@@ -1,0 +1,140 @@
+.error-container-400 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 120px); /* Ajuste con header y footer */
+  position: relative;
+  text-align: center;
+  padding: 0 20px;
+  gap: 20px;
+}
+
+/* Ajustar la imagen y centrarla mejor */
+.error-left-400 {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Animación y ajuste de tamaño */
+.doctor-image-400 {
+  width: 100%;
+  height: auto;
+  max-height: 85vh;
+  object-fit: contain;
+  animation: slideIn 1s ease-out;
+}
+
+/* Se sube más el texto y se compacta */
+.error-right-400 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transform: translateY(-50px);
+}
+
+/* Ajuste del 400 */
+.error-code-400 {
+  font-size: 18vh;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInUp 1s ease-out;
+  margin-bottom: -10px;
+}
+
+/* Icono del "0" ajustado */
+.error-icon-400 {
+  width: 16vh;
+  height: 16vh;
+  margin: 0 10px;
+  animation: bounce 1.5s infinite;
+}
+
+/* Texto del título más alineado */
+.error-title-400 {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 5px;
+}
+
+.error-message-400 {
+  font-size: 18px;
+  margin-top: 5px;
+  color: #666;
+  max-width: 450px;
+}
+
+/* Botón más estilizado */
+.error-button-400 {
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #00bfa5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.error-button-400:hover {
+  background-color: #00897b;
+}
+
+/* Corregir la posición y forma del círculo en la esquina */
+.error-circle-400 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  background-color: #e6fbf8;
+  border-radius: 0 120px 0 0; /* Solo se ve 1/4 del círculo en la esquina */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .error-container-400 {
+    flex-direction: column;
+    text-align: center;
+    height: auto;
+    padding: 50px 20px;
+  }
+
+  .error-right-400 {
+    transform: translateY(-30px);
+  }
+
+  .error-left-400 {
+    margin-top: 15px;
+  }
+
+  .doctor-image-400 {
+    width: 90%;
+    max-height: 60vh;
+  }
+
+  .error-code-400 {
+    font-size: 14vh;
+  }
+
+  .error-icon-400 {
+    width: 10vh;
+    height: 10vh;
+  }
+
+  .error-circle-400 {
+    width: 80px;
+    height: 80px;
+    border-radius: 0 80px 0 0;
+  }
+}

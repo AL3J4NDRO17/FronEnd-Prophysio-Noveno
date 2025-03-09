@@ -1,0 +1,113 @@
+.blog-grid-container {
+  width: 100%;
+}
+
+.tech_blog_posts_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* Por defecto, 2 columnas */
+  gap: 2rem;
+  padding: 0 1rem;
+}
+
+.tech_blog_post_card {
+  border: 1px solid #eee;
+  overflow: hidden;
+  transition: transform 0.2s;
+  max-width: 100%;
+}
+
+.tech_blog_post_card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tech_blog_post_image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.tech_blog_post_content {
+  padding: 1rem;
+}
+
+.tech_blog_post_content h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.tech_blog_post_content p {
+  color: #666;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.pagination button {
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 0.9rem;
+}
+
+.read-more-button {
+  background-color: #c0387a;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+  margin-top: 1rem;
+}
+
+.read-more-button:hover {
+  background-color: #982d60;
+  transform: translateY(-2px);
+}
+
+.read-more-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .pagination button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .tech_blog_posts_grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,69 @@
+/* Importar variables */
+@import "./variables.css";
+
+/* Layout principal */
+.adminDashboard-container {
+  display: flex;
+  height: 100vh;
+  background-color: var(--adminDashboard-background);
+}
+
+.adminDashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.adminDashboard-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+/* Stats grid */
+.adminDashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .adminDashboard-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .adminDashboard-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Overview grid */
+.adminDashboard-overview-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .adminDashboard-overview-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.adminDashboard-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .adminDashboard-bottom-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+

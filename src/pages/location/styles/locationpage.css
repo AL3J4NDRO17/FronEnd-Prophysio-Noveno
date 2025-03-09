@@ -1,0 +1,126 @@
+.location-container {
+
+  margin: 0 auto;
+
+}
+
+.location-hero {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  padding: 3rem 1rem;
+  border-radius: 10px;
+}
+
+.location-hero h1 {
+  font-size: 2.5rem;
+  color: #0d9488;
+  margin-bottom: 1rem;
+}
+
+.location-hero p {
+  font-size: 1.2rem;
+  color: #4b5563;
+}
+
+.location-info {
+  max-width: 1200px;
+  justify-self: center;
+  display: flex;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.location-image {
+  flex: 1;
+}
+
+.location-image img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.location-details {
+  flex: 1;
+}
+
+.info-item-txt {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.info-icon {
+  margin-right: 1rem;
+  color: #0d9488;
+}
+
+.info-item-txt h3 {
+  font-size: 1.2rem;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.info-item-txt p {
+  color: #4b5563;
+  margin: 0;
+}
+
+.location-action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.location-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.location-btn.primary {
+  background-color: #0d9488;
+  color: white;
+}
+
+.location-btn.primary:hover {
+  background-color: #0f766e;
+}
+
+.location-btn.secondary {
+  background-color: white;
+  color: #0d9488;
+  border: 2px solid #0d9488;
+}
+
+.location-btn.secondary:hover {
+  background-color: #f0f9ff;
+}
+
+.location-map {
+  margin-top: 3rem;
+}
+
+.location-map iframe {
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .location-info {
+    flex-direction: column;
+  }
+
+  .location-action-buttons {
+    flex-direction: column;
+  }
+
+  .location-btn {
+    width: 100%;
+  }
+}
+

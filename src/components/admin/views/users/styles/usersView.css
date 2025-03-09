@@ -1,0 +1,398 @@
+/* Variables globales */
+:root {
+    --usersAdmin-color-primary: #14b8a6;
+    --usersAdmin-color-primary-hover: #0d9488;
+    --usersAdmin-color-text: #111827;
+    --usersAdmin-color-text-secondary: #6b7280;
+    --usersAdmin-color-border: #e5e7eb;
+    --usersAdmin-color-background: #ffffff;
+    --usersAdmin-color-background-secondary: #f9fafb;
+    --usersAdmin-color-active: #10b981;
+    --usersAdmin-color-inactive: #6b7280;
+    --usersAdmin-color-new: #3b82f6;
+    --usersAdmin-color-active-bg: #dcfce7;
+    --usersAdmin-color-inactive-bg: #f3f4f6;
+    --usersAdmin-color-new-bg: #dbeafe;
+    --usersAdmin-border-radius: 0.375rem;
+    --usersAdmin-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --usersAdmin-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --usersAdmin-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* Contenedor principal */
+  .usersAdmin-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /* Estilos del encabezado */
+  .usersAdmin-header {
+    background-color: var(--usersAdmin-color-background);
+    border-bottom: 1px solid var(--usersAdmin-color-border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .usersAdmin-header-title {
+    display: flex;
+    align-items: center;
+  }
+  
+  .usersAdmin-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--usersAdmin-color-text);
+  }
+  
+  .usersAdmin-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .usersAdmin-search-container {
+    position: relative;
+    display: none;
+  }
+  
+  @media (min-width: 768px) {
+    .usersAdmin-search-container {
+      display: block;
+    }
+  }
+  
+  .usersAdmin-search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1rem;
+    height: 1rem;
+    color: var(--usersAdmin-color-text-secondary);
+  }
+  
+  .usersAdmin-search-input {
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    width: 16rem;
+    border-radius: var(--usersAdmin-border-radius);
+    border: 1px solid var(--usersAdmin-color-border);
+    outline: none;
+    font-size: 0.875rem;
+  }
+  
+  .usersAdmin-search-input:focus {
+    border-color: transparent;
+    box-shadow: 0 0 0 2px var(--usersAdmin-color-primary);
+  }
+  
+  /* Estilos de botones */
+  .usersAdmin-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--usersAdmin-border-radius);
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  
+  .usersAdmin-btn-text {
+    margin-left: 0.25rem;
+  }
+  
+  .usersAdmin-btn-primary {
+    background-color: var(--usersAdmin-color-primary);
+    color: white;
+    border: none;
+  }
+  
+  .usersAdmin-btn-primary:hover {
+    background-color: var(--usersAdmin-color-primary-hover);
+  }
+  
+  .usersAdmin-btn-outline {
+    background-color: transparent;
+    color: var(--usersAdmin-color-text);
+    border: 1px solid var(--usersAdmin-color-border);
+  }
+  
+  .usersAdmin-btn-outline:hover {
+    background-color: var(--usersAdmin-color-background-secondary);
+  }
+  
+  .usersAdmin-btn-icon {
+    padding: 0.5rem;
+    border: 1px solid var(--usersAdmin-color-border);
+    background-color: transparent;
+    border-radius: var(--usersAdmin-border-radius);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .usersAdmin-btn-icon:hover {
+    background-color: var(--usersAdmin-color-background-secondary);
+  }
+  
+  .usersAdmin-icon-sm {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .usersAdmin-btn-icon {
+    color: var(--usersAdmin-color-text-secondary);
+  }
+  
+  /* Contenido principal */
+  .usersAdmin-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+  }
+  
+  /* Estilos de pestañas */
+  .usersAdmin-tabs-container {
+    margin-bottom: 1.5rem;
+  }
+  
+  .usersAdmin-tabs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .usersAdmin-tabs-list {
+    display: flex;
+    background-color: var(--usersAdmin-color-background-secondary);
+    border-radius: var(--usersAdmin-border-radius);
+    padding: 0.25rem;
+  }
+  
+  .usersAdmin-tab-item {
+    padding: 0.5rem 1rem;
+    border-radius: var(--usersAdmin-border-radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--usersAdmin-color-text-secondary);
+  }
+  
+  .usersAdmin-tab-text {
+    display: inline-block;
+  }
+  
+  .usersAdmin-tab-item.usersAdmin-active {
+    background-color: var(--usersAdmin-color-background);
+    color: var(--usersAdmin-color-text);
+    box-shadow: var(--usersAdmin-shadow-sm);
+  }
+  
+  .usersAdmin-tabs-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  /* Estilos de tarjetas */
+  .usersAdmin-card {
+    background-color: var(--usersAdmin-color-background);
+    border-radius: var(--usersAdmin-border-radius);
+    box-shadow: var(--usersAdmin-shadow);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  
+  .usersAdmin-card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--usersAdmin-color-border);
+  }
+  
+  .usersAdmin-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  .usersAdmin-card-content {
+    padding: 1.5rem;
+  }
+  
+  .usersAdmin-empty-content {
+    font-size: 0.875rem;
+    color: var(--usersAdmin-color-text-secondary);
+  }
+  
+  /* Estilos de tabla */
+  .usersAdmin-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .usersAdmin-table-header,
+  .usersAdmin-table-cell {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--usersAdmin-color-border);
+  }
+  
+  .usersAdmin-table-header {
+    font-weight: 500;
+    color: var(--usersAdmin-color-text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .usersAdmin-table-body tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .usersAdmin-col-name {
+    width: 250px;
+  }
+  
+  .usersAdmin-col-actions {
+    text-align: right;
+  }
+  
+  .usersAdmin-actions-cell {
+    text-align: right;
+  }
+  
+  .usersAdmin-actions-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+  
+  /* Estilos de avatar */
+  .usersAdmin-avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-color: var(--usersAdmin-color-background-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+  .usersAdmin-avatar-fallback {
+    font-weight: 500;
+    color: var(--usersAdmin-color-primary);
+  }
+  
+  /* Estilos de usuario */
+  .usersAdmin-user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .usersAdmin-user-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .usersAdmin-user-name {
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+  
+  .usersAdmin-user-email,
+  .usersAdmin-user-phone,
+  .usersAdmin-user-detail {
+    font-size: 0.75rem;
+    color: var(--usersAdmin-color-text-secondary);
+  }
+  
+  /* Estilos de badge */
+  .usersAdmin-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .usersAdmin-badge-active {
+    background-color: var(--usersAdmin-color-active-bg);
+    color: var(--usersAdmin-color-active);
+  }
+  
+  .usersAdmin-badge-inactive {
+    background-color: var(--usersAdmin-color-inactive-bg);
+    color: var(--usersAdmin-color-inactive);
+  }
+  
+  .usersAdmin-badge-new {
+    background-color: var(--usersAdmin-color-new-bg);
+    color: var(--usersAdmin-color-new);
+  }
+  
+  /* Estilos de estadísticas */
+  .usersAdmin-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .usersAdmin-stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .usersAdmin-stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .usersAdmin-stat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .usersAdmin-stat-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .usersAdmin-stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  
+  /* Estilos de listas de usuarios */
+  .usersAdmin-user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .usersAdmin-user-list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .usersAdmin-calendar-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background-color: rgba(20, 184, 166, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--usersAdmin-color-primary);
+  }
+  
+  

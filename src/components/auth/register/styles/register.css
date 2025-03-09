@@ -1,0 +1,46 @@
+.register-section {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9fafb;
+    padding: 1rem;
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+}
+
+
+.decoration-1 {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background-color: rgba(0, 191, 166, 0.1);
+    ;
+    border-radius: 50%;
+    top: -300px;
+    left: -300px;
+}
+
+.decoration-2 {
+    width: 600px;
+    height: 600px;
+    bottom: -120px;
+    right: -50px;
+}
+
+.asset-register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    transform: scaleX(-1);
+    /* Invierte la imagen horizontalmente */
+}
+
+@media (max-width: 1024px) {
+
+   .asset-register{
+    display: none;
+   }
+}

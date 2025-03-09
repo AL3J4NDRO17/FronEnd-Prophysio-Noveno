@@ -1,0 +1,49 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+ 
+}
+
+main {
+ 
+  min-height: 100vh;
+  
+  /* 🚀 Hace que el contenido principal crezca y mantenga el footer abajo */
+}
+
+
+.custom-toast {
+  background-color: #4caf50;
+  /* Color de fondo */
+  color: white;
+  /* Color del texto */
+  border-radius: 8px;
+  /* Bordes redondeados */
+  padding: 10px;
+  /* Espaciado interno */
+}
+
+.custom-toast-error {
+  background-color: #f44336;
+  /* Color de fondo para errores */
+}
+

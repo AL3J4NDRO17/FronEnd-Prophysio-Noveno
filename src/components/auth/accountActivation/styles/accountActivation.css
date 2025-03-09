@@ -1,0 +1,100 @@
+.account-verification-container {
+    min-height: 100vh;
+    background-color: #f9fafb;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  
+  .account-verification-card {
+    max-width: 28rem;
+    width: 100%;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .account-verification-loading-container {
+    position: relative;
+    width: 6rem;
+    height: 6rem;
+    margin: 0 auto 1.5rem auto;
+  }
+  
+  .account-verification-loading-circle {
+    width: 6rem;
+    height: 6rem;
+    border: 0.5rem solid #e5e7eb;
+    border-radius: 50%;
+  }
+  
+  .account-verification-loading-spinner {
+    position: absolute;
+    top: 0;
+    width: 6rem;
+    height: 6rem;
+    border: 0.5rem solid #14b8a6;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .account-verification-status-icon {
+    width: 6rem;
+    height: 6rem;
+    margin: 0 auto 1.5rem auto;
+  }
+  
+  .account-verification-success-icon {
+    color: #14b8a6;
+  }
+  
+  .account-verification-error-icon {
+    color: #ef4444;
+  }
+  
+  .account-verification-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  
+  .account-verification-message {
+    color: #4b5563;
+    margin-bottom: 1.5rem;
+  }
+  
+  .account-verification-support-button {
+    background-color: #14b8a6;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.375rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .account-verification-support-button:hover {
+    background-color: #0d9488;
+  }
+  
+  @media (max-width: 640px) {
+    .account-verification-card {
+      margin: 1rem;
+    }
+  }
+  

@@ -1,0 +1,407 @@
+/* Importar variables */
+@import "./variables.css";
+
+/* Sidebar */
+.adminDashboard-sidebar {
+  width: 16rem;
+  background-color: var(--adminDashboard-white);
+  border-right: 1px solid var(--adminDashboard-border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  transition: transform 0.3s ease, width 0.3s ease;
+}
+
+/* Botón de toggle para móvil */
+.adminDashboard-sidebar-toggle {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 50;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.375rem;
+  background-color: var(--adminDashboard-white);
+  border: 1px solid var(--adminDashboard-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--adminDashboard-text);
+  display: none;
+}
+
+/* Overlay para móvil */
+.adminDashboard-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 30;
+}
+
+/* Estilos para el header del sidebar */
+.adminDashboard-sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--adminDashboard-border);
+}
+
+.adminDashboard-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.adminDashboard-logo {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background-color: var(--adminDashboard-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adminDashboard-logo-text {
+  color: var(--adminDashboard-white);
+  font-weight: bold;
+}
+
+.adminDashboard-logo-name {
+  color: var(--adminDashboard-primary);
+  font-size: 1.25rem;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Estilos para la navegación */
+.adminDashboard-sidebar-nav {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.adminDashboard-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.adminDashboard-nav-section {
+  padding-top: 1rem;
+}
+
+.adminDashboard-nav-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--adminDashboard-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminDashboard-nav-sublist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.adminDashboard-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  color: var(--adminDashboard-text);
+  border-radius: 0.375rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminDashboard-nav-item:hover {
+  background-color: var(--adminDashboard-background);
+}
+
+.adminDashboard-nav-item-active {
+  background-color: var(--adminDashboard-primary-light);
+  color: var(--adminDashboard-primary);
+}
+
+.adminDashboard-nav-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.adminDashboard-badge {
+  margin-left: auto;
+  background-color: var(--adminDashboard-primary-light);
+  color: var(--adminDashboard-primary);
+  padding: 0.125rem 0.375rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Estilos para el footer */
+.adminDashboard-sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--adminDashboard-border);
+}
+
+/* Contenedor de usuario con menú */
+.adminDashboard-user-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.adminDashboard-user-profile {
+  flex: 1;
+  min-width: 0;
+}
+
+/* User profile */
+.adminDashboard-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+}
+
+.adminDashboard-user-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  background-color: var(--adminDashboard-primary-light);
+  color: var(--adminDashboard-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.adminDashboard-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.adminDashboard-user-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminDashboard-user-role {
+  font-size: 0.75rem;
+  color: var(--adminDashboard-text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Botón de menú */
+.adminDashboard-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  background-color: transparent;
+  border: none;
+  color: var(--adminDashboard-text-light);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.adminDashboard-menu-button:hover {
+  background-color: var(--adminDashboard-background);
+  color: var(--adminDashboard-text);
+}
+
+/* Dropdown menu */
+.adminDashboard-dropdown {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 0.5rem;
+  width: 14rem;
+  background-color: var(--adminDashboard-white);
+  border: 1px solid var(--adminDashboard-border);
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  z-index: 50;
+  overflow: hidden;
+}
+
+.adminDashboard-user-menu:hover .adminDashboard-dropdown-menu,
+.adminDashboard-user-menu:focus-within .adminDashboard-dropdown-menu {
+  display: block;
+}
+
+.adminDashboard-dropdown-header {
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text);
+}
+
+.adminDashboard-dropdown-divider {
+  height: 1px;
+  background-color: var(--adminDashboard-border);
+  margin: 0;
+}
+
+.adminDashboard-dropdown-header {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text);
+}
+
+.adminDashboard-dropdown-divider {
+  height: 1px;
+  background-color: var(--adminDashboard-border);
+  margin: 0.25rem 0;
+}
+
+.adminDashboard-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--adminDashboard-text);
+  text-decoration: none;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.adminDashboard-dropdown-item:hover {
+  background-color: var(--adminDashboard-background);
+}
+
+.adminDashboard-dropdown-item {
+  display: block;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--adminDashboard-text);
+  text-decoration: none;
+}
+
+.adminDashboard-dropdown-item:hover {
+  background-color: var(--adminDashboard-background);
+}
+
+.adminDashboard-dropdown-item-danger {
+  color: var(--adminDashboard-danger);
+}
+
+.adminDashboard-dropdown-item-danger:hover {
+  background-color: #fee2e2;
+}
+
+/* Modo colapsado para escritorio */
+.adminDashboard-sidebar.closed {
+  width: 4.5rem;
+}
+
+.adminDashboard-sidebar.closed .adminDashboard-logo-name,
+.adminDashboard-sidebar.closed .adminDashboard-nav-section-title,
+.adminDashboard-sidebar.closed .adminDashboard-user-info,
+.adminDashboard-sidebar.closed .adminDashboard-nav-item span {
+  display: none;
+}
+
+/* Ajustes para el modo colapsado */
+.adminDashboard-sidebar.closed .adminDashboard-menu-button {
+  display: none;
+}
+
+.adminDashboard-sidebar.closed .adminDashboard-nav-item {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.adminDashboard-sidebar.closed .adminDashboard-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(25%, -25%);
+  margin-left: 0;
+}
+
+.adminDashboard-sidebar.closed .adminDashboard-user-profile {
+  justify-content: center;
+}
+
+/* Responsive para tablets y móviles */
+@media (max-width: 1023px) {
+  .adminDashboard-sidebar-toggle {
+    display: flex;
+  }
+
+  .adminDashboard-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .adminDashboard-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Ajustes para móvil */
+  @media (max-width: 1023px) {
+    .adminDashboard-dropdown {
+      width: 16rem;
+    }
+  }
+
+  /* Ajustar el contenido principal para dejar espacio al botón de toggle */
+  
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .adminDashboard-sidebar {
+    width: 85vw;
+  }
+}
+

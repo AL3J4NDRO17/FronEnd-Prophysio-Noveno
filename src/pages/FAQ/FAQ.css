@@ -1,0 +1,146 @@
+.faq-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .faq-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 40px;
+    font-size: 2.5em;
+    font-weight: bold;
+  }
+  
+  .faq-content {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+  }
+  
+  .faq-sections {
+    flex: 1;
+  }
+  
+  .faq-accordion {
+    margin-bottom: 10px;
+  }
+  
+  .faq-button {
+    width: 100%;
+    padding: 15px 20px;
+    background: white;
+    border: none;
+    border-radius: 4px;
+    text-align: left;
+    font-size: 16px;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  
+  .faq-button:hover {
+    background: #f8f8f8;
+  }
+  
+  .faq-plus {
+    color: #00bfa5;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .faq-active {
+    background: #f8f8f8;
+  }
+  
+  .faq-active .faq-plus {
+    transform: rotate(45deg);
+  }
+  
+  .faq-panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: white;
+    margin-top: 2px;
+    padding: 0 20px;
+  }
+  
+  .faq-panel-open {
+    max-height: 200px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .faq-help {
+    flex: 0 0 300px;
+    text-align: center;
+  }
+  
+  .faq-help-image {
+    width: 400px;
+    height: auto;
+
+    margin-bottom: 20px;
+  }
+  
+  .faq-help-title {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+  }
+  
+  .faq-help-subtitle {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+  }
+  
+  .faq-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .faq-textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+    font-family: inherit;
+  }
+  
+  .faq-submit {
+    background: #00bfa5;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease;
+  }
+  
+  .faq-submit:hover {
+    background: #00a693;
+  }
+  
+  @media (max-width: 768px) {
+    .faq-content {
+      flex-direction: column;
+    }
+  
+    .faq-help {
+      flex: 0 0 auto;
+      width: 100%;
+    }
+  }
+  
+  

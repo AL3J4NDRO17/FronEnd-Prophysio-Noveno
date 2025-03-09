@@ -1,0 +1,114 @@
+/* Importar variables */
+@import "./variables.css";
+
+/* Cards */
+.adminDashboard-card {
+  background-color: var(--adminDashboard-white);
+  border-radius: 0.5rem;
+  border: 1px solid var(--adminDashboard-border);
+  overflow: hidden;
+}
+
+.adminDashboard-card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+  padding: 1rem 1rem 0.5rem 1rem;
+}
+
+.adminDashboard-card-header-full {
+  padding: 1.25rem 1.25rem 0.5rem 1.25rem;
+}
+
+.adminDashboard-card-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text-light);
+  margin: 0;
+}
+
+.adminDashboard-card-title-large {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--adminDashboard-text);
+  margin: 0;
+}
+
+.adminDashboard-card-description {
+  font-size: 0.875rem;
+  color: var(--adminDashboard-text-light);
+  margin: 0.25rem 0 0 0;
+}
+
+.adminDashboard-card-icon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--adminDashboard-primary);
+}
+
+.adminDashboard-card-content {
+  padding: 0.5rem 1rem 1rem 1rem;
+}
+
+.adminDashboard-card-content-full {
+  padding: 1rem 1.25rem;
+}
+
+.adminDashboard-card-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--adminDashboard-border);
+}
+
+.adminDashboard-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--adminDashboard-text);
+}
+
+.adminDashboard-stat-comparison {
+  font-size: 0.75rem;
+  color: var(--adminDashboard-text-light);
+  display: flex;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.adminDashboard-stat-increase {
+  color: var(--adminDashboard-success);
+  display: flex;
+  align-items: center;
+  margin-right: 0.25rem;
+}
+
+.adminDashboard-stat-decrease {
+  color: var(--adminDashboard-danger);
+  display: flex;
+  align-items: center;
+  margin-right: 0.25rem;
+}
+
+.adminDashboard-trend-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.25rem;
+}
+
+.adminDashboard-appointments-card {
+  height: 100%;
+}
+
+.adminDashboard-full-card {
+  height: 100%;
+}
+
+/* Placeholder */
+.adminDashboard-placeholder-text {
+  font-size: 0.875rem;
+  color: var(--adminDashboard-text-light);
+  margin: 0;
+}
+

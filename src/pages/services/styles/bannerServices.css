@@ -1,0 +1,66 @@
+.contact-banner {
+    background-color: #f8f4f4;
+    padding: 4rem 2rem;
+    margin-top: 4rem;
+  }
+  
+  .banner-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  
+  .banner-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #b76e79;
+  }
+  
+  .banner-text {
+    text-align: left;
+  }
+  
+  .banner-text h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .banner-text p {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+  }
+  
+  .contact-button {
+    background-color: #b76e79;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .contact-button:hover {
+    background-color: #a25d68;
+  }
+  
+  @media (max-width: 768px) {
+    .banner-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      text-align: center;
+    }
+  
+    .banner-text {
+      text-align: center;
+    }
+  }
+  
+  

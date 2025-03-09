@@ -1,0 +1,110 @@
+:root {
+  --color-primary: #2a9d8f;  /* Verde principal (Editar, Nuevo) */
+  --color-secondary: #c4226b; /* Rosa oscuro (No usado por ahora) */
+  --color-danger: #ff5b5b; /* Rojo para eliminar y despublicar */
+  --color-dark: #64748b; /* Gris oscuro para botones secundarios */
+  --color-success: #28a745; /* Verde para publicar */
+  --color-hover: rgba(0, 0, 0, 0.05); /* Color de fondo al hacer hover */
+}
+
+/* 🔹 Botón Base */
+.ui-btn {
+  padding: 6px;
+  border: 1.5px solid transparent; /* Borde transparente por defecto */
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, transform 0.1s, border-color 0.2s;
+}
+
+/* 📝 Botón Editar */
+.ui-btnEdit {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.ui-btnEdit:hover {
+  background: var(--color-hover);
+  transform: scale(1.05);
+}
+
+/* 📤 Botón Publicar */
+.ui-btnPublish {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.ui-btnPublish:hover {
+  background: var(--color-hover);
+  transform: scale(1.05);
+}
+
+/* ❌ Botón Despublicar */
+.ui-btnUnpublish {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.ui-btnUnpublish:hover {
+  background: var(--color-hover);
+  transform: scale(1.05);
+}
+
+/* 👁️ Botón Vista Previa */
+.ui-btnPreview {
+  border-color: var(--color-dark);
+  color: var(--color-dark);
+}
+
+.ui-btnPreview:hover {
+  background: var(--color-hover);
+  transform: scale(1.05);
+}
+
+/* 🗑️ Botón Eliminar */
+.ui-btnDelete {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.ui-btnDelete:hover {
+  background: var(--color-hover);
+  transform: scale(1.05);
+}
+
+/* ❌ Botón Cerrar */
+.ui-btnClose {
+  border-color: transparent;
+  color: var(--color-dark);
+}
+
+.ui-btnClose:hover {
+  background: var(--color-hover);
+}
+
+/* ➕ Botón Nuevo Testimonio */
+.ui-btnNuevo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.ui-btnNuevo:hover {
+  background: var(--color-hover);
+  transform: scale(1.05);
+}
+
+/* ✨ Efecto de presionar (feedback visual) */
+.ui-btn:active {
+  transform: scale(0.95);
+}

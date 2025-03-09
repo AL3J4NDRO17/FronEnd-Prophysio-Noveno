@@ -1,0 +1,54 @@
+.topBar {
+  background-color: #666666;
+  color: white;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.topBarContainer {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.topBarContent {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.socialLink {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.2s ease;
+}
+
+.socialLink:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .socialLinks {
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .topBarContent {
+    justify-content: center;
+  }
+
+  .socialLink span {
+    display: none;
+  }
+}
+

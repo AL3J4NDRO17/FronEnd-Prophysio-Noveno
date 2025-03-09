@@ -1,0 +1,152 @@
+.error-container-500 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;/* Ajuste con header y footer */
+  position: relative;
+  text-align: center;
+  padding: 0 20px;
+  gap: 20px;
+}
+
+/* Mover la imagen más a la derecha */
+.error-left {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding-left: 50px; /* Desplazamiento más preciso */
+  max-width: 900px;
+}
+
+/* Imagen más grande y mejor alineada */
+.doctor-image-500 {
+  width: 110%;  /* Se expande un poco más */
+  height: auto;
+  max-height: 90vh;
+  object-fit: contain;
+  animation: slideIn 1s ease-out;
+}
+
+/* Se sube más el texto */
+.error-right-500 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transform: translateY(-50px);
+}
+
+/* Ajuste del "500" */
+.error-code-500 {
+  font-size: 20vh;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInUp 1s ease-out;
+  margin-bottom: -10px;
+}
+
+/* Icono del "5" con animación mejorada */
+@keyframes bounceRotate {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(7deg);
+  }
+}
+
+.error-icon-500 {
+  width: 18vh;
+  height: 18vh;
+  margin: 0 10px;
+  animation: bounceRotate 1.5s infinite ease-in-out;
+}
+
+/* Texto del título más alineado */
+.error-title-500 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 5px;
+}
+
+.error-message-500 {
+  font-size: 18px;
+  margin-top: 5px;
+  color: #666;
+  max-width: 450px;
+}
+
+/* Botón más estilizado */
+.error-button-500 {
+  margin-top: 15px;
+  padding: 12px 24px;
+  font-size: 18px;
+  background-color: #00bfa5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.error-button-500:hover {
+  background-color: #00897b;
+}
+
+/* Corregir la posición y forma del círculo en la esquina */
+.error-circle-500 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  background-color: #e6fbf8;
+  border-radius: 0 120px 0 0; /* Solo se ve 1/4 del círculo en la esquina */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .error-container-500 {
+    flex-direction: column;
+    text-align: center;
+    height: auto;
+    padding: 50px 20px;
+  }
+
+  .error-right-500 {
+    transform: translateY(-30px);
+  }
+
+  .error-left-500 {
+    padding-left: 0; /* Se vuelve a centrar en móviles */
+    margin-top: 15px;
+  }
+
+  .doctor-image-500 {
+    width: 95%;
+    max-height: 70vh;
+  }
+
+  .error-code-500 {
+    font-size: 16vh;
+  }
+
+  .error-icon-500 {
+    width: 12vh;
+    height: 12vh;
+  }
+
+  .error-circle-500 {
+    width: 80px;
+    height: 80px;
+    border-radius: 0 80px 0 0;
+  }
+}

@@ -1,0 +1,129 @@
+.breadcrumb-nav {
+    display: flex;
+
+    z-index: 1;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px 20px 10px 300px;
+
+}
+
+.breadcrumb-back-button {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #2b9c8f;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-back-button:hover {
+    color: #1e7268;
+}
+
+.breadcrumb-back-icon {
+    margin-right: 5px;
+}
+
+.breadcrumb-list {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.breadcrumb-item {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+.breadcrumb-link {
+    display: flex;
+    align-items: center;
+    color: #2b9c8f;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb-link:hover {
+    color: #1e7268;
+}
+
+.breadcrumb-current {
+    display: flex;
+    align-items: center;
+    color: #e11d48;
+    font-weight: 600;
+}
+
+.breadcrumb-icon {
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+.breadcrumb-separator {
+    color: #9ca3af;
+    margin: 0 8px;
+}
+
+@media (max-width: 768px) {
+    .breadcrumb-nav {
+        margin: 15px 10%;
+        padding: 6px 15px;
+    }
+
+    .breadcrumb-back-button {
+        font-size: 14px;
+        margin-right: 10px;
+    }
+
+    .breadcrumb-list {
+        font-size: 14px;
+    }
+
+    .breadcrumb-icon {
+        font-size: 12px;
+    }
+
+    .breadcrumb-separator {
+        margin: 0 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .breadcrumb-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 10px 5%;
+        padding: 6px 10px;
+    }
+
+    .breadcrumb-back-button {
+        margin-bottom: 8px;
+    }
+
+    .breadcrumb-list {
+        overflow-x: scroll;
+        width: 100%;
+    }
+
+    .breadcrumb-item {
+        font-size: 14px;
+    }
+
+    .breadcrumb-icon {
+        font-size: 12px;
+    }
+
+    .breadcrumb-separator {
+        margin: 0 4px;
+    }
+}

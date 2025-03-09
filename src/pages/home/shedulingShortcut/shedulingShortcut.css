@@ -1,0 +1,59 @@
+.Shortcut-container {
+    position: relative;
+    width: -webkit-fill-available;
+    height: 600px;
+  
+    
+
+}
+
+.Shortcut-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.Shortcut-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Shortcut-card {
+    
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: calc(100% - 32px);
+    margin: 0 16px;
+    text-align: center;
+}
+
+.Shortcut-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.Shortcut-text {
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.schedule-button {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.schedule-button:hover {
+    background-color: #059669;
+}

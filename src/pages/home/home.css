@@ -1,0 +1,49 @@
+.main-home {
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+   
+    
+}
+
+.home-asset{
+    position:relative;
+
+}
+.decoration-home-1 {
+    position: absolute;
+    background-color: rgba(0, 191, 166, 0.1);
+    border-radius: 50%;
+    z-index: -999;
+}
+
+.decoration-home-1{
+    position: absolute;
+    width: 1500px;
+    height: 1500px;
+    border-radius: 50%;
+    top: 100px;
+    left: -700px;
+}
+
+.decoration-home-2 {
+    position: absolute;
+    background-color: rgba(0, 191, 166, 0.1);
+    border-radius: 50%;
+    z-index: -999;
+   
+    
+}
+
+.decoration-home-2{
+    position: absolute;
+    width: 2000px;
+    height: 1900px;
+    background-color: rgba(235, 0, 78, 0.1);;
+    border-radius: 50%;
+    top: 1600px;
+    right: -750px;
+    z-index: -2;
+    
+
+}

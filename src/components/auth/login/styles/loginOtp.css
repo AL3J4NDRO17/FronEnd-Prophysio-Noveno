@@ -1,0 +1,180 @@
+.otp-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  height: fit-content;
+  max-width: 500px;
+  padding: 2.5rem;
+  position: relative;
+  z-index: 1;
+ 
+  justify-self: center
+}
+
+.otp-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.otp-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+}
+
+.otp-subtitle {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.otp-input-group {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.otp-input {
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: #55a5a5;
+  box-shadow: 0 0 0 3px rgba(85, 165, 165, 0.2);
+}
+
+.otp-verify-button {
+  width: 100%;
+  padding: 1rem;
+  background-color: #55a5a5;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.otp-verify-button:hover {
+  background-color: #4a9191;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(85, 165, 165, 0.2);
+}
+
+.otp-verify-button:active {
+  transform: translateY(0);
+}
+
+.otp-resend-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: none;
+  border: none;
+  color: #d84d7d;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.otp-resend-button:hover {
+  color: #c2446f;
+  background-color: rgba(216, 77, 125, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+  .asset-decoration{
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  .otp-container {
+    padding: 2rem;
+  }
+
+  .otp-title {
+    font-size: 1.5rem;
+  }
+
+  .otp-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .otp-input-group {
+    gap: 0.5rem;
+  }
+
+  .otp-input {
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.25rem;
+  }
+
+  .otp-verify-button,
+  .otp-resend-button {
+    padding: 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.otp-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Accessibility improvements */
+.otp-input:focus-visible {
+  outline: 2px solid #55a5a5;
+  outline-offset: 2px;
+}
+
+.otp-verify-button:focus-visible,
+.otp-resend-button:focus-visible {
+  outline: 2px solid #55a5a5;
+  outline-offset: 2px;
+}
+
+/* Additional styles for better user experience */
+.otp-input::placeholder {
+  color: #ccc;
+}
+
+.otp-input:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.otp-verify-button:disabled,
+.otp-resend-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+

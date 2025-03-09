@@ -1,0 +1,462 @@
+/* Importar variables */
+@import "./variables.css";
+
+/* Container */
+.companySettings-container {
+  padding: 1.5rem;
+  background-color: var(--adminDashboard-background);
+  min-height: 100vh;
+}
+
+/* Header */
+.companySettings-header {
+  margin-bottom: 2rem;
+}
+
+.companySettings-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--adminDashboard-text);
+  margin: 0;
+}
+
+.companySettings-subtitle {
+  font-size: 0.875rem;
+  color: var(--adminDashboard-text-light);
+  margin: 0.25rem 0 0 0;
+}
+
+/* Tabs */
+.companySettings-tabs {
+  margin-bottom: 1.5rem;
+}
+
+.companySettings-tabs-list {
+  display: flex;
+  background-color: var(--adminDashboard-background);
+  border-radius: 0.375rem;
+  padding: 0.25rem;
+}
+
+.companySettings-tab-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text-light);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.companySettings-tab-button:hover {
+  color: var(--adminDashboard-text);
+}
+
+.companySettings-tab-button.active {
+  background-color: var(--adminDashboard-white);
+  color: var(--adminDashboard-text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Content */
+.companySettings-content {
+  margin-top: 1.5rem;
+}
+
+/* Card */
+.companySettings-card {
+  background-color: var(--adminDashboard-white);
+  border-radius: 0.5rem;
+  border: 1px solid var(--adminDashboard-border);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.companySettings-card-header {
+  padding: 1.25rem 1.25rem 0.5rem 1.25rem;
+}
+
+.companySettings-card-header h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--adminDashboard-text);
+  margin: 0;
+}
+
+.companySettings-card-header p {
+  font-size: 0.875rem;
+  color: var(--adminDashboard-text-light);
+  margin: 0.25rem 0 0 0;
+}
+
+.companySettings-card-content {
+  padding: 1rem 1.25rem;
+}
+
+/* Form */
+.companySettings-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.companySettings-form-group {
+  margin-bottom: 1rem;
+}
+
+.companySettings-form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text);
+  margin-bottom: 0.5rem;
+}
+
+.companySettings-input-with-icon {
+  position: relative;
+}
+
+.companySettings-input-with-icon i {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--adminDashboard-text-lighter);
+}
+
+.companySettings-input-with-icon input {
+  padding-left: 2.5rem;
+}
+
+.companySettings-form-group input,
+.companySettings-form-group textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--adminDashboard-border);
+  font-size: 0.875rem;
+  color: var(--adminDashboard-text);
+}
+
+.companySettings-form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.companySettings-form-group input:focus,
+.companySettings-form-group textarea:focus {
+  outline: none;
+  border-color: var(--adminDashboard-primary);
+  box-shadow: 0 0 0 2px var(--adminDashboard-primary-light);
+}
+
+/* Social Links */
+.companySettings-social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Logo Upload */
+.companySettings-logo-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.companySettings-logo-preview {
+  width: 100px;
+  height: 100px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--adminDashboard-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.companySettings-logo-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.companySettings-filepond {
+  margin-top: 0.5rem;
+}
+
+/* Misión y Visión */
+.companySettings-MV-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Form Actions */
+.companySettings-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+/* Buttons */
+.companySettings-button-primary {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  background-color: var(--adminDashboard-primary);
+  color: var(--adminDashboard-white);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.companySettings-button-primary:hover {
+  background-color: var(--adminDashboard-primary-hover);
+}
+
+.companySettings-button-outline {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid var(--adminDashboard-border);
+  background-color: var(--adminDashboard-white);
+  color: var(--adminDashboard-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.companySettings-button-outline:hover {
+  background-color: var(--adminDashboard-background);
+}
+
+.companySettings-button-full {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  background-color: var(--adminDashboard-primary);
+  color: var(--adminDashboard-white);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.companySettings-button-full:hover {
+  background-color: var(--adminDashboard-primary-hover);
+}
+
+.companySettings-button-delete {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid #fee2e2;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.companySettings-button-delete:hover {
+  background-color: #fecaca;
+}
+
+.companySettings-button-icon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.5rem;
+}
+
+.companySettings-icon-button-small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  border: none;
+  background-color: transparent;
+  color: var(--adminDashboard-text-light);
+  cursor: pointer;
+}
+
+.companySettings-icon-button-small:hover {
+  background-color: var(--adminDashboard-background);
+}
+
+.companySettings-icon-small {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* FAQ Styles */
+.companySettings-faq-list {
+  margin-bottom: 2rem;
+}
+
+.companySettings-faq-item {
+  border: 1px solid var(--adminDashboard-border);
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.companySettings-faq-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--adminDashboard-white);
+}
+
+.companySettings-faq-question {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  cursor: pointer;
+}
+
+.companySettings-faq-question h3 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text);
+  margin: 0;
+  flex: 1;
+}
+
+.companySettings-faq-icon {
+  color: var(--adminDashboard-primary);
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.companySettings-faq-toggle {
+  color: var(--adminDashboard-text-light);
+  width: 1rem;
+  height: 1rem;
+}
+
+.companySettings-faq-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.companySettings-faq-answer {
+  padding: 0 1rem 1rem 3rem;
+  background-color: var(--adminDashboard-white);
+}
+
+.companySettings-faq-answer p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--adminDashboard-text-light);
+  line-height: 1.5;
+}
+
+.companySettings-faq-edit-input {
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--adminDashboard-border);
+  font-size: 0.875rem;
+}
+
+.companySettings-faq-edit-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--adminDashboard-border);
+  font-size: 0.875rem;
+  min-height: 80px;
+  resize: vertical;
+}
+
+.companySettings-faq-form {
+  background-color: var(--adminDashboard-background);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--adminDashboard-border);
+  margin-top: 1.5rem;
+}
+
+/* Policy Styles */
+.companySettings-policy-item {
+  margin-bottom: 2rem;
+}
+
+.companySettings-policy-header {
+  margin-bottom: 1rem;
+}
+
+.companySettings-policy-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.companySettings-policy-title h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text);
+  margin: 0;
+}
+
+.companySettings-policy-icon {
+  color: var(--adminDashboard-primary);
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Loading and Error States */
+.companySettings-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1rem;
+  color: var(--adminDashboard-text-light);
+}
+
+.companySettings-error {
+  padding: 1rem;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .companySettings-form-grid,
+  .companySettings-MV-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .companySettings-policy-header,
+  .companySettings-faq-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .companySettings-policy-actions,
+  .companySettings-faq-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+

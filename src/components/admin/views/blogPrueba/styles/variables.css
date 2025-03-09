@@ -1,0 +1,19 @@
+:root {
+    --blogAdmin-color-primary: #14b8a6;
+    --blogAdmin-color-primary-hover: #0d9488;
+    --blogAdmin-color-text: #111827;
+    --blogAdmin-color-text-secondary: #6b7280;
+    --blogAdmin-color-border: #e5e7eb;
+    --blogAdmin-color-background: #ffffff;
+    --blogAdmin-color-background-secondary: #f9fafb;
+    --blogAdmin-color-active: #10b981;
+    --blogAdmin-color-inactive: #6b7280;
+    --blogAdmin-color-new: #3b82f6;
+    --blogAdmin-color-active-bg: #dcfce7;
+    --blogAdmin-color-inactive-bg: #f3f4f6;
+    --blogAdmin-color-new-bg: #dbeafe;
+    --blogAdmin-border-radius: 0.375rem;
+    --blogAdmin-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --blogAdmin-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --blogAdmin-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }

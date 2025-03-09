@@ -1,0 +1,122 @@
+/* Sección principal */
+.blog-home-section {
+    background-color: #f8fafc;
+}
+
+.blog-home-link{
+    text-align: center;
+    color: #c0387a;
+    font-weight: bolder;
+}
+/* Contenedor principal */
+.blog-home-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Encabezado del blog */
+.blog-home-header {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Título principal */
+.blog-home-container h2 {
+    color: #333;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    line-height: 1.2;
+}
+
+/* Contenido adicional */
+.blog-home-content {
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+
+/* Estilos para textos principales y secundarios */
+.blog-home-main-text,
+.blog-home-secondary-text {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* Resaltado en el contenido */
+.blog-home-container strong {
+    color: #c0387a;
+    font-weight: 600;
+}
+
+/* Contenedor de acciones */
+.blog-home-action-container {
+    padding: 0 2rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Contenedor de botones de acción */
+.blog-home-action-button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Botón de acción */
+.blog-home-action-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: #3e949f;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 2px solid #3e949f;
+    border-radius: 50px;
+}
+
+.blog-home-action-button:hover {
+    background: #3e949f;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Separador de acciones */
+.blog-home-action-separator {
+    color: #c0387a;
+    font-size: 1.5rem;
+}
+
+/* Icono de acción */
+.blog-home-action-icon {
+    margin-right: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .blog-home-container {
+        padding: 1rem;
+    }
+
+    .blog-home-container h2 {
+        font-size: 2rem;
+    }
+
+    .blog-home-action-container {
+        padding: 0 1rem 1rem;
+    }
+
+    .blog-home-action-separator {
+        display: none;
+    }
+
+    .blog-home-action-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

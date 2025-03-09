@@ -1,0 +1,19 @@
+/* Variables CSS */
+:root {
+    --adminDashboard-primary: #14b8a6;
+    --adminDashboard-primary-hover: #0d9488;
+    --adminDashboard-primary-light: #f0fdfa;
+    --adminDashboard-text: #374151;
+    --adminDashboard-text-light: #6b7280;
+    --adminDashboard-text-lighter: #9ca3af;
+    --adminDashboard-border: #e5e7eb;
+    --adminDashboard-background: #f9fafb;
+    --adminDashboard-white: #ffffff;
+    --adminDashboard-success: #10b981;
+    --adminDashboard-danger: #ef4444;
+    --adminDashboard-warning: #f59e0b;
+    --adminDashboard-info: #3b82f6;
+    --adminDashboard-purple: #8b5cf6;
+  }
+  
+  

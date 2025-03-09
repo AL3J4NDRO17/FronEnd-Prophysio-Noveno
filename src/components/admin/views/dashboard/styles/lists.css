@@ -1,0 +1,232 @@
+/* Importar variables */
+@import "./variables.css";
+
+/* Avatar */
+.adminDashboard-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: var(--adminDashboard-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adminDashboard-avatar-fallback {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-white);
+  background-color: var(--adminDashboard-primary);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Appointments list */
+.adminDashboard-appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.adminDashboard-appointment-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--adminDashboard-border);
+}
+
+.adminDashboard-appointment-item:hover {
+  background-color: var(--adminDashboard-background);
+}
+
+.adminDashboard-appointment-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.adminDashboard-appointment-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminDashboard-appointment-type {
+  font-size: 0.75rem;
+  color: var(--adminDashboard-text-light);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adminDashboard-appointment-time {
+  text-align: right;
+}
+
+.adminDashboard-appointment-hour {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text);
+  margin: 0;
+}
+
+.adminDashboard-appointment-duration {
+  font-size: 0.75rem;
+  color: var(--adminDashboard-text-light);
+  margin: 0;
+}
+
+/* Activity list */
+.adminDashboard-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.adminDashboard-activity-item {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.adminDashboard-activity-icon {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adminDashboard-activity-icon-blue {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.adminDashboard-activity-icon-green {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.adminDashboard-activity-icon-purple {
+  background-color: #f3e8ff;
+  color: #9333ea;
+}
+
+.adminDashboard-activity-icon-amber {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.adminDashboard-activity-info {
+  flex: 1;
+}
+
+.adminDashboard-activity-text {
+  font-size: 0.875rem;
+  color: var(--adminDashboard-text);
+  margin: 0;
+}
+
+.adminDashboard-activity-highlight {
+  font-weight: 500;
+}
+
+.adminDashboard-activity-time {
+  font-size: 0.75rem;
+  color: var(--adminDashboard-text-light);
+  margin: 0.25rem 0 0 0;
+}
+
+/* Articles list */
+.adminDashboard-articles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.adminDashboard-article-item {
+  display: flex;
+  gap: 1rem;
+}
+
+.adminDashboard-article-thumbnail {
+  flex-shrink: 0;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.375rem;
+  background-color: var(--adminDashboard-background);
+  overflow: hidden;
+}
+
+.adminDashboard-article-info {
+  flex: 1;
+}
+
+.adminDashboard-article-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text);
+  margin: 0;
+}
+
+.adminDashboard-article-meta {
+  font-size: 0.75rem;
+  color: var(--adminDashboard-text-light);
+  margin: 0.25rem 0 0 0;
+}
+
+/* Testimonials list */
+.adminDashboard-testimonials-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.adminDashboard-testimonial-item {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--adminDashboard-border);
+}
+
+.adminDashboard-testimonial-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.adminDashboard-testimonial-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adminDashboard-text);
+  margin: 0;
+}
+
+.adminDashboard-rating {
+  display: flex;
+  align-items: center;
+}
+
+.adminDashboard-star {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: #facc15;
+}
+
+.adminDashboard-testimonial-text {
+  font-size: 0.875rem;
+  color: var(--adminDashboard-text);
+  margin: 0;
+}
+

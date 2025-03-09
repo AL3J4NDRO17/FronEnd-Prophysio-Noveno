@@ -1,0 +1,30 @@
+@import "./consts/variables.css";
+
+.adminLayout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-off-white);
+}
+
+.adminMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.adminContent {
+  flex: 1;
+
+ 
+}
+
+@media (max-width: 768px) {
+  .adminLayout {
+    flex-direction: column;
+  }
+
+  .adminContent {
+    padding: 16px;
+  }
+}
+

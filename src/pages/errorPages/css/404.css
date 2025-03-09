@@ -1,0 +1,137 @@
+.error-container-404 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: calc(100vh - 120px); /* Ajuste con header y footer */
+  position: relative;
+  text-align: center;
+  padding: 0 20px;
+  gap: 20px;
+}
+
+/* Se sube el texto y se compacta */
+.error-left-404 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transform: translateY(-80px); /* Se sube más el contenido */
+}
+
+.error-right-404 {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Imagen de la doctora grande y bien alineada */
+.doctor-image-404 {
+  width: 100%;
+  height: auto;
+  max-height: 85vh;
+  object-fit: contain;
+  animation: slideIn 1s ease-out;
+}
+
+/* Tamaño del 404 ajustado para mejor alineación */
+.error-code-404 {
+  font-size: 18vh;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInUp 1s ease-out;
+  margin-bottom: -10px; /* Se ajusta para que el texto suba más */
+}
+
+.error-icon-404 {
+  width: 16vh;
+  height: 16vh;
+  margin: 0 10px;
+  animation: bounce 1.5s infinite;
+}
+
+.error-title-404 {
+  font-size: 26px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 5px;
+}
+
+.error-message-404 {
+  font-size: 18px;
+  margin-top: 5px;
+  color: #666;
+  max-width: 450px;
+}
+
+/* Botón más estilizado */
+.error-button-404 {
+  margin-top: 15px;
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #00bfa5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.error-button-404:hover {
+  background-color: #00897b;
+}
+
+/* Corregir la posición y forma del círculo en la esquina */
+.error-circle-404 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  background-color: #e6fbf8;
+  border-radius: 0 120px 0 0; /* Solo 1/4 del círculo en la esquina */
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .error-container-404 {
+    flex-direction: column;
+    text-align: center;
+    height: auto;
+    padding: 50px 20px;
+  }
+
+  .error-left-404 {
+    transform: translateY(-50px);
+  }
+
+  .error-right-404 {
+    margin-top: 15px;
+  }
+
+  .doctor-image-404 {
+    width: 90%;
+    max-height: 60vh;
+  }
+
+  .error-code-404 {
+    font-size: 14vh;
+  }
+
+  .error-icon-404 {
+    width: 10vh;
+    height: 10vh;
+  }
+
+  .error-circle-404 {
+    width: 80px;
+    height: 80px;
+    border-radius: 0 80px 0 0;
+  }
+}

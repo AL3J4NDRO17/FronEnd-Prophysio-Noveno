@@ -1,0 +1,139 @@
+.services-container {
+
+    margin: 0 auto;
+    padding: 2rem;
+
+}
+
+.main-services-section {
+    display: flex;
+    margin: 0 auto;
+    gap: 50px;
+    max-width: 1500px;
+}
+
+.main-left-img {
+    max-width: 600px;
+
+}
+
+.main-left-img img {
+    max-width: 600px;
+    opacity: 0.8;
+    /* Imagen más transparente */
+    filter: brightness(0.95) contrast(100%) grayscale(0%);
+    /* Ajusta brillo, contraste y reduce un poco la saturación */
+    border-radius: 5px;
+    /* Bordes redondeados sutiles */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Sombra suave */
+    transition: all 0.3s ease;
+    /* Transición suave para hover */
+}
+
+.top-services {
+    position: relative;
+    width: 100%;
+
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-top: -100px;
+    margin-bottom: 100px;
+    text-align: center;
+    max-width: 1200px;
+}
+
+.service-item {
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.service-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.service-item h3 {
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.service-item p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.main-services {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.service-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.service-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 1.5rem;
+}
+
+.category {
+    color: #666;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.service-card h3 {
+    margin: 0.5rem 0;
+    color: #333;
+}
+
+.learn-more {
+    color: #b76e79;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.learn-more:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 1024px) {
+    .main-services {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .top-services {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+
+    .top-services,
+    .main-services {
+        grid-template-columns: 1fr;
+    }
+}
