@@ -22,6 +22,12 @@ const Tabs = ({ activeTab, setActiveTab }) => {
         >
           FAQ
         </button>
+        <button
+          className={`companySettings-tab-button ${activeTab === "incidents" ? "active" : ""}`}
+          onClick={() => setActiveTab("incidents")}
+        >
+          Incidentes
+        </button>
       </div>
     </div>
   )

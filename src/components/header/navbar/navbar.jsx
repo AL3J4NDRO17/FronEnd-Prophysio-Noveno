@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Menu, X, User, Calendar } from "lucide-react"
-import "./navbar.css"
+import "./styles/navbar.css"
 import { useAuth } from "../../../context/authContext" // Import useAuth
 
 const Navbar = () => {

@@ -13,7 +13,6 @@ import {
     FaLock,
     FaChevronRight,
     FaArrowLeft,
-    FaBlog,
     FaFileContract,
 } from "react-icons/fa6";
 import { useBlogs } from "../../pages/blogPropouse/hooks/useClientBlog";

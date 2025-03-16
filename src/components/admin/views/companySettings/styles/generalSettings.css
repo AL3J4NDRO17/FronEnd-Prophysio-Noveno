@@ -1,0 +1,454 @@
+/* Estilos para el componente CompanyAdjustments */
+
+/* Contenedor principal */
+.company-adjustments-container {
+    background-color: var(--adminDashboard-white);
+    border-radius: 0.5rem;
+    border: 1px solid var(--adminDashboard-border);
+    overflow: hidden;
+  }
+  
+  /* Encabezado */
+  .company-adjustments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--adminDashboard-border);
+  }
+  
+  .company-adjustments-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--adminDashboard-text);
+    margin: 0;
+  }
+  
+  .company-adjustments-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  /* Formulario */
+  .company-adjustments-form {
+    padding: 1.5rem;
+  }
+  
+  .company-adjustments-form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--adminDashboard-border);
+  }
+  
+  .company-adjustments-form-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  
+  .company-adjustments-section-title {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--adminDashboard-text);
+    margin: 0 0 1.25rem 0;
+  }
+  
+  .company-adjustments-section-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.5rem;
+    color: var(--adminDashboard-primary);
+  }
+  
+  .company-adjustments-form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .company-adjustments-form-group {
+    margin-bottom: 1.25rem;
+  }
+  
+  .company-adjustments-form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--adminDashboard-text);
+    margin-bottom: 0.5rem;
+  }
+  
+  .company-adjustments-form-group input,
+  .company-adjustments-form-group textarea,
+  .company-adjustments-form-group select {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--adminDashboard-border);
+    font-size: 0.875rem;
+    color: var(--adminDashboard-text);
+    background-color: var(--adminDashboard-white);
+  }
+  
+  .company-adjustments-form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+  
+  .company-adjustments-form-group input:focus,
+  .company-adjustments-form-group textarea:focus,
+  .company-adjustments-form-group select:focus {
+    outline: none;
+    border-color: var(--adminDashboard-primary);
+    box-shadow: 0 0 0 2px var(--adminDashboard-primary-light);
+  }
+  
+  .company-adjustments-input-error {
+    border-color: #ef4444 !important;
+  }
+  
+  .company-adjustments-error-message {
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin-top: 0.25rem;
+  }
+  
+  .company-adjustments-error-alert {
+    padding: 0.75rem;
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+  
+  /* Logo */
+  .company-adjustments-logo-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .company-adjustments-logo-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid var(--adminDashboard-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--adminDashboard-background);
+  }
+  
+  .company-adjustments-logo-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  
+  .company-adjustments-filepond {
+    margin-top: 0.5rem;
+  }
+  
+  /* Redes sociales */
+  .company-adjustments-social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .company-adjustments-social-link-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    background-color: var(--adminDashboard-background);
+  }
+  
+  .company-adjustments-social-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--adminDashboard-primary);
+  }
+  
+  .company-adjustments-social-platform {
+    font-weight: 500;
+    color: var(--adminDashboard-text);
+    min-width: 80px;
+  }
+  
+  .company-adjustments-social-url {
+    flex: 1;
+    color: var(--adminDashboard-text-light);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .company-adjustments-social-url:hover {
+    color: var(--adminDashboard-primary);
+    text-decoration: underline;
+  }
+  
+  .company-adjustments-social-remove {
+    background: none;
+    border: none;
+    color: var(--adminDashboard-text-light);
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 9999px;
+  }
+  
+  .company-adjustments-social-remove:hover {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+  
+  .company-adjustments-social-add {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .company-adjustments-social-select {
+    width: auto;
+    min-width: 120px;
+  }
+  
+  /* Botones */
+  .company-adjustments-button-primary {
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 1rem;
+    border-radius: 0.375rem;
+    border: none;
+    background-color: var(--adminDashboard-primary);
+    color: var(--adminDashboard-white);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .company-adjustments-button-primary:hover {
+    background-color: var(--adminDashboard-primary-hover);
+  }
+  
+  .company-adjustments-button-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+  
+  .company-adjustments-button-outline {
+    display: flex;
+    align-items: center;
+    padding: 0.625rem 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--adminDashboard-border);
+    background-color: var(--adminDashboard-white);
+    color: var(--adminDashboard-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .company-adjustments-button-outline:hover {
+    background-color: var(--adminDashboard-background);
+  }
+  
+  .company-adjustments-button-small {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  
+  .company-adjustments-button-icon {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+  }
+  
+  .company-adjustments-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+  
+  /* Vista previa */
+  .company-adjustments-preview {
+    padding: 1.5rem;
+  }
+  
+  .company-adjustments-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--adminDashboard-border);
+  }
+  
+  .company-adjustments-preview-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--adminDashboard-background);
+  }
+  
+  .company-adjustments-preview-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  
+  .company-adjustments-preview-info {
+    flex: 1;
+  }
+  
+  .company-adjustments-preview-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--adminDashboard-text);
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .company-adjustments-preview-description {
+    font-size: 0.875rem;
+    color: var(--adminDashboard-text-light);
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  .company-adjustments-preview-section {
+    margin-bottom: 2rem;
+  }
+  
+  .company-adjustments-preview-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--adminDashboard-text);
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--adminDashboard-border);
+  }
+  
+  .company-adjustments-preview-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .company-adjustments-preview-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--adminDashboard-text);
+  }
+  
+  .company-adjustments-preview-contact-icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--adminDashboard-primary);
+  }
+  
+  .company-adjustments-preview-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .company-adjustments-preview-social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    background-color: var(--adminDashboard-background);
+    color: var(--adminDashboard-text);
+    text-decoration: none;
+    font-size: 0.875rem;
+  }
+  
+  .company-adjustments-preview-social-link:hover {
+    background-color: var(--adminDashboard-primary-light);
+    color: var(--adminDashboard-primary);
+  }
+  
+  .company-adjustments-preview-mv {
+    margin-bottom: 1.5rem;
+  }
+  
+  .company-adjustments-preview-mv:last-child {
+    margin-bottom: 0;
+  }
+  
+  .company-adjustments-preview-mv-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--adminDashboard-text);
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .company-adjustments-preview-mv-content {
+    font-size: 0.875rem;
+    color: var(--adminDashboard-text-light);
+    margin: 0;
+    line-height: 1.6;
+  }
+  
+  /* Estado de carga */
+  .company-adjustments-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 1rem;
+    color: var(--adminDashboard-text-light);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .company-adjustments-form-row {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  
+    .company-adjustments-preview-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .company-adjustments-social-add {
+      flex-direction: column;
+    }
+  
+    .company-adjustments-social-link-item {
+      flex-wrap: wrap;
+    }
+  
+    .company-adjustments-social-url {
+      width: 100%;
+      order: 3;
+      margin-top: 0.5rem;
+      margin-left: 2rem;
+    }
+  }
+  
+  

@@ -18,7 +18,7 @@ const AppointmentScheduler = () => {
   })
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target
+    const { name, value, checked } = e.target
 
     if (name === "termsAccepted") {
       setFormData((prev) => ({

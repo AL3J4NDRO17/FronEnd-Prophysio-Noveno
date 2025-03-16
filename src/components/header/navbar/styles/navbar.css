@@ -1,9 +1,9 @@
-@import "../../admin/consts/variables.css";
+
 
 .navbar {
   background-color: white;
   position: sticky;
-  top: 40px; /* Ajusta este valor a la altura de .topBar */
+  top: 0px; /* Ajusta este valor a la altura de .topBar */
   z-index: 1000;
   transition: all 0.3s ease;
 }

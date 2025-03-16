@@ -1,61 +1,189 @@
-.blog-categories {
+.blog-filters {
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
-}
-
-.categories-title {
-    font-size: 24px;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 1.5;
-    margin-bottom: 15px;
-}
-
-.categories-container {
+    max-width: 400px;
+    padding: 24px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .filter-header {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.category-item {
-    position: relative;
-    width: 100%;
-    height: 60px;
-
-    overflow: hidden;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .blog-filters h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0;
+  }
+  
+  .reset-filters-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #555555;
     cursor: pointer;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.category-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: opacity 0.3s ease-in-out;
-}
-
-.category-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #333;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+  }
+  
+  .reset-filters-btn:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .filter-section {
+    margin-bottom: 24px;
+  }
+  
+  .filter-section h4 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #555555;
+    margin-bottom: 12px;
+  }
+  
+  /* Estilos para las categorías */
+  .categories-grid {
     display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  
+  .category-chip {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    padding: 6px 12px;
+    background-color: #f0f0f0;
+    color: #333333;
+    border-radius: 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .category-chip:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .category-chip.selected {
+    background-color: #333333;
+    color: #ffffff;
+  }
+  
+  /* Estilos para los autores - manteniendo los estilos originales */
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .filter-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .filter-option input[type="checkbox"] {
+    margin-right: 6px;
+  }
+  
+  .filter-option span {
+    font-size: 14px;
+    color: #333333;
+  }
+  
+  /* Estilos para las fechas - manteniendo los estilos originales */
+  .date-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .date-input-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  
+  .date-input-wrapper label {
+    font-size: 14px;
+    color: #555555;
+    margin-right: 8px;
+    width: 30px;
+  }
+  
+  .date-input {
+    flex: 1;
+    padding: 8px;
+    font-size: 14px;
+    color: #333333;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+  }
+  
+  /* Botón de aplicar filtros - manteniendo los estilos originales */
+  .apply-filters-btn {
+    width: 100%;
+    padding: 12px;
     font-size: 16px;
-    font-weight: bold;
-    transition: background 0.3s ease-in-out;
-}
-
-.category-item:hover .category-overlay {
-    background: rgba(0, 0, 0, 0.3);
-}
-
-.category-item:hover .category-image {
-    opacity: 0.8;
-}
+    font-weight: 500;
+    color: #ffffff;
+    background-color: #333333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .apply-filters-btn:hover {
+    background-color: #555555;
+  }
+  
+  .apply-filters-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(51, 51, 51, 0.2);
+  }
+  
+  /* Mensajes de carga y error */
+  .loading-message,
+  .error-message {
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .loading-message {
+    background-color: #f5f5f5;
+    color: #555555;
+  }
+  
+  .error-message {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+  
+  /* Responsive - manteniendo la estructura original */
+  @media (max-width: 480px) {
+    .blog-filters {
+      max-width: 100%;
+      padding: 16px;
+    }
+    
+    .categories-grid {
+      gap: 6px;
+    }
+    
+    .category-chip {
+      padding: 4px 10px;
+      font-size: 13px;
+    }
+  }

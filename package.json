@@ -48,6 +48,7 @@
     "react-scripts": "5.0.1",
     "react-slick": "^0.30.3",
     "react-splash-screen": "^0.0.3",
+    "react-sticky": "^6.0.3",
     "react-toastify": "^11.0.3",
     "shadcn": "^2.4.0-canary.11",
     "slick-carousel": "^1.8.1",
@@ -57,9 +58,9 @@
     "web-vitals": "^4.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -81,6 +82,9 @@
     ]
   },
   "devDependencies": {
-    "webpack-bundle-analyzer": "^4.10.2"
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.2.1",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-dev-server": "^5.2.0"
   }
 }

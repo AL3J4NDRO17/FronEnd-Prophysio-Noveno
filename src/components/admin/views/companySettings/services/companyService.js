@@ -11,7 +11,9 @@ export const getCompanyById = async (companyId) => {
 };
 
 export const updateDataCompany = async (companyId, companyData) => {
+    console.log(companyId,companyData)
     const response = await axiosInstance.put(`${API_URL}/updateCompanies/${companyId}`, companyData);
+ 
     return response.data;
 };
 

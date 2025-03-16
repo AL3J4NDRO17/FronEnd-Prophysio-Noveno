@@ -1,3 +1,6 @@
+
+import { useEffect } from "react";
+import { fetchCsrfToken } from "./components/api/axiosConfig"; // 📌 Importar la función
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, useLocation } from "react-router-dom";
@@ -18,6 +21,10 @@ const MemoizedFooter = React.memo(Footer);
 
 function App() {
   const location = useLocation();
+  useEffect(() => {
+    fetchCsrfToken(); // 🔥 Obtener el CSRF Token al inicio
+  }, []);
+
   const hideHeaderRoutes = [
     "/admin",
     "/admin/adminUser",
@@ -27,8 +34,8 @@ function App() {
     "/admin/adminCompanySettings",
     "/maintenance",
     "/admin/adminBlogEditor",
-     "/admin/adminAppointments",
-     "/admin/pruebaaa"
+    "/admin/adminAppointments",
+    "/admin/pruebaaa"
 
 
 

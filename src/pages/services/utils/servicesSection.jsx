@@ -31,7 +31,7 @@ const ServicesGrid = () => {
             </div>
             <div className="main-services-section">
                 <div className="main-left-img">
-                    <img src={IMG}/>
+                    <img alt="serviceImg" src={IMG}/>
 
                    
                 </div>

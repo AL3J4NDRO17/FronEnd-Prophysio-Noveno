@@ -1,6 +1,6 @@
 /* Archivo principal que importa todos los estilos */
 @import "./adminDashboardLayout.css";
-@import "./variables.css";
+
 @import "./header.css";
 @import "./cards.css";
 @import "./buttons.css";

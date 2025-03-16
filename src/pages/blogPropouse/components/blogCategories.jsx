@@ -1,9 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import "../styles/blogFilters.css"
+import { useCategories } from "../hooks/useClientCategories"
+import "../styles/blogCategories.css"
 
-export default function BlogFilters({ posts = [], onFilterChange }) {
+export default function BlogFiltersUnificado({ posts = [], onFilterChange, onCategoryClick }) {
+  const { categories, loading, error } = useCategories()
+
+  // Estado para los filtros seleccionados (pero no aplicados aún)
   const [filters, setFilters] = useState({
     selectedCategories: [],
     selectedAuthors: [],
@@ -11,9 +15,9 @@ export default function BlogFilters({ posts = [], onFilterChange }) {
     endDate: "",
   })
 
-  const categories = [...new Set(posts.map((post) => post.category))]
   const authors = [...new Set(posts.map((post) => post.author))]
 
+  // Actualiza el estado de los filtros seleccionados, pero no aplica los cambios
   const handleFilterChange = (type, value) => {
     setFilters((prev) => {
       if (type === "selectedCategories" || type === "selectedAuthors") {
@@ -26,23 +30,38 @@ export default function BlogFilters({ posts = [], onFilterChange }) {
     })
   }
 
-  const applyFilters = () => {
-    onFilterChange(filters)
+  // Función para manejar el clic en categoría (solo actualiza el estado local)
+  const handleCategoryClick = (categoryId) => {
+    // Actualiza los filtros seleccionados sin aplicar el filtro
+    handleFilterChange("selectedCategories", categoryId)
+
+    // Eliminamos la llamada a onCategoryClick para evitar filtrado en tiempo real
   }
 
+  // Aplica todos los filtros cuando se hace clic en el botón
+  const applyFilters = () => {
+    // Notifica al componente padre sobre los filtros aplicados
+    onFilterChange(filters)
+
+    // Si existe onCategoryClick, lo llamamos aquí para las categorías seleccionadas
+    if (onCategoryClick) {
+      filters.selectedCategories.forEach((categoryId) => {
+        onCategoryClick(categoryId, true) // true indica que ahora sí debe aplicarse
+      })
+    }
+  }
+
+  // Resetea los filtros
   const resetFilters = () => {
-    setFilters({
+    const emptyFilters = {
       selectedCategories: [],
       selectedAuthors: [],
       startDate: "",
       endDate: "",
-    })
-    onFilterChange({
-      selectedCategories: [],
-      selectedAuthors: [],
-      startDate: "",
-      endDate: "",
-    })
+    }
+
+    setFilters(emptyFilters)
+    onFilterChange(emptyFilters)
   }
 
   return (
@@ -54,6 +73,29 @@ export default function BlogFilters({ posts = [], onFilterChange }) {
         </button>
       </div>
 
+      {/* Sección de categorías */}
+      <div className="filter-section">
+        <h4>Categorías</h4>
+        {loading ? (
+          <div className="loading-message">Cargando categorías...</div>
+        ) : error ? (
+          <div className="error-message">Error cargando categorías.</div>
+        ) : (
+          <div className="categories-grid">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                className={`category-chip ${filters.selectedCategories.includes(category.id) ? "selected" : ""}`}
+                onClick={() => handleCategoryClick(category.id)}
+              >
+                {category.nombre}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Sección de autores */}
       <div className="filter-section">
         <h4>Autores</h4>
         <div className="filter-options">
@@ -70,6 +112,7 @@ export default function BlogFilters({ posts = [], onFilterChange }) {
         </div>
       </div>
 
+      {/* Sección de rango de fechas */}
       <div className="filter-section">
         <h4>Rango de fecha</h4>
         <div className="date-inputs">
@@ -102,3 +145,4 @@ export default function BlogFilters({ posts = [], onFilterChange }) {
     </div>
   )
 }
+

@@ -1,4 +1,5 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
+import {Link} from "react-router-dom"
 import { useLoginState } from "../hooks/loginHook";
 import "../styles/loginForm.css";
 import IMG from "../assets/candado.png";
@@ -75,7 +76,7 @@ const LoginForm = ({ onEmailSubmit, setEmail, setStep }) => { // 🔥 Agregamos 
                     </button>
 
                     <div className="register-link">
-                        ¿No tienes una cuenta? <a href="/register">Regístrate aquí</a>
+                        ¿No tienes una cuenta? <Link href="/register">Regístrate aquí</Link>
                     </div>
                 </form>
             </div>

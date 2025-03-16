@@ -113,7 +113,7 @@ export function useBlogEditor(existingBlog, onClose, contentImageSize) {
     // Subir imagen de contenido con el tamaño ajustado
     if (contentImageUrl && contentImageUrl instanceof File) {
       try {
-        console.log()
+       
         const response = await uploadImageToCloudinary(
           contentImageUrl,
           contentImageSize.width,  // Usamos el tamaño ajustado aquí
@@ -126,7 +126,7 @@ export function useBlogEditor(existingBlog, onClose, contentImageSize) {
         return;
       }
     }
-    console.log(bannerImageUrl.url)
+
     // Preparar datos para enviar al backend
     const blogToSend = {
       ...blogData,

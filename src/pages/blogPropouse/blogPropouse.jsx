@@ -1,58 +1,42 @@
 import { useState, useEffect } from "react";
-import BlogGrid from "./utils/blogGrid";
-import BlogSearch from "./utils/blogSearch";
-import BlogSlider from "./utils/blogSlider";
-import BlogCategories from "./utils/blogCategories";
-import BlogRecentPosts from "./utils/blogRecentPosts";
-import BlogFilters from "./utils/blogFilters";
+import BlogGrid from "./components/blogGrid";
+import BlogSearch from "./components/blogSearch";
+import BlogSlider from "./components/blogSlider";
+import BlogCategories from "./components/blogCategories";
+import BlogRecentPosts from "./components/blogRecentPosts";
 import { useBlogs } from "./hooks/useClientBlog";
 
 import "./styles/blogPropouse.css";
 
-export default function BlogPropuse() {
+export default function BlogPropouse() {
     const { blogs, isLoading, error } = useBlogs();
     const [filteredBlogs, setFilteredBlogs] = useState([]);
-    const [searchResults, setSearchResults] = useState([]);
 
     useEffect(() => {
         setFilteredBlogs(blogs);
-        setSearchResults(blogs);
     }, [blogs]);
 
     const handleFilterChange = ({ selectedCategories, selectedAuthors, startDate, endDate }) => {
-        let results = blogs;
+        const results = blogs.filter(blog => {
+            const matchesCategory = selectedCategories.length ? selectedCategories.includes(blog.category) : true;
+            const matchesAuthor = selectedAuthors.length ? selectedAuthors.includes(blog.author) : true;
+            const matchesStartDate = startDate ? new Date(blog.createdAt) >= new Date(startDate) : true;
+            const matchesEndDate = endDate ? new Date(blog.createdAt) <= new Date(endDate) : true;
 
-        if (selectedCategories.length) {
-            results = results.filter(blog => selectedCategories.includes(blog.category));
-        }
-
-        if (selectedAuthors.length) {
-            results = results.filter(blog => selectedAuthors.includes(blog.author));
-        }
-
-        if (startDate) {
-            results = results.filter(blog => new Date(blog.createdAt) >= new Date(startDate));
-        }
-
-        if (endDate) {
-            results = results.filter(blog => new Date(blog.createdAt) <= new Date(endDate));
-        }
+            return matchesCategory && matchesAuthor && matchesStartDate && matchesEndDate;
+        });
 
         setFilteredBlogs(results);
-        setSearchResults(results);
     };
 
-    const handleCategoryClick = (categoryName) => {
-        console.log(categoryName)
-        console.log(blogs)
-        const filteredByCategory = blogs.filter(blog => blog.categoryId === categoryName);
-
+    const handleCategoryClick = (categoryId) => {
+        const filteredByCategory = blogs.filter(blog => blog.categoryId === categoryId);
         setFilteredBlogs(filteredByCategory);
-        setSearchResults(filteredByCategory);
     };
+
     const handleSearchResults = (results) => {
-        setFilteredBlogs(results)
-    }
+        setFilteredBlogs(results);
+    };
 
     return (
         <section className="tech-blog-app">
@@ -61,20 +45,14 @@ export default function BlogPropuse() {
             <main className="tech-blog-main">
                 <div className="p-blog-left-side">
                     <BlogSearch blogs={blogs} onSearch={handleSearchResults} />
-                    <BlogCategories onCategoryClick={handleCategoryClick} />
-                    <BlogFilters posts={blogs} onFilterChange={handleFilterChange} />
-
+                    <BlogCategories   posts={blogs} onFilterChange={handleFilterChange} onCategoryClick={handleCategoryClick} />
                     <BlogRecentPosts />
                 </div>
-                <div className="p-blog-right-side">
-                    {isLoading ? (
-                        <div>Cargando blogs...</div>
-                    ) : error ? (
-                        <div>{error}</div>
-                    ) : (
-                        <BlogGrid blogs={filteredBlogs} />
 
-                    )}
+                <div className="p-blog-right-side">
+                    {isLoading && <div>Cargando blogs...</div>}
+                    {error && <div>{error}</div>}
+                    {!isLoading && !error && <BlogGrid blogs={filteredBlogs} />}
                 </div>
             </main>
         </section>

@@ -1,9 +1,13 @@
 {
-    "compilerOptions": {
-      "baseUrl": "src",
-      "paths": {
-        "@/*": ["./*"]
-      }
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"],
+      "@components/*": ["components/*"],
+      "@hooks/*": ["hooks/*"],
+      "@styles/*": ["styles/*"],
+      "@variables": ["constants/variables.css"],
+      "@uiLoader": ["components/admin/ui/loader/loader.jsx"]
     }
   }
-  
+}

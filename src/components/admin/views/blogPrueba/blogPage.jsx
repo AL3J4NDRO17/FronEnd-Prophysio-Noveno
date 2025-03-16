@@ -5,8 +5,10 @@ import { useBlogs } from "./hooks/useBlogs"
 import { useBlogEditor } from "./hooks/blogEditorHook"
 import { useCategories } from "./hooks/useConfig"
 import { Edit, Trash2, ImageIcon } from "lucide-react"
+
+import BlogGrid from "./components/grid"
 import BlogModal from "./components/modal"
-import BlogConfig from "./utils/blogConfig"
+import BlogConfig from "./components/blogConfig"
 import BlogHeader from "./components/header"
 import BlogSummary from "./components/summary"
 
@@ -35,7 +37,7 @@ export default function BlogPage() {
     setSelectedBlog(blog)
     setIsModalOpen(true)
   }
-  
+
 
   // Lógica para eliminar el blog
   const handleDelete = (blogId) => {
@@ -100,66 +102,13 @@ export default function BlogPage() {
             {isLoading ? (
               <div className="blogAdmin-loading">Cargando blogs...</div>
             ) : (
-              <div className="blogAdmin-blog-grid">
-                {filteredAndSortedBlogs.map((blog) => (
-                  <div key={blog.id} className="blogAdmin-blog-card">
-                    <div className="blogAdmin-blog-card-image">
-                      {blog.bannerImage ? (
-                        <img src={blog.bannerImage || "/placeholder.svg"} alt={blog.title} />
-                      ) : (
-                        <div className="blogAdmin-blog-card-image-placeholder">
-                          <ImageIcon className="blogAdmin-icon" />
-                        </div>
-                      )}
-                      <div className={`blogAdmin-blog-status blogAdmin-blog-status-${blog.status}`}>
-                        {blog.status === "published" ? "Publicado" : "Borrador"}
-                      </div>
-                    </div>
-                    <div className="blogAdmin-blog-card-content">
-                      <div className="blogAdmin-blog-card-category">
-                        {categories.find((cat) => cat.id === Number(blog.categoryId))?.nombre || "Sin categoría"}
-                      </div>
-                      <h3 className="blogAdmin-blog-card-title">{blog.title}</h3>
-                      <p className="blogAdmin-blog-card-subtitle">{blog.effectsTitle}</p>
-                      <div className="blogAdmin-blog-card-meta">
-                        <span>{blog.author}</span>
-                        <span>•</span>
-                        <span>{new Date(blog.publishDate || Date.now()).toLocaleDateString()}</span>
-                      </div>
-                    </div>
-                    <div className="blogAdmin-blog-card-actions">
-                      <button
-                        className="blogAdmin-icon-button-small"
-                        onClick={() => handleStatusChange(blog)}
-                        title={blog.status === "published" ? "Cambiar a borrador" : "Publicar"}
-                      >
-                        {blog.status === "published" ? (
-                          <Edit className="blogAdmin-icon-small" />
-                        ) : (
-                          <ImageIcon className="blogAdmin-icon-small" />
-                        )}
-                      </button>
-                      <button className="blogAdmin-icon-button-small" onClick={() => handleEdit(blog)} title="Editar">
-                        <Edit className="blogAdmin-icon-small" />
-                      </button>
-                      <button
-                        className="blogAdmin-icon-button-small"
-                        onClick={() => handleDelete(blog.id)}
-                        title="Eliminar"
-                      >
-                        <Trash2 className="blogAdmin-icon-small" />
-                      </button>
-                      <button
-                        className="blogAdmin-icon-button-small"
-                        onClick={() => window.open(`/blog/${blog.id}`, "_blank")}
-                        title="Vista previa"
-                      >
-                        <ImageIcon className="blogAdmin-icon-small" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <BlogGrid
+                blogs={filteredAndSortedBlogs}
+                categories={categories}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+                handleStatusChange={handleStatusChange}
+              />
             )}
           </div>
 
