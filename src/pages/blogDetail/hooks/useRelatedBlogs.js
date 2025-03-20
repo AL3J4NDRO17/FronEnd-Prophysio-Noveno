@@ -14,24 +14,20 @@ export function useRelatedBlogs(currentBlogId, categoryId, limit = 3) {
     if (blogsLoading || categoriesLoading || !currentBlogId) {
       return
     }
-
+   
     setIsLoading(true)
 
     // Filtrar blogs relacionados por categoría y excluir el blog actual
     let related = blogs.filter(
-      (blog) => blog.id !== Number(currentBlogId) && (categoryId ? blog.categoryId === Number(categoryId) : true),
-    )
+      (blog) => 
+        blog.id !== Number(currentBlogId) && 
+        (categoryId ? blog.categoryId === Number(categoryId) : true) &&
+        blog.status !== "draft" // ✅ Excluir los que tienen status "draft"
+    );
+    
 
     // Si no hay suficientes blogs en la misma categoría, agregar blogs de otras categorías
-    if (related.length < limit) {
-      const otherBlogs = blogs.filter(
-        (blog) => blog.id !== Number(currentBlogId) && (categoryId ? blog.categoryId !== Number(categoryId) : false),
-      )
-
-      related = [...related, ...otherBlogs].slice(0, limit)
-    } else {
-      related = related.slice(0, limit)
-    }
+   
 
     // Agregar el nombre de la categoría a cada blog
     const blogsWithCategoryNames = related.map((blog) => {

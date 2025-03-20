@@ -5,6 +5,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin: 0 autox ;
 }
 
 /* Overlay para loader a pantalla completa */
@@ -45,7 +46,7 @@
   height: 12px;
   border-radius: 50%;
   margin: 0 4px;
-  background-color: var(--adminDashboard-primary);
+  background-color: var(--admin-primary);
   animation: adminDashboard-loader-pulse 1.5s infinite ease-in-out;
 }
 
@@ -66,7 +67,7 @@
   margin-top: 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--adminDashboard-text);
+  color: var(--admin-text);
   min-width: 80px;
   text-align: center;
 }
@@ -96,27 +97,27 @@
 
 /* Variantes de color */
 .adminDashboard-loader-primary .adminDashboard-loader-circle {
-  background-color: var(--adminDashboard-primary);
+  background-color: var(--admin-primary);
 }
 
 .adminDashboard-loader-secondary .adminDashboard-loader-circle {
-  background-color: var(--adminDashboard-text-light);
+  background-color: var(--admin-text-light);
 }
 
 .adminDashboard-loader-success .adminDashboard-loader-circle {
-  background-color: var(--adminDashboard-success);
+  background-color: var(--admin-success);
 }
 
 .adminDashboard-loader-danger .adminDashboard-loader-circle {
-  background-color: var(--adminDashboard-danger);
+  background-color: var(--admin-danger);
 }
 
 .adminDashboard-loader-warning .adminDashboard-loader-circle {
-  background-color: var(--adminDashboard-warning);
+  background-color: var(--admin-warning);
 }
 
 .adminDashboard-loader-info .adminDashboard-loader-circle {
-  background-color: var(--adminDashboard-info);
+  background-color: var(--admin-info);
 }
 
 /* Animaciones */

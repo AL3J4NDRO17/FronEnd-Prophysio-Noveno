@@ -1,6 +1,6 @@
 // services/categoryService.js
 
-import axiosInstance from '../../../../api/axiosConfig';
+import axiosInstance from "@/components/api/axiosConfig";
 const API_URL = '/categoria';  // Asegúrate de que esta URL esté bien configurada
 
 export const getCategories = async () => {

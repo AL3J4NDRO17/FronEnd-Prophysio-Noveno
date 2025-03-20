@@ -1,4 +1,4 @@
-import axiosInstance from "../../../../api/axiosConfig"
+import axiosInstance from "@/components/api/axiosConfig";
 
 const API_URL = "companie"; // Ajusta la URL según tu backend
 

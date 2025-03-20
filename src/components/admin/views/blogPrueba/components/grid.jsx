@@ -1,7 +1,7 @@
 
 import { Edit, Trash2, ImageIcon } from "lucide-react"
 import Swal from "sweetalert2"
-import { EditButton,PublishButton,UnpublishButton, DeleteButton, SeePreviewButton } from '../../../ui/buttons/buttons'
+import { EditButton,PublishButton,UnpublishButton, DeleteButton, SeePreviewButton } from '@uiButtons'
 
 const BlogGrid = ({ blogs, categories, handleEdit, handleDelete, handleStatusChange }) => {
   return (

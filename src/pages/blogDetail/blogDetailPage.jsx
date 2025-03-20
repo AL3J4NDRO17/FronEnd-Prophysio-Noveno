@@ -33,6 +33,7 @@ export default function BlogDetail() {
     const { categories } = useCategories()
 
     // Obtener blogs relacionados
+    console.log("relatedComponent :", id,blog?.categoryId)
     const { relatedBlogs } = useRelatedBlogs(id, blog?.categoryId)
 
     // Función para compartir en redes sociales

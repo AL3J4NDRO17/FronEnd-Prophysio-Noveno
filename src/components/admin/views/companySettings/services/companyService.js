@@ -1,4 +1,4 @@
-import axiosInstance from "../../../../api/axiosConfig"
+import axiosInstance from "@/components/api/axiosConfig";
 
 
 const API_URL = "companie"; // Ajusta la URL según tu backend
@@ -24,5 +24,30 @@ export const createCompany = async (companyData) => {
 export const getallCompanies = async () => {
     const response = await axiosInstance.get(`${API_URL}/getAllCompanies`);
     console.log(response.data)
+    return response.data;
+};
+export const uploadLogo = async (companyId, file) => {
+   
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("company_id", companyId);
+
+    const response = await axiosInstance.post(`${API_URL}/uploadLogo`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    return response.data;
+};
+
+// 📌 Obtener historial de logos de la empresa
+export const getCompanyLogos = async (companyId) => {
+    const response = await axiosInstance.get(`${API_URL}/getCompanyLogos/${companyId}`);
+    
+    return response.data;
+};
+
+// 📌 Establecer un logo del historial como actual
+export const setCurrentLogo = async (companyId, logoUrl) => {
+    const response = await axiosInstance.post(`${API_URL}/set-current-logo`, { companyId, logoUrl });
     return response.data;
 };

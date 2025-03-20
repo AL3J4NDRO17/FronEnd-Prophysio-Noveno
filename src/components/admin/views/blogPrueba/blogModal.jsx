@@ -103,7 +103,7 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                 >
                   <option value="draft">Borrador</option>
                   <option value="published">Publicado</option>
-                  <option value="scheduled">Programado</option>
+                  {/* <option value="scheduled">Programado</option> */}
                 </select>
               </div>
             </div>

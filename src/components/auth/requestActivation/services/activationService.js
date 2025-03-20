@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '@/components/api/axiosConfig';
 
 export const activateAccountService = async (token) => {
     const response = await axiosInstance.post('/auth/requestactivate', { token });

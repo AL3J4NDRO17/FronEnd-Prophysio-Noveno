@@ -1,4 +1,4 @@
-import axiosInstance from "../../../../api/axiosConfig";
+import axiosInstance from "@/components/api/axiosConfig";
 
 
 export const fetchBlogs = async () => {

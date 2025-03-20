@@ -1,0 +1,137 @@
+.terms-simple-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 3rem 1rem;
+    background-color: #f9fafb;
+    font-family: "Inter", sans-serif;
+  }
+  
+  .terms-simple-content {
+    display: flex;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .terms-simple-text {
+    flex: 1;
+    padding: 2.5rem;
+    max-width: 65%;
+  }
+  
+  .terms-simple-illustration {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #fff;
+    max-width: 35%;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    max-height: 800px;
+  }
+  
+  .terms-simple-title {
+    color: #c0387a;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  
+  .terms-simple-date {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  
+  .terms-simple-section {
+    margin-bottom: 2rem;
+  }
+  
+  .terms-simple-section h2 {
+    color: #333;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+  }
+  
+  .terms-simple-section p {
+    color: #555;
+    line-height: 1.6;
+    margin: 0 0 1rem 0;
+  }
+  
+  .terms-simple-section ul {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .terms-simple-section li {
+    color: #555;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+  
+  .terms-simple-contact {
+    background-color: #f8f0f4;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #c0387a;
+  }
+  
+  .terms-simple-contact a {
+    color: #c0387a;
+    text-decoration: none;
+  }
+  
+  .terms-simple-contact a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .terms-simple-content {
+      flex-direction: column;
+    }
+  
+    .terms-simple-text {
+      max-width: 100%;
+      padding: 2rem;
+    }
+  
+    .terms-simple-illustration {
+      max-width: 100%;
+      height: 300px;
+      max-height: 300px;
+      position: relative;
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .terms-simple-title {
+      font-size: 1.5rem;
+    }
+  
+    .terms-simple-section h2 {
+      font-size: 1.2rem;
+    }
+  
+    .terms-simple-text {
+      padding: 1.5rem;
+    }
+  
+    .terms-simple-illustration {
+      height: 200px;
+    }
+  }
+  
+  

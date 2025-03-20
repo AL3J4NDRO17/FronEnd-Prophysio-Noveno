@@ -15,7 +15,7 @@ const Footer = () => {
           <ul>
             <li><a href="/faq">FAQ</a></li>
             <li><a href="/servicios">Servicios</a></li>
-            <li><a href="/blog">Blog</a></li>
+            <li><a href="/terms">Terminos y Condiciones</a></li>
             <li><a href="/ubicacion">Ubicación</a></li>
           </ul>
         </div>
@@ -41,13 +41,13 @@ const Footer = () => {
         <div className="footer-section">
           <h4>Síguenos</h4>
           <div className="social-links">
-            <a href="#" className="social-link">
+            <a href="#a" className="social-link">
               <i className="social-icon facebook"></i>
             </a>
-            <a href="#" className="social-link">
+            <a href="#a" className="social-link">
               <i className="social-icon youtube"></i>
             </a>
-            <a href="#" className="social-link">
+            <a href="#a" className="social-link">
               <i className="social-icon instagram"></i>
             </a>
           </div>

@@ -74,10 +74,13 @@ const LoginForm = ({ onEmailSubmit, setEmail, setStep }) => { // 🔥 Agregamos 
                     <button type="submit" className="login-submit-button" disabled={isLoading}>
                         {isLoading ? "Iniciando sesión..." : "Iniciar sesión"}
                     </button>
-
                     <div className="register-link">
-                        ¿No tienes una cuenta? <Link href="/register">Regístrate aquí</Link>
+                        ¿Olvidaste tu Contraseña? <Link to="/resetPass">Restablecela</Link>
                     </div>
+                    <div className="register-link">
+                        ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
+                    </div>
+                    
                 </form>
             </div>
         </div>

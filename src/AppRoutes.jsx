@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { NavigationProvider } from "./context/navigationContext.js";
 import { AuthProvider, useAuth } from "./context/authContext.js";
 
+import ScrollToTop from "./utils/animations/scrollTop.jsx";
 import BreadCrumbs from "./utils/breadCrumbs/breadCrumbs.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 import { ErrorBoundary } from "react-error-boundary";
@@ -14,8 +15,6 @@ import Error404 from "./pages/errorPages/Error404.jsx";
 import Error500 from "./pages/errorPages/Error500.jsx";
 import ServerOfflinePage from "./pages/errorPages/Maintenance.jsx";
 import LoaderPublic from "./utils/skeletons/skeleton.js";
-import ScrollToTop from "./utils/animations/scrollTop.jsx";
-
 
 
 
@@ -30,7 +29,8 @@ const ContactPage = lazy(() => import("./pages/location/contactPage"));
 const BlogPropuse = lazy(() => import("./pages/blogPropouse/blogPropouse.jsx"));
 const ServicesSection = lazy(() => import("./pages/services/services.jsx"));
 const MainAdmin = lazy(() => import("./components/admin/layout.jsx"));
-
+const ResetPass = lazy(() =>import("./components/auth/requestResetPassword/passwordReset.jsx"))
+const TermsAndPolicies = lazy(() =>import("./pages/termsAndPolicies/termsAndPolicies.jsx"))
 
 const AdminDashboard = lazy(() => import("./components/admin/views/dashboard/adminDashboard.jsx"));
 const PatientDatabase = lazy(() => import("./components/admin/views/users/adminUsers.jsx"));
@@ -56,16 +56,7 @@ const pageVariants = {
   exit: { opacity: 0, y: -10, transition: { duration: 0.3 } },
 };
 
-const AdminRouteWithMotion = ({ path, element }) => (
-  <Route
-    path={path}
-    element={
-      <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
-        {element}
-      </motion.div>
-    }
-  />
-);
+
 
 
 const AppRoutes = () => {
@@ -110,8 +101,8 @@ const AppContent = ({ showSplash, location }) => {
         key={location.pathname}
       >
 
-        {/* <ScrollToTop />
-      <BreadCrumbs /> */}
+        <ScrollToTop />
+        <BreadCrumbs />
         <Suspense fallback={<LoaderPublic />}>
           <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Home />} />
@@ -121,7 +112,11 @@ const AppContent = ({ showSplash, location }) => {
             <Route path="/blog" element={<BlogPropuse />} />
             <Route path="/services" element={<ServicesSection />} />
             <Route path="/requestactivate" element={<RequestActivation />} />
-            <Route path="activate" element={<AccountActivation />} />
+            <Route path="/activate" element={<AccountActivation />} />
+            
+            <Route path="/resetPass" element={<ResetPass />} />
+            <Route path="/terms" element={<TermsAndPolicies />} />
+            
 
             <Route path="/blog/:id" element={<BlogDetail />} />
 

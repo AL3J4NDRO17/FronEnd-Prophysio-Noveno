@@ -1,4 +1,8 @@
 import "./about.css"
+import collageImg1 from "./assets/collageImg1.jpeg"
+import collageImg2 from "./assets/collageImg2.jpg"
+import collageImg3 from "./assets/collageImg3.jpg"
+import MVSectionImg from "./assets/MyVSectionImg.jpg"
 
 export default function AboutClinic() {
     return (
@@ -8,17 +12,17 @@ export default function AboutClinic() {
 
                 <div className="therapy-gallery">
                     <img
-                        src="https://placehold.co/600x400"
+                        src={collageImg1}
                         alt="Terapia física con paciente"
                         className="therapy-image therapy-left"
                     />
                     <img
-                        src="https://placehold.co/600x400"
+                        src={collageImg2}
                         alt="Sesión de rehabilitación"
                         className="therapy-image therapy-center"
                     />
                     <img
-                        src="https://placehold.co/600x400"
+                        src={collageImg3}
                         alt="Ejercicios terapéuticos"
                         className="therapy-image therapy-right"
                     />
@@ -38,7 +42,7 @@ export default function AboutClinic() {
                 <div className="vision-wrapper">
                     <div className="vision-content">
                         <img
-                            src="https://placehold.co/600x400"
+                            src={MVSectionImg}
                             alt="Profesional de fisioterapia"
                             className="vision-image"
                         />

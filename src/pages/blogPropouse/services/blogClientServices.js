@@ -1,4 +1,4 @@
-import axiosInstance from "../../../components/api/axiosConfig";
+import axiosInstance from "@/components/api/axiosConfig";
 const PUBLIC_URL = 'public';  // Asegúrate de que esta URL esté bien configurada
 
 

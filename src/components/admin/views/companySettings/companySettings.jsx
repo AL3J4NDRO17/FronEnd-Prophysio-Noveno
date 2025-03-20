@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, } from "react"
 import useCompany from "./hooks/useCompany"
 import useFaqs from "./hooks/useFaqs"
 import { usePolicy } from "./hooks/usePolicies"
@@ -15,6 +15,7 @@ import IncidentsSettings from "./components/incidentsSettings"
 import "./styles/companySettings.css"
 import "./styles/generalSettings.css"
 import { updateDataCompany } from "./services/companyService"
+import AdminLoader from "@uiLoader"
 
 export default function CompanySettings() {
   const [activeTab, setActiveTab] = useState("general")
@@ -24,7 +25,7 @@ export default function CompanySettings() {
   const { socialLinks, loading: socialLinksLoading } = useSocialLinks(company?.id)
 
   if (companyLoading) {
-    return <div className="companySettings-loading">Cargando información de la empresa...</div>
+    return <AdminLoader/>
   }
 
   if (companyError) {

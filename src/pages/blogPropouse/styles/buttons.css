@@ -8,14 +8,14 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.375rem;
-  border: 1px solid var(--adminDashboard-border);
-  background-color: var(--adminDashboard-white);
-  color: var(--adminDashboard-text);
+  border: 1px solid var(--admin-border);
+  background-color: var(--admin-white);
+  color: var(--admin-text);
   cursor: pointer;
 }
 
 .adminDashboard-icon-button:hover {
-  background-color: var(--adminDashboard-background);
+  background-color: var(--admin-background);
 }
 
 .adminDashboard-icon-button-small {
@@ -27,12 +27,12 @@
   border-radius: 0.375rem;
   border: none;
   background-color: transparent;
-  color: var(--adminDashboard-text-light);
+  color: var(--admin-text-light);
   cursor: pointer;
 }
 
 .adminDashboard-icon-button-small:hover {
-  background-color: var(--adminDashboard-background);
+  background-color: var(--admin-background);
 }
 
 .adminDashboard-primary-button {
@@ -41,15 +41,15 @@
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
   border: none;
-  background-color: var(--adminDashboard-primary);
-  color: var(--adminDashboard-white);
+  background-color: var(--admin-primary);
+  color: var(--admin-white);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
 }
 
 .adminDashboard-primary-button:hover {
-  background-color: var(--adminDashboard-primary-hover);
+  background-color: var(--admin-primary-hover);
 }
 
 .adminDashboard-secondary-button {
@@ -57,16 +57,16 @@
   align-items: center;
   padding: 0.5rem 1rem;
   border-radius: 0.375rem;
-  border: 1px solid var(--adminDashboard-border);
-  background-color: var(--adminDashboard-white);
-  color: var(--adminDashboard-text);
+  border: 1px solid var(--admin-border);
+  background-color: var(--admin-white);
+  color: var(--admin-text);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
 }
 
 .adminDashboard-secondary-button:hover {
-  background-color: var(--adminDashboard-background);
+  background-color: var(--admin-background);
 }
 
 .adminDashboard-button-icon {

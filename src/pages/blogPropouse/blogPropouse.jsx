@@ -1,60 +1,63 @@
-import { useState, useEffect } from "react";
-import BlogGrid from "./components/blogGrid";
-import BlogSearch from "./components/blogSearch";
-import BlogSlider from "./components/blogSlider";
-import BlogCategories from "./components/blogCategories";
-import BlogRecentPosts from "./components/blogRecentPosts";
-import { useBlogs } from "./hooks/useClientBlog";
+"use client"
 
-import "./styles/blogPropouse.css";
+import { useState, useEffect } from "react"
+import BlogGrid from "./components/blogGrid"
+import BlogSearch from "./components/blogSearch"
+import BlogSlider from "./components/blogSlider"
+import BlogCategories from "./components/blogCategories"
+import BlogRecentPosts from "./components/blogRecentPosts"
+import { useBlogs } from "./hooks/useClientBlog"
+
+import "./styles/blogPropouse.css"
 
 export default function BlogPropouse() {
-    const { blogs, isLoading, error } = useBlogs();
-    const [filteredBlogs, setFilteredBlogs] = useState([]);
+  const { blogs, isLoading, error } = useBlogs()
+  const [filteredBlogs, setFilteredBlogs] = useState([])
 
-    useEffect(() => {
-        setFilteredBlogs(blogs);
-    }, [blogs]);
+  useEffect(() => {
+    setFilteredBlogs(blogs)
+  }, [blogs])
 
-    const handleFilterChange = ({ selectedCategories, selectedAuthors, startDate, endDate }) => {
-        const results = blogs.filter(blog => {
-            const matchesCategory = selectedCategories.length ? selectedCategories.includes(blog.category) : true;
-            const matchesAuthor = selectedAuthors.length ? selectedAuthors.includes(blog.author) : true;
-            const matchesStartDate = startDate ? new Date(blog.createdAt) >= new Date(startDate) : true;
-            const matchesEndDate = endDate ? new Date(blog.createdAt) <= new Date(endDate) : true;
+  const handleFilterChange = ({ selectedCategories, selectedAuthors, startDate, endDate }) => {
+    const results = blogs.filter((blog) => {
+      // Modificado para manejar múltiples categorías correctamente
+      const matchesCategory =
+        selectedCategories.length === 0 || selectedCategories.some((catId) => blog.categoryId === catId)
 
-            return matchesCategory && matchesAuthor && matchesStartDate && matchesEndDate;
-        });
+      const matchesAuthor = selectedAuthors.length === 0 || selectedAuthors.includes(blog.author)
 
-        setFilteredBlogs(results);
-    };
+      const matchesStartDate = !startDate || new Date(blog.createdAt) >= new Date(startDate)
 
-    const handleCategoryClick = (categoryId) => {
-        const filteredByCategory = blogs.filter(blog => blog.categoryId === categoryId);
-        setFilteredBlogs(filteredByCategory);
-    };
+      const matchesEndDate = !endDate || new Date(blog.createdAt) <= new Date(endDate)
 
-    const handleSearchResults = (results) => {
-        setFilteredBlogs(results);
-    };
+      return matchesCategory && matchesAuthor && matchesStartDate && matchesEndDate
+    })
 
-    return (
-        <section className="tech-blog-app">
-            <BlogSlider />
+    setFilteredBlogs(results)
+  }
 
-            <main className="tech-blog-main">
-                <div className="p-blog-left-side">
-                    <BlogSearch blogs={blogs} onSearch={handleSearchResults} />
-                    <BlogCategories   posts={blogs} onFilterChange={handleFilterChange} onCategoryClick={handleCategoryClick} />
-                    <BlogRecentPosts />
-                </div>
+  const handleSearchResults = (results) => {
+    setFilteredBlogs(results)
+  }
 
-                <div className="p-blog-right-side">
-                    {isLoading && <div>Cargando blogs...</div>}
-                    {error && <div>{error}</div>}
-                    {!isLoading && !error && <BlogGrid blogs={filteredBlogs} />}
-                </div>
-            </main>
-        </section>
-    );
+  return (
+    <section className="tech-blog-app">
+      <BlogSlider />
+
+      <main className="tech-blog-main">
+        <div className="p-blog-left-side">
+          <BlogSearch blogs={blogs} onSearch={handleSearchResults} />
+          <BlogCategories posts={blogs} onFilterChange={handleFilterChange} />
+          <BlogRecentPosts />
+        </div>
+
+        <div className="p-blog-right-side">
+          {isLoading && <div>Cargando blogs...</div>}
+          {error && <div>{error}</div>}
+          {!isLoading && !error && <BlogGrid blogs={filteredBlogs}  />}
+        </div>
+      </main>
+    </section>
+  )
 }
+

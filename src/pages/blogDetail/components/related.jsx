@@ -15,8 +15,11 @@ export default function BlogRelated({ relatedBlogs }) {
                 <div className="publicBlogDetail-related-image-placeholder"></div>
               )}
             </div>
+            
             <div className="publicBlogDetail-related-content">
               <h3 className="publicBlogDetail-related-card-title">{relatedBlog.title}</h3>
+              <p className="publicBlogDetail-related-card-met">{relatedBlog.mainContent.substring(0, 120)}...</p>
+              
               <p className="publicBlogDetail-related-card-meta">
                 {new Date(relatedBlog.publishDate || Date.now()).toLocaleDateString()}
               </p>

@@ -30,25 +30,10 @@ export default function BlogFiltersUnificado({ posts = [], onFilterChange, onCat
     })
   }
 
-  // Función para manejar el clic en categoría (solo actualiza el estado local)
-  const handleCategoryClick = (categoryId) => {
-    // Actualiza los filtros seleccionados sin aplicar el filtro
-    handleFilterChange("selectedCategories", categoryId)
-
-    // Eliminamos la llamada a onCategoryClick para evitar filtrado en tiempo real
-  }
-
   // Aplica todos los filtros cuando se hace clic en el botón
   const applyFilters = () => {
     // Notifica al componente padre sobre los filtros aplicados
     onFilterChange(filters)
-
-    // Si existe onCategoryClick, lo llamamos aquí para las categorías seleccionadas
-    if (onCategoryClick) {
-      filters.selectedCategories.forEach((categoryId) => {
-        onCategoryClick(categoryId, true) // true indica que ahora sí debe aplicarse
-      })
-    }
   }
 
   // Resetea los filtros
@@ -73,7 +58,7 @@ export default function BlogFiltersUnificado({ posts = [], onFilterChange, onCat
         </button>
       </div>
 
-      {/* Sección de categorías */}
+      {/* Sección de categorías - Ahora con checkboxes como los autores */}
       <div className="filter-section">
         <h4>Categorías</h4>
         {loading ? (
@@ -81,15 +66,16 @@ export default function BlogFiltersUnificado({ posts = [], onFilterChange, onCat
         ) : error ? (
           <div className="error-message">Error cargando categorías.</div>
         ) : (
-          <div className="categories-grid">
+          <div className="filter-options">
             {categories.map((category) => (
-              <div
-                key={category.id}
-                className={`category-chip ${filters.selectedCategories.includes(category.id) ? "selected" : ""}`}
-                onClick={() => handleCategoryClick(category.id)}
-              >
-                {category.nombre}
-              </div>
+              <label key={category.id} className="filter-option">
+                <input
+                  type="checkbox"
+                  checked={filters.selectedCategories.includes(category.id)}
+                  onChange={() => handleFilterChange("selectedCategories", category.id)}
+                />
+                <span>{category.nombre}</span>
+              </label>
             ))}
           </div>
         )}

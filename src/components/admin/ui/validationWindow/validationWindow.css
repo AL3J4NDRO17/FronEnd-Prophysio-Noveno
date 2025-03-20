@@ -1,0 +1,98 @@
+/* Estilos para la ventana de validación de contraseña */
+.password-validation-window {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 12px;
+    z-index: 10;
+    border: 1px solid #e2e8f0;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .password-validation-header {
+    margin-bottom: 12px;
+  }
+  
+  .password-validation-strength {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  
+  .password-validation-strength-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+  
+  .password-validation-strength-value {
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .password-validation-meter {
+    height: 4px;
+    width: 100%;
+    background-color: #e2e8f0;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  
+  .password-validation-meter-fill {
+    height: 100%;
+    transition: width 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .password-validation-criteria {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .password-validation-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+  
+  .password-validation-item.valid {
+    color: #475569;
+  }
+  
+  .password-validation-icon {
+    flex-shrink: 0;
+  }
+  
+  .password-validation-icon.valid {
+    color: #10b981;
+  }
+  
+  .password-validation-icon.invalid {
+    color: #ef4444;
+  }
+  
+  /* Estilos para el contenedor del campo de contraseña */
+  .password-input-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  

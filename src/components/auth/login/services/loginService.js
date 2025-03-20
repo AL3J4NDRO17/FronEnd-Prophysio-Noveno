@@ -1,4 +1,4 @@
-import axiosInstance from "../../../api/axiosConfig";
+import axiosInstance from "@/components/api/axiosConfig";
 import { queryClient } from "../../../../utils/queryclient/queryclient";
 
 // Servicio para hacer login

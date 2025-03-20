@@ -3,8 +3,8 @@
 /* Sidebar */
 .adminDashboard-sidebar {
   width: 16rem;
-  background-color: var(--adminDashboard-white);
-  border-right: 1px solid var(--adminDashboard-border);
+  background-color: var(--admin-white);
+  border-right: 1px solid var(--admin-border);
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -23,14 +23,14 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.375rem;
-  background-color: var(--adminDashboard-white);
-  border: 1px solid var(--adminDashboard-border);
+  background-color: var(--admin-white);
+  border: 1px solid var(--admin-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--adminDashboard-text);
+  color: var(--admin-text);
   display: none;
 }
 
@@ -48,7 +48,7 @@
 /* Estilos para el header del sidebar */
 .adminDashboard-sidebar-header {
   padding: 1rem;
-  border-bottom: 1px solid var(--adminDashboard-border);
+  border-bottom: 1px solid var(--admin-border);
 }
 
 .adminDashboard-logo-container {
@@ -61,7 +61,7 @@
   width: 2rem;
   height: 2rem;
   border-radius: 9999px;
-  background-color: var(--adminDashboard-primary);
+  background-color: var(--admin-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,12 +69,12 @@
 }
 
 .adminDashboard-logo-text {
-  color: var(--adminDashboard-white);
+  color: var(--admin-white);
   font-weight: bold;
 }
 
 .adminDashboard-logo-name {
-  color: var(--adminDashboard-primary);
+  color: var(--admin-primary);
   font-size: 1.25rem;
   font-weight: bold;
   white-space: nowrap;
@@ -105,7 +105,7 @@
 .adminDashboard-nav-section-title {
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--adminDashboard-text-light);
+  color: var(--admin-text-light);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.5rem;
@@ -129,7 +129,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem;
-  color: var(--adminDashboard-text);
+  color: var(--admin-text);
   border-radius: 0.375rem;
   font-weight: 500;
   text-decoration: none;
@@ -140,12 +140,12 @@
 }
 
 .adminDashboard-nav-item:hover {
-  background-color: var(--adminDashboard-background);
+  background-color: var(--admin-background);
 }
 
 .adminDashboard-nav-item-active {
-  background-color: var(--adminDashboard-primary-light);
-  color: var(--adminDashboard-primary);
+  background-color: var(--admin-primary-light);
+  color: var(--admin-primary);
 }
 
 .adminDashboard-nav-icon {
@@ -156,8 +156,8 @@
 
 .adminDashboard-badge {
   margin-left: auto;
-  background-color: var(--adminDashboard-primary-light);
-  color: var(--adminDashboard-primary);
+  background-color: var(--admin-primary-light);
+  color: var(--admin-primary);
   padding: 0.125rem 0.375rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -168,7 +168,7 @@
 /* Estilos para el footer */
 .adminDashboard-sidebar-footer {
   padding: 1rem;
-  border-top: 1px solid var(--adminDashboard-border);
+  border-top: 1px solid var(--admin-border);
 }
 
 /* Contenedor de usuario con menú */
@@ -196,8 +196,8 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 9999px;
-  background-color: var(--adminDashboard-primary-light);
-  color: var(--adminDashboard-primary);
+  background-color: var(--admin-primary-light);
+  color: var(--admin-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -213,7 +213,7 @@
 .adminDashboard-user-name {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--adminDashboard-text);
+  color: var(--admin-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -221,7 +221,7 @@
 
 .adminDashboard-user-role {
   font-size: 0.75rem;
-  color: var(--adminDashboard-text-light);
+  color: var(--admin-text-light);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -237,14 +237,14 @@
   border-radius: 0.375rem;
   background-color: transparent;
   border: none;
-  color: var(--adminDashboard-text-light);
+  color: var(--admin-text-light);
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
 }
 
 .adminDashboard-menu-button:hover {
-  background-color: var(--adminDashboard-background);
-  color: var(--adminDashboard-text);
+  background-color: var(--admin-background);
+  color: var(--admin-text);
 }
 
 /* Dropdown menu */
@@ -254,8 +254,8 @@
   right: 0;
   margin-bottom: 0.5rem;
   width: 14rem;
-  background-color: var(--adminDashboard-white);
-  border: 1px solid var(--adminDashboard-border);
+  background-color: var(--admin-white);
+  border: 1px solid var(--admin-border);
   border-radius: 0.375rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   z-index: 50;
@@ -271,12 +271,12 @@
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--adminDashboard-text);
+  color: var(--admin-text);
 }
 
 .adminDashboard-dropdown-divider {
   height: 1px;
-  background-color: var(--adminDashboard-border);
+  background-color: var(--admin-border);
   margin: 0;
 }
 
@@ -284,12 +284,12 @@
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--adminDashboard-text);
+  color: var(--admin-text);
 }
 
 .adminDashboard-dropdown-divider {
   height: 1px;
-  background-color: var(--adminDashboard-border);
+  background-color: var(--admin-border);
   margin: 0.25rem 0;
 }
 
@@ -299,7 +299,7 @@
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
-  color: var(--adminDashboard-text);
+  color: var(--admin-text);
   text-decoration: none;
   transition: background-color 0.2s;
   cursor: pointer;
@@ -310,23 +310,23 @@
 }
 
 .adminDashboard-dropdown-item:hover {
-  background-color: var(--adminDashboard-background);
+  background-color: var(--admin-background);
 }
 
 .adminDashboard-dropdown-item {
   display: block;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-  color: var(--adminDashboard-text);
+  color: var(--admin-text);
   text-decoration: none;
 }
 
 .adminDashboard-dropdown-item:hover {
-  background-color: var(--adminDashboard-background);
+  background-color: var(--admin-background);
 }
 
 .adminDashboard-dropdown-item-danger {
-  color: var(--adminDashboard-danger);
+  color: var(--admin-danger);
 }
 
 .adminDashboard-dropdown-item-danger:hover {

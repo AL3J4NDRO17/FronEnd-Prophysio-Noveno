@@ -1,4 +1,4 @@
-import axiosInstance from "../../../../api/axiosConfig";
+import axiosInstance from "@/components/api/axiosConfig";
 const API_URL = "social-links"; // Ajusta la URL según tu backend
 
 // ✅ Obtener redes sociales por empresa

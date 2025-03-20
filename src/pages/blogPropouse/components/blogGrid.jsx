@@ -1,22 +1,32 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/blogGrid.css";
+"use client"
+
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { useCategories } from "../hooks/useClientCategories"
+import "../styles/blogGrid.css"
 
 export default function BlogGrid({ blogs = [] }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const navigate = useNavigate();
-  const postsPerPage = 6;
+  const [currentPage, setCurrentPage] = useState(1)
+  const navigate = useNavigate()
+  const postsPerPage = 6
+  const { categories } = useCategories()
 
   // Filtrar solo los blogs que están publicados
-  const publishedBlogs = blogs.filter((blog) => blog.status === "published");
+  const publishedBlogs = blogs.filter((blog) => blog.status === "published")
 
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = publishedBlogs.slice(indexOfFirstPost, indexOfLastPost);
-  const totalPages = Math.ceil(publishedBlogs.length / postsPerPage);
+  const indexOfLastPost = currentPage * postsPerPage
+  const indexOfFirstPost = indexOfLastPost - postsPerPage
+  const currentPosts = publishedBlogs.slice(indexOfFirstPost, indexOfLastPost)
+  const totalPages = Math.ceil(publishedBlogs.length / postsPerPage)
+
+  // Función para obtener el nombre de la categoría por ID
+  const getCategoryName = (categoryId) => {
+    const category = categories?.find((cat) => cat.id === categoryId)
+    return category ? category.nombre : "Sin categoría"
+  }
 
   if (!publishedBlogs.length) {
-    return <div>No hay blogs publicados para mostrar.</div>;
+    return <div>No hay blogs publicados para mostrar.</div>
   }
 
   return (
@@ -24,31 +34,27 @@ export default function BlogGrid({ blogs = [] }) {
       <div className="tech_blog_posts_grid">
         {currentPosts.map((post) => (
           <article key={post.id} className="tech_blog_post_card">
-            <img
-              src={post.contentImage}
-              alt={post.title}
-              className="tech_blog_post_image"
-            />
+            <img src={post.bannerImage || "/placeholder.svg"} alt={post.title} className="tech_blog_post_image" />
             <div className="tech_blog_post_content">
-              <p>{new Date(post.createdAt).toLocaleDateString()}</p>
+              <div className="tech_blog_post_meta">
+                <span className="tech_blog_post_date">{new Date(post.createdAt).toLocaleDateString()}</span>
+                <span className="tech_blog_post_category">{getCategoryName(post.categoryId)}</span>
+              </div>
               <h3>{post.title}</h3>
-              <p>{post.mainContent.substring(0, 150)}...</p>
-              <button
-                onClick={() => navigate(`/blog/${post.id}`)}
-                className="read-more-button"
-              >
-                Leer más
-              </button>
+              <p className="tech_blog_post_excerpt">{post.mainContent.substring(0, 300)}...</p>
+              <div className="tech_blog_post_footer">
+                <p className="tech_blog_post_author">Por: {post.author}</p>
+                <button onClick={() => navigate(`/blog/${post.id}`)} className="read-more-button">
+                  Leer más
+                </button>
+              </div>
             </div>
           </article>
         ))}
       </div>
 
       <div className="pagination">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
+        <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
           ⬅ Anterior
         </button>
         <span>
@@ -62,5 +68,6 @@ export default function BlogGrid({ blogs = [] }) {
         </button>
       </div>
     </div>
-  );
+  )
 }
+

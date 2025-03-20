@@ -1,110 +1,101 @@
-:root {
-  --color-primary: #2a9d8f;  /* Verde principal (Editar, Nuevo) */
-  --color-secondary: #c4226b; /* Rosa oscuro (No usado por ahora) */
-  --color-danger: #ff5b5b; /* Rojo para eliminar y despublicar */
-  --color-dark: #64748b; /* Gris oscuro para botones secundarios */
-  --color-success: #28a745; /* Verde para publicar */
-  --color-hover: rgba(0, 0, 0, 0.05); /* Color de fondo al hacer hover */
-}
-
-/* 🔹 Botón Base */
+/* Estilos para los botones UI */
 .ui-btn {
-  padding: 6px;
-  border: 1.5px solid transparent; /* Borde transparente por defecto */
-  background: white;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s, transform 0.1s, border-color 0.2s;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 0.875rem;
 }
 
-/* 📝 Botón Editar */
+.ui-btn svg {
+  margin-right: 0.25rem;
+}
+
+/* Botón Editar */
 .ui-btnEdit {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  background-color: #f3f4f6;
+  color: #4b5563;
 }
 
 .ui-btnEdit:hover {
-  background: var(--color-hover);
-  transform: scale(1.05);
+  background-color: #e5e7eb;
 }
 
-/* 📤 Botón Publicar */
+/* Botón Publicar */
 .ui-btnPublish {
-  border-color: var(--color-success);
-  color: var(--color-success);
+  background-color: #dcfce7;
+  color: #16a34a;
 }
 
 .ui-btnPublish:hover {
-  background: var(--color-hover);
-  transform: scale(1.05);
+  background-color: #bbf7d0;
 }
 
-/* ❌ Botón Despublicar */
+/* Botón Despublicar */
 .ui-btnUnpublish {
-  border-color: var(--color-danger);
-  color: var(--color-danger);
+  background-color: #fef3c7;
+  color: #d97706;
 }
 
 .ui-btnUnpublish:hover {
-  background: var(--color-hover);
-  transform: scale(1.05);
+  background-color: #fde68a;
 }
 
-/* 👁️ Botón Vista Previa */
+/* Botón Ver Vista Previa */
 .ui-btnPreview {
-  border-color: var(--color-dark);
-  color: var(--color-dark);
+  background-color: #dbeafe;
+  color: #2563eb;
 }
 
 .ui-btnPreview:hover {
-  background: var(--color-hover);
-  transform: scale(1.05);
+  background-color: #bfdbfe;
 }
 
-/* 🗑️ Botón Eliminar */
+/* Botón Eliminar */
 .ui-btnDelete {
-  border-color: var(--color-danger);
-  color: var(--color-danger);
+  background-color: #fee2e2;
+  color: #dc2626;
 }
 
 .ui-btnDelete:hover {
-  background: var(--color-hover);
-  transform: scale(1.05);
+  background-color: #fecaca;
 }
 
-/* ❌ Botón Cerrar */
+/* Botón Cerrar */
 .ui-btnClose {
-  border-color: transparent;
-  color: var(--color-dark);
+  background-color: #f3f4f6;
+  color: #4b5563;
 }
 
 .ui-btnClose:hover {
-  background: var(--color-hover);
+  background-color: #e5e7eb;
 }
 
-/* ➕ Botón Nuevo Testimonio */
+/* Botón Nuevo Testimonio */
 .ui-btnNuevo {
+  background-color: #14b8a6;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  background: white;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
+  gap: 0.5rem;
 }
 
 .ui-btnNuevo:hover {
-  background: var(--color-hover);
-  transform: scale(1.05);
+  background-color: #0d9488;
 }
 
-/* ✨ Efecto de presionar (feedback visual) */
-.ui-btn:active {
-  transform: scale(0.95);
+/* Botones en tarjetas de testimonios */
+.testimonial-actions .ui-btn {
+  padding: 0.375rem;
+}
+
+/* Botones en el header */
+.header-actions .ui-btn {
+  margin-left: 0.5rem;
 }

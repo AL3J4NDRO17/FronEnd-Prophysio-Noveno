@@ -3,7 +3,7 @@
 .adminDashboard-container {
   display: flex;
   height: 100vh;
-  background-color: var(--adminDashboard-background);
+  background-color: var(--admin-background);
 }
 
 .adminDashboard-main {

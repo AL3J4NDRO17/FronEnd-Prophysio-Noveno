@@ -1,6 +1,6 @@
 
-import axiosInstance from "../../../../api/axiosConfig";
-const   API_URL= `/users`
+import axiosInstance from "@/components/api/axiosConfig";
+const  API_URL= `/users`
 
 export const getUsers = async () => {
   const response = await axiosInstance.get(`${API_URL}/getAllUsers`);

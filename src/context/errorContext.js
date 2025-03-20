@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../components/api/axiosConfig"
+import axiosInstance from "@/components/api/axiosConfig";
 // 🔥 Crear el contexto
 const ErrorContext = createContext(null);
 
