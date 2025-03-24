@@ -9,6 +9,9 @@
     position:relative;
 
 }
+.home-blog{
+    overflow: hidden;
+}
 .decoration-home-1 {
     position: absolute;
     background-color: rgba(0, 191, 166, 0.1);

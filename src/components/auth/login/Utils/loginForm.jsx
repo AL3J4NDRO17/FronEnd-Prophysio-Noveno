@@ -1,16 +1,21 @@
 import React, { useState } from "react";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useLoginState } from "../hooks/loginHook";
 import "../styles/loginForm.css";
 import IMG from "../assets/candado.png";
 
-
+import { PasswordToggleButton } from "@uiButtons";
 
 const LoginForm = ({ onEmailSubmit, setEmail, setStep }) => { // 🔥 Agregamos setStep
     const [email, setLocalEmail] = useState("");
     const { password, setPassword, isLoading, handleLoginSubmit } = useLoginState(setStep, setEmail);
 
-    
+    const [showPassword, setShowPassword] = useState(false)
+
+    const togglePassword = () => setShowPassword(!showPassword)
+
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setEmail(email); // 🔥 Asegurar que el email se actualiza en el contexto global
@@ -58,17 +63,21 @@ const LoginForm = ({ onEmailSubmit, setEmail, setStep }) => { // 🔥 Agregamos 
                     </div>
 
                     <div className="form-group">
+
                         <label htmlFor="password" className="form-label">
                             Contraseña
                         </label>
-                        <input
-                            id="password"
-                            type="password"
-                            className="form-input"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
+                        <div className="password-wrapper">
+                            <input
+                                id="password"     
+                                type={showPassword ? "text" : "password"}
+                                className="form-input"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                            <PasswordToggleButton showPassword={showPassword} togglePassword={togglePassword} />
+                        </div>
                     </div>
 
                     <button type="submit" className="login-submit-button" disabled={isLoading}>
@@ -80,7 +89,7 @@ const LoginForm = ({ onEmailSubmit, setEmail, setStep }) => { // 🔥 Agregamos 
                     <div className="register-link">
                         ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
                     </div>
-                    
+
                 </form>
             </div>
         </div>

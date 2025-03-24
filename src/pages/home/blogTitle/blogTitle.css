@@ -1,6 +1,6 @@
 /* Sección principal */
 .blog-home-section {
-    background-color: #f8fafc;
+    background-color: (var( --background-white));
 }
 
 .blog-home-link{

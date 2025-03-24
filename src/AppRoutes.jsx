@@ -29,13 +29,9 @@ const ContactPage = lazy(() => import("./pages/location/contactPage"));
 const BlogPropuse = lazy(() => import("./pages/blogPropouse/blogPropouse.jsx"));
 const ServicesSection = lazy(() => import("./pages/services/services.jsx"));
 const MainAdmin = lazy(() => import("./components/admin/layout.jsx"));
-const ResetPass = lazy(() =>import("./components/auth/requestResetPassword/passwordReset.jsx"))
-const TermsAndPolicies = lazy(() =>import("./pages/termsAndPolicies/termsAndPolicies.jsx"))
+const ResetPass = lazy(() => import("./components/auth/requestResetPassword/passwordReset.jsx"))
+const TermsAndPolicies = lazy(() => import("./pages/termsAndPolicies/termsAndPolicies.jsx"))
 
-const AdminDashboard = lazy(() => import("./components/admin/views/dashboard/adminDashboard.jsx"));
-const PatientDatabase = lazy(() => import("./components/admin/views/users/adminUsers.jsx"));
-
-const BlogEditor = lazy(() => import("./components/admin/views/blogPrueba/blogPage.jsx"));
 
 const RequestActivation = lazy(() => import("./components/auth/requestActivation/requestActivation.jsx"));
 const AccountActivation = lazy(() => import("./components/auth/accountActivation/accountActivation.jsx"));
@@ -44,10 +40,24 @@ const AdminAppointments = lazy(() => import("./components/admin/views/appointmen
 
 
 const BlogDetail = lazy(() => import("./pages/blogDetail/blogDetailPage.jsx"));
-const AdminTestimonials = lazy(() => import("./components/admin/views/testimoniasEditor/testimonialsControl.jsx"));
-const CompanySettings = lazy(() => import("./components/admin/views/companySettings/companySettings.jsx"));
+
+
 const FaqSection = lazy(() => import("./pages/FAQ/FAQ.jsx"));
 const AboutClinic = lazy(() => import("./pages/about/about.jsx"));
+
+//Dashboard de admin
+const AdminTestimonials = lazy(() => import("./components/admin/views/testimoniasEditor/testimonialsControl.jsx"));
+const CompanySettings = lazy(() => import("./components/admin/views/companySettings/companySettings.jsx"));
+const AdminDashboard = lazy(() => import("./components/admin/views/dashboard/adminDashboard.jsx"));
+const PatientDatabase = lazy(() => import("./components/admin/views/users/adminUsers.jsx"));
+const BlogEditor = lazy(() => import("./components/admin/views/blogPrueba/blogPage.jsx"));
+const AdminStadics= lazy(() => import("./components/admin/views/stadistics/ModeloMatematico.jsx"));
+
+//Dashboard de usuarios
+const UserDashboardLayout = lazy(() => import("./components/user/userLayout.jsx"));
+const UserProfileEdit = lazy(() => import("./components/user/components/profile/profile.jsx"));
+const UserDashboard = lazy(() => import("./components/user/components/welcome/welcome.jsx"));
+const UserHistorySheduler = lazy(() => import("./components/user/components/shedulerHistory/shedulerHistory.jsx"));
 
 // 🔥 VARIANTES DE ANIMACIÓN PARA TRANSICIONES MÁS FLUIDAS
 const pageVariants = {
@@ -113,14 +123,9 @@ const AppContent = ({ showSplash, location }) => {
             <Route path="/services" element={<ServicesSection />} />
             <Route path="/requestactivate" element={<RequestActivation />} />
             <Route path="/activate" element={<AccountActivation />} />
-            
             <Route path="/resetPass" element={<ResetPass />} />
             <Route path="/terms" element={<TermsAndPolicies />} />
-            
-
             <Route path="/blog/:id" element={<BlogDetail />} />
-
-            <Route path="/sheduler" element={<AppointmentScheduler />} />
             <Route path="/faq" element={<FaqSection />} />
             <Route path="/about" element={<AboutClinic />} />
 
@@ -129,8 +134,18 @@ const AppContent = ({ showSplash, location }) => {
             <Route path="/error500" element={<Error500 />} />
 
             <Route path="*" element={<Error404 />} />
-
-            {/* 🔥 RUTAS PROTEGIDAS */}
+            {/* 🔥 RUTAS PROTEGIDAS DE ADMIN DE USUARIO LOGEADO */}
+            <Route element={<ProtectedRoute allowedRoles={["usuario"]} />}>
+              <Route path="/user" element={<UserDashboardLayout />}>
+                <Route index element={<UserDashboard />} />
+                <Route path="shedulerHistory" element={<UserHistorySheduler />} />
+                <Route path="dashboard" element={<UserDashboard />} />
+                <Route path="sheduler" element={<AppointmentScheduler />} />
+                <Route path="profile" element={<UserProfileEdit />} />
+             
+              </Route>
+            </Route>
+            {/* 🔥 RUTAS PROTEGIDAS DE ADMIN */}
             <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
               <Route path="/admin" element={<MainAdmin />}>
                 <Route index element={<AdminDashboard />} />
@@ -146,13 +161,13 @@ const AppContent = ({ showSplash, location }) => {
 
                 <Route path="adminAppointments" element={<AdminAppointments />} />
 
-
+                <Route path="adminEstadisticas" element={<AdminStadics />} />
               </Route>
             </Route>
           </Routes>
 
         </Suspense>
-      </motion.div>
+      </motion.div >
     </>
   );
 };

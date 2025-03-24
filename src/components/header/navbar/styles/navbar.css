@@ -181,7 +181,7 @@
 }
 
 .registerButton:hover {
-  background-color: var(--color-off-red);
+  background-color: var(--color-secondary-hover);
 }
 
 @media (max-width: 1024px) {

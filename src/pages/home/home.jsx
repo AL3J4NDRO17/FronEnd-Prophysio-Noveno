@@ -20,11 +20,11 @@ export default function Home() {
 
                 <ServicesGrid />
 
+                <div className="home-blog">
+                    <BlogTitle />
 
-                <BlogTitle />
-
-                <BlogSection />
-
+                    <BlogSection />
+                </div>
                 <Shortcut />
 
                 <TestimonialsSection />

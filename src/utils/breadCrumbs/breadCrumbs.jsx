@@ -37,7 +37,7 @@ const routeIcons = {
 const BlogBreadcrumb = ({ match }) => {
     const { getBlogById } = useBlogs();
     const blog = getBlogById(match.params.id);
-    return blog ? blog.title : "Cargando...";
+    return blog ? blog.bannerTitle : "Cargando...";
 };
 
 // 🔥 Definir las rutas para breadcrumbs

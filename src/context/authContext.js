@@ -24,8 +24,9 @@ export const AuthProvider = ({ children }) => {
   });
 
   const user = sessionData?.user || null;
+ 
   const isAuthenticated = sessionData?.isAuthenticated || false;
-
+  
   const logoutMutation = useMutation({
     mutationFn: async () => {
       return axiosInstance.post("/auth/logout", {}, { withCredentials: true });

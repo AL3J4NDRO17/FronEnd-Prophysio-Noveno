@@ -1,8 +1,8 @@
 .services {
   padding: 6rem 0;
-  background-color: #f8fafc;
+  background: linear-gradient(to bottom, #f8fafc 0%, (var(--background-white)) 100%);
   position: relative;
-  overflow: hidden;
+overflow: hidden;
 }
 
 .services::before {
@@ -15,6 +15,18 @@
   top: -300px;
   right: -300px;
   z-index: 0;
+}
+
+.services::after {
+  content: "";
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(42, 157, 143, 0.1), rgba(196, 34, 107, 0.1));
+  bottom: -300px;
+  left: -300px;
+  z-index: -1;
 }
 
 
@@ -168,4 +180,3 @@
     grid-template-columns: repeat(3, 1fr);
   }
 }
-

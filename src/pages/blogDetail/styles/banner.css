@@ -1,81 +1,82 @@
-
 /* Banner */
 .publicBlogDetail-banner {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 0.5rem;
+
+}
+
+.publicBlogDetail-banner-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.publicBlogDetail-banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+}
+
+.publicBlogDetail-banner-content {
+  max-width: 800px;
+}
+
+.publicBlogDetail-title {
+  color: white;
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.publicBlogDetail-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.25rem;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .publicBlogDetail-banner {
+    height: 350px;
   }
-  
-  .publicBlogDetail-banner-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
+
   .publicBlogDetail-banner-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7));
-    display: flex;
-    align-items: flex-end;
-    padding: 3rem;
+    padding: 1.5rem;
   }
-  
-  .publicBlogDetail-banner-content {
-    max-width: 800px;
-  }
-  
+
   .publicBlogDetail-title {
-    color: white;
-    font-size: 3rem;
-    font-weight: 700;
-    margin: 0 0 1rem 0;
-    line-height: 1.2;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 2rem;
   }
-  
+
   .publicBlogDetail-subtitle {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.25rem;
-    margin: 0;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-size: 1rem;
   }
-  
-  /* Responsive */
-  @media (max-width: 768px) {
-    .publicBlogDetail-banner {
-      height: 350px;
-    }
-  
-    .publicBlogDetail-banner-overlay {
-      padding: 1.5rem;
-    }
-  
-    .publicBlogDetail-title {
-      font-size: 2rem;
-    }
-  
-    .publicBlogDetail-subtitle {
-      font-size: 1rem;
-    }
+}
+
+@media (max-width: 480px) {
+  .publicBlogDetail-banner {
+    height: 250px;
   }
-  
-  @media (max-width: 480px) {
-    .publicBlogDetail-banner {
-      height: 250px;
-    }
-  
-    .publicBlogDetail-title {
-      font-size: 1.5rem;
-    }
-  
-    .publicBlogDetail-subtitle {
-      font-size: 0.875rem;
-    }
+
+  .publicBlogDetail-title {
+    font-size: 1.5rem;
   }
-  
-  
+
+  .publicBlogDetail-subtitle {
+    font-size: 0.875rem;
+  }
+}

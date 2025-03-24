@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
-import SidebarHeader from "./utils/sidebarHeader"
-import SidebarNavigation from "./utils/sidebarNavigation"
-import SidebarFooter from "./utils/sidebarFooter"
+import SidebarHeader from "./components/sidebarHeader"
+import SidebarNavigation from "./components/sidebarNavigation"
+import SidebarFooter from "./components/sidebarFooter"
 import "./styles/mobilSidebar.css"
 
 export default function AdminSidebar() {

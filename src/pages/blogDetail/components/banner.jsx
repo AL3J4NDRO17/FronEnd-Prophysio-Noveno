@@ -13,8 +13,8 @@ export default function BlogBanner({ blog }) {
       )}
       <div className="publicBlogDetail-banner-overlay">
         <div className="publicBlogDetail-banner-content">
-          <h1 className="publicBlogDetail-title">{blog.title}</h1>
-          {blog.bannerTitle && <p className="publicBlogDetail-subtitle">{blog.bannerTitle}</p>}
+          <h1 className="publicBlogDetail-title">{blog.bannerTitle}</h1>
+
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 .appointment-section {
-  background-color: #f8fafc;
+  background-color: (var(--background-white));
   padding: 6rem 1.5rem;
 }
 
@@ -108,4 +108,3 @@
     height: 300px;
   }
 }
-

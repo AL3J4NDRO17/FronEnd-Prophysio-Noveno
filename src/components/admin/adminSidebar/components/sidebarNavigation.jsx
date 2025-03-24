@@ -14,15 +14,18 @@ import SidebarSection from "./sidebarSection";
 export default function SidebarNavigation() {
     const navSections = [
         {
-            title: null,
-            items: [{ icon: TrendingUp, label: "Dashboard", url: "/admin/adminDashboard" }],
+            title: "Inicio",
+            items: [{ icon: House, label: "Dashboard", url: "/admin/adminDashboard" },
+            { icon: TrendingUp, label: "Estadisticas", url: "/admin/adminEstadisticas" }
+            ],
+
         },
         {
             title: "Pacientes",
             items: [
                 { icon: Users, label: "Directorio", url: "/admin/adminUser" },
                 { icon: Calendar, label: "Citas", url: "/admin/adminAppointments", badge: "8" },
-              
+
             ],
         },
         {
@@ -36,7 +39,6 @@ export default function SidebarNavigation() {
             title: "Administración",
             items: [
                 { icon: ClipboardCheck, label: "Auditorías", url: "/auditorias" },
-
                 { icon: Settings, label: "Configuración", url: "/admin/adminCompanySettings" },
             ],
         },

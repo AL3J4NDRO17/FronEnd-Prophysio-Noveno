@@ -13,6 +13,7 @@ export const useGlobalError = () => {
   return context;
 };
 
+
 // 🔄 Función para verificar si el servidor está en línea
 const checkServerStatus = async () => {
   try {

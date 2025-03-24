@@ -1,0 +1,145 @@
+/* Variables de color */
+:root {
+    --primary: #c0387a;
+    --primary-hover: #a03066;
+    --primary-light: #f8f0f4;
+    --primary-dark: #8c2a5a;
+    --text: #333333;
+    --text-light: #666666;
+    --text-lighter: #999999;
+    --background: #f9f9f9;
+    --white: #ffffff;
+    --border: #e5e7eb;
+    --border-light: #f0f0f0;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --sidebar-width: 260px;
+    --header-height: 60px;
+  }
+  
+ 
+  
+ 
+  
+  /* Dashboard principal */
+  .user-dashboard {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+  }
+  
+  /* Contenido principal */
+  .user-dashboard-content {
+    flex: 1;
+    min-height: 100vh;
+    background-color: var(--background);
+  }
+  
+  .user-dashboard-mobile-header {
+    display: none;
+    padding: 1rem;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    align-items: center;
+  }
+  
+  .user-dashboard-menu-button {
+    background: none;
+    border: none;
+    width: 24px;
+    height: 24px;
+    position: relative;
+    cursor: pointer;
+    margin-right: 1rem;
+  }
+  
+  .user-dashboard-menu-icon,
+  .user-dashboard-menu-icon::before,
+  .user-dashboard-menu-icon::after {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: var(--text);
+    position: absolute;
+    transition: transform 0.3s;
+  }
+  
+  .user-dashboard-menu-icon::before {
+    top: -6px;
+  }
+  
+  .user-dashboard-menu-icon::after {
+    bottom: -6px;
+  }
+  
+  .user-dashboard-mobile-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .user-dashboard-content-inner {
+    padding: 2rem;
+  }
+  
+  .user-dashboard-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 90;
+  }
+  
+  /* Placeholder para páginas en desarrollo */
+  .placeholder-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    background-color: var(--white);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow);
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  .placeholder-page h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0 0 1rem 0;
+  }
+  
+  .placeholder-page p {
+    color: var(--text-light);
+    margin: 0;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .user-dashboard-content {
+      margin-left: 0;
+    }
+  
+    .user-dashboard-mobile-header {
+      display: flex;
+    }
+  
+    .user-dashboard-sidebar-overlay {
+      display: block;
+    }
+  }
+  
+  

@@ -9,6 +9,7 @@ module.exports = function override(config) {
     "@axiosInstance": path.resolve(__dirname, "src/components/api/axiosConfig.js"), 
     "@uiButtons": path.resolve(__dirname, "src/components/admin/ui/buttons/buttons.jsx"),
     "@uiValidationWindow": path.resolve(__dirname, "src/components/admin/ui/validationWindow/validationWindow.jsx"),
+    "@authContext": path.resolve(__dirname, "src/context/authContext.js"),
   }
   return config
 }

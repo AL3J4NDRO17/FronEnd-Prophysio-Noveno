@@ -1,27 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import {
-  X,
-  Bold,
-  Italic,
-  List,
-  ListOrdered,
-  Link,
-  ImageIcon,
-  Tag,
-  Eye,
-  Save,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  Edit,
-} from "lucide-react"
+import { X, Eye, Save, Edit } from "lucide-react"
 import { Resizable } from "re-resizable"
 import { FilePond, registerPlugin } from "react-filepond"
 import FilePondPluginImagePreview from "filepond-plugin-image-preview"
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
-import { useBlogEditor } from "./hooks/blogEditorHook"
+import { useBlogEditor } from "../hooks/blogEditorHook"
+import RichTextEditor from "./RichTextEditor"
 
 import "filepond/dist/filepond.min.css"
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
@@ -82,6 +68,21 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
     }))
   }
 
+  // Manejar cambios en el contenido del editor de texto enriquecido
+  const handleMainContentChange = (content) => {
+    setBlogData((prev) => ({
+      ...prev,
+      mainContent: content,
+    }))
+  }
+
+  // Manejar cambios en el contenido de efectos del editor de texto enriquecido
+  const handleEffectsContentChange = (content) => {
+    setBlogData((prev) => ({
+      ...prev,
+      effectsContent: content,
+    }))
+  }
 
   if (!isOpen) return null
 
@@ -103,7 +104,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                 >
                   <option value="draft">Borrador</option>
                   <option value="published">Publicado</option>
-                  {/* <option value="scheduled">Programado</option> */}
                 </select>
               </div>
             </div>
@@ -174,46 +174,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                   ))}
                 </select>
               </div>
-
-              <div className="adminDashboard-form-group">
-                <label>Color</label>
-                <div className="adminDashboard-color-picker-container">
-                  <input
-                    type="color"
-                    value={blogData.textStyle?.color || "#000000"}
-                    onChange={(e) => handleStyleChange("color", e.target.value)}
-                    className="adminDashboard-color-picker"
-                  />
-                  <span className="adminDashboard-color-value">{blogData.textStyle?.color || "#000000"}</span>
-                </div>
-              </div>
-
-              <div className="adminDashboard-form-group">
-                <label>Alineación</label>
-                <div className="adminDashboard-alignment-buttons">
-                  <button
-                    type="button"
-                    className={`adminDashboard-alignment-button ${blogData.textStyle?.textAlign === "left" ? "active" : ""}`}
-                    onClick={() => handleStyleChange("textAlign", "left")}
-                  >
-                    <AlignLeft size={16} />
-                  </button>
-                  <button
-                    type="button"
-                    className={`adminDashboard-alignment-button ${blogData.textStyle?.textAlign === "center" ? "active" : ""}`}
-                    onClick={() => handleStyleChange("textAlign", "center")}
-                  >
-                    <AlignCenter size={16} />
-                  </button>
-                  <button
-                    type="button"
-                    className={`adminDashboard-alignment-button ${blogData.textStyle?.textAlign === "right" ? "active" : ""}`}
-                    onClick={() => handleStyleChange("textAlign", "right")}
-                  >
-                    <AlignRight size={16} />
-                  </button>
-                </div>
-              </div>
             </div>
 
             <div className="adminDashboard-editor-sidebar-section">
@@ -236,8 +196,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                 </select>
               </div>
             </div>
-
-           
 
             <div className="adminDashboard-editor-sidebar-section">
               <h3>Autor</h3>
@@ -282,36 +240,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                   />
                 </div>
 
-                {/* Text Styling Toolbar */}
-                <div className="adminDashboard-editor-toolbar">
-                  <div className="adminDashboard-editor-toolbar-group">
-                    <button type="button" className="adminDashboard-editor-toolbar-button">
-                      <Bold className="adminDashboard-editor-toolbar-icon" />
-                    </button>
-                    <button type="button" className="adminDashboard-editor-toolbar-button">
-                      <Italic className="adminDashboard-editor-toolbar-icon" />
-                    </button>
-                  </div>
-
-                  <div className="adminDashboard-editor-toolbar-group">
-                    <button type="button" className="adminDashboard-editor-toolbar-button">
-                      <List className="adminDashboard-editor-toolbar-icon" />
-                    </button>
-                    <button type="button" className="adminDashboard-editor-toolbar-button">
-                      <ListOrdered className="adminDashboard-editor-toolbar-icon" />
-                    </button>
-                  </div>
-
-                  <div className="adminDashboard-editor-toolbar-group">
-                    <button type="button" className="adminDashboard-editor-toolbar-button">
-                      <Link className="adminDashboard-editor-toolbar-icon" />
-                    </button>
-                    <button type="button" className="adminDashboard-editor-toolbar-button">
-                      <ImageIcon className="adminDashboard-editor-toolbar-icon" />
-                    </button>
-                  </div>
-                </div>
-
                 {/* Title */}
                 <div className="adminDashboard-editor-title">
                   <input
@@ -326,17 +254,12 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                   />
                 </div>
 
-                {/* Main Content */}
+                {/* Main Content - Rich Text Editor */}
                 <div className="adminDashboard-editor-body">
-                  <textarea
-                    className="adminDashboard-editor-textarea"
-                    placeholder="Contenido principal del artículo..."
-                    name="mainContent"
+                  <RichTextEditor
                     value={blogData.mainContent || ""}
-                    onChange={handleInputChange}
-                    rows={8}
-                    required
-                    style={blogData.textStyle}
+                    onChange={handleMainContentChange}
+                    placeholder="Contenido principal del artículo..."
                   />
                 </div>
 
@@ -345,7 +268,7 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                   <input
                     type="text"
                     className="adminDashboard-editor-subtitle-input"
-                    placeholder="Título de los efectos"
+                    placeholder="Subtitulo del articulo"
                     name="effectsTitle"
                     value={blogData.effectsTitle || ""}
                     onChange={handleInputChange}
@@ -355,14 +278,11 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
 
                 <div className="adminDashboard-editor-effects">
                   <div className="adminDashboard-editor-effects-content">
-                    <textarea
-                      className="adminDashboard-editor-textarea"
-                      placeholder="Contenido de los efectos..."
-                      name="effectsContent"
+                    {/* Effects Content - Rich Text Editor */}
+                    <RichTextEditor
                       value={blogData.effectsContent || ""}
-                      onChange={handleInputChange}
-                      rows={6}
-                      style={blogData.textStyle}
+                      onChange={handleEffectsContentChange}
+                      placeholder="Contenido secundario del articulo..."
                     />
                   </div>
 
@@ -419,15 +339,7 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
 
                   <div className="adminDashboard-preview-body">
                     {blogData.mainContent ? (
-                      blogData.mainContent.split("\n").map((paragraph, index) =>
-                        paragraph ? (
-                          <p key={index} style={blogData.textStyle}>
-                            {paragraph}
-                          </p>
-                        ) : (
-                          <br key={index} />
-                        ),
-                      )
+                      <div dangerouslySetInnerHTML={{ __html: blogData.mainContent }} />
                     ) : (
                       <p className="adminDashboard-preview-placeholder">El contenido principal aparecerá aquí...</p>
                     )}
@@ -440,18 +352,10 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                   <div className="adminDashboard-preview-effects">
                     <div className="adminDashboard-preview-effects-content">
                       {blogData.effectsContent ? (
-                        blogData.effectsContent.split("\n").map((paragraph, index) =>
-                          paragraph ? (
-                            <p key={index} style={blogData.textStyle}>
-                              {paragraph}
-                            </p>
-                          ) : (
-                            <br key={index} />
-                          ),
-                        )
+                        <div dangerouslySetInnerHTML={{ __html: blogData.effectsContent }} />
                       ) : (
                         <p className="adminDashboard-preview-placeholder">
-                          El contenido de los efectos aparecerá aquí...
+                          El subcontenido del articulo aparecerá aquí...
                         </p>
                       )}
                     </div>
@@ -500,8 +404,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                       </span>
                     )}
                   </div>
-
-                 
                 </div>
               </div>
             )}

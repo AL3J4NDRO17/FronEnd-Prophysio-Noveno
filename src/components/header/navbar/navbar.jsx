@@ -85,7 +85,7 @@ const Navbar = () => {
                     <Link to="/HistorialMedico" className="dropdownItem" onClick={closeMenu}>
                       Historial Médico
                     </Link>
-                    <Link to="/profile" className="dropdownItem" onClick={closeMenu}>
+                    <Link to="/user" className="dropdownItem" onClick={closeMenu}>
                       Perfil
                     </Link>
                     <button className="dropdownItem" onClick={logout}>

@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { KeyRound, Eye, EyeOff } from 'lucide-react'
-
+import { PasswordToggleButton } from "@uiButtons";
+import ValidationWindow from "@uiButtons"
 const NewPasswordForm = ({ onSubmit, loading, error }) => {
   const [otp, setOtp] = useState("")
   const [password, setPassword] = useState("")
@@ -10,6 +11,11 @@ const NewPasswordForm = ({ onSubmit, loading, error }) => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [localErrors, setLocalErrors] = useState({})
+
+
+  const togglePassword = () => setShowPassword(!showPassword)
+  const toggleConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword)
+
 
   const validateForm = () => {
     const newErrors = {}

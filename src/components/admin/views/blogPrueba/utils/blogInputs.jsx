@@ -138,7 +138,7 @@ const EditorInputs = ({
         <input
           type="text"
           name="effectsTitle"
-          placeholder="Título de los Efectos"
+          placeholder="Subtitulo del articulo"
           value={blogData.effectsTitle}
           onChange={handleInputChange}
           className="input-field"
@@ -148,7 +148,7 @@ const EditorInputs = ({
         <div className="effects-container">
           <textarea
             name="effectsContent"
-            placeholder="Contenido de los efectos..."
+            placeholder="subcontenido del articulo"
             value={blogData.effectsContent}
             onChange={handleInputChange}
             className="input-field effects-textarea"

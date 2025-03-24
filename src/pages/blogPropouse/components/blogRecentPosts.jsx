@@ -18,7 +18,9 @@ export default function BlogRecentPosts() {
     .slice()
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 3);
-
+  if (!recentPosts) {
+    return <div>No hay post recientes para mostrar...</div>;
+  }
   return (
     <section className="blog-recent-posts">
       <h2 className="recent-posts-title">Post Recientes</h2>

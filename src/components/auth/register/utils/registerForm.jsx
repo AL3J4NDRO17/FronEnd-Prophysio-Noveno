@@ -6,7 +6,8 @@ import "../styles/registerForm.css"
 import IMG from "../assets/usuario.png"
 import { FaEye, FaEyeSlash } from "react-icons/fa6" // 🔥 Iconos para mostrar/ocultar contraseña
 import ReCAPTCHA from "react-google-recaptcha" // 🔥 reCAPTCHA para seguridad
-import ValidationWindow from "@/components/admin/ui/validationWindow/validationWindow"; 
+import { PasswordToggleButton } from "@uiButtons";
+import ValidationWindow from "@/components/admin/ui/validationWindow/validationWindow";
 const SITE_KEY = "6LdFN18qAAAAAB5WT437-hRS9w4jTFRoGKjIdIBe" // 🔥 Reemplaza con tu clave pública de Google reCAPTCHA
 
 // Lista de preguntas secretas
@@ -43,6 +44,9 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isPasswordFocused, setIsPasswordFocused] = useState(false)
+
+  const togglePassword = () => setShowPassword(!showPassword)
+  const toggleConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword)
 
   return (
     <div className="signup-container">
@@ -106,14 +110,12 @@ const RegisterForm = () => {
                   onFocus={() => setIsPasswordFocused(true)}
                   onBlur={() => setTimeout(() => setIsPasswordFocused(false), 200)}
                 />
-                <span onClick={() => setShowPassword(!showPassword)} className="password-toggle">
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </span>
+                <PasswordToggleButton showPassword={showPassword} togglePassword={togglePassword} />
               </div>
               <ValidationWindow password={password} isVisible={isPasswordFocused} />
             </div>
           </div>
-
+          
           <div className="signup-form-group">
             <label htmlFor="confirmPassword" className="signup-form-label">
               Confirmar contraseña
@@ -127,9 +129,7 @@ const RegisterForm = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
-              <span onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="password-toggle">
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+              <PasswordToggleButton showPassword={showConfirmPassword} togglePassword={toggleConfirmPassword} />
             </div>
           </div>
 

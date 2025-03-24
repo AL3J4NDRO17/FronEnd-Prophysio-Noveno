@@ -1,0 +1,52 @@
+.account-info-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.account-info-row {
+  display: flex;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.account-info-row:last-of-type {
+  margin-bottom: 0.5rem;
+}
+
+.account-info-label {
+  width: 40%;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.account-info-value {
+  width: 60%;
+  color: var(--text-light);
+  font-size: 0.875rem;
+}
+
+.info-box.warning {
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+.info-box.warning svg {
+  color: var(--warning);
+}
+
+@media (max-width: 768px) {
+  .account-info-row {
+    flex-direction: column;
+  }
+
+  .account-info-label,
+  .account-info-value {
+    width: 100%;
+  }
+
+  .account-info-label {
+    margin-bottom: 0.25rem;
+  }
+}
+

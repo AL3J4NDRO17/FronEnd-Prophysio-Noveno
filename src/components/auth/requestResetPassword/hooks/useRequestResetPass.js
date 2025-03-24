@@ -77,7 +77,7 @@ export const usePasswordRecovery = () => {
             toast.success("Éxito", "Contraseña actualizada correctamente 🔐", "success")
             return true
         } catch (error) {
-            Swal.fire("Error", "Código incorrecto o expirado ❌", "error")
+            toast.info(error.response?.data?.error || "Error al reestablecer la contraseña")
             return false
         } finally {
             setLoading(false)

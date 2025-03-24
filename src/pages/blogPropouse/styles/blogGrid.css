@@ -120,6 +120,7 @@
 }
 
 .read-more-button {
+  margin-top: 10px;
   background-color: #c0387a;
   color: #ffffff;
   padding: 0.5rem 1rem;

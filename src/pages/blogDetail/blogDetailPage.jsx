@@ -105,7 +105,7 @@ export default function BlogDetail() {
     return (
         <div className="publicBlogDetail-container">
             <div className="publicContainer">
-                <div>
+                <div className="publicBlogDetail-data">
                     <BlogBanner blog={blog} />
 
                     <BlogMeta
@@ -125,7 +125,7 @@ export default function BlogDetail() {
 
                     </div>
                 </div>
-                <div>
+                <div className="publicBlogDetail-relatedData">
                     {relatedBlogs && relatedBlogs.length > 0 && (
                         <div className="publicBlogDetail-sidebar">
                             <BlogRelated relatedBlogs={relatedBlogs} />

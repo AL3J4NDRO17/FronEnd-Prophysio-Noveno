@@ -46,7 +46,7 @@
   left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--admin-text-lighter);
+  color: var(--text-lighter);
   width: 1rem;
   height: 1rem;
 }
@@ -63,8 +63,8 @@
 
 .adminDashboard-search-input:focus {
   outline: none;
-  border-color: var(--admin-primary);
-  box-shadow: 0 0 0 2px var(--admin-primary-light);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
 }
 
 .adminDashboard-filter-button {
@@ -179,7 +179,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--admin-primary);
+  background-color: var(--color-primary);
   color: white;
   font-weight: 600;
   font-size: 1rem;
@@ -202,7 +202,7 @@
   flex-direction: column;
   gap: 0.25rem;
   font-size: 0.75rem;
-  color: var(--admin-text-light);
+  color: var(--text-light);
 }
 
 .adminDashboard-testimonial-date {
@@ -295,7 +295,7 @@
 
 .adminDashboard-testimonials-empty p {
   font-size: 1rem;
-  color: var(--admin-text-light);
+  color: var(--text-light);
   margin: 0 0 1.5rem 0;
 }
 
@@ -382,8 +382,8 @@
 .adminDashboard-testimonials-form-group select:focus,
 .adminDashboard-testimonials-form-group textarea:focus {
   outline: none;
-  border-color: var(--admin-primary);
-  box-shadow: 0 0 0 2px var(--admin-primary-light);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-light);
 }
 
 /* Checkbox group */
@@ -523,7 +523,7 @@
 
 .adminDashboard-testimonials-stats-label {
   font-size: 0.875rem;
-  color: var(--admin-text-light);
+  color: var(--text-light);
 }
 
 .adminDashboard-testimonials-stats-value {
@@ -577,7 +577,7 @@
   width: 2rem;
   text-align: right;
   font-size: 0.875rem;
-  color: var(--admin-text-light);
+  color: var(--text-light);
 }
 
 /* Responsive */

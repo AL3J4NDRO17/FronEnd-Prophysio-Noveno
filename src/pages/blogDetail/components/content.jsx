@@ -1,14 +1,16 @@
-import React from 'react'
-
 export default function BlogContent({ blog }) {
+  function stripHtmlTags(str) {
+  return str.replace(/<[^>]*>/g, ''); // Esto elimina todas las etiquetas HTML
+}
+
   return (
     <div className="publicBlogDetail-content">
-      <div className="publicBlogDetail-main-content" style={blog.textStyle || {}}>
-        {blog.mainContent &&
-          blog.mainContent
-            .split("\n")
-            .map((paragraph, index) => (paragraph ? <p key={index}>{paragraph}</p> : <br key={index} />))}
-      </div>
+      <p className="publicBlogDetail-effects-title">{blog.title}</p>
+      <div
+        className="publicBlogDetail-main-content"
+        style={blog.textStyle || {}}
+        dangerouslySetInnerHTML={{ __html: blog.mainContent || "" }}
+      />
 
       {/* Sección de efectos */}
       {(blog.effectsTitle || blog.effectsContent) && (
@@ -20,15 +22,22 @@ export default function BlogContent({ blog }) {
           )}
 
           <div className="publicBlogDetail-effects-container">
-            <div className="publicBlogDetail-effects-content" style={blog.textStyle || {}}>
-              {blog.effectsContent &&
-                blog.effectsContent
-                  .split("\n")
-                  .map((paragraph, index) => (paragraph ? <p key={index}>{paragraph}</p> : <br key={index} />))}
-            </div>
+            <div
+              className="publicBlogDetail-effects-content"
+              style={blog.textStyle || {}}
+              dangerouslySetInnerHTML={{ __html: blog.effectsContent || "" }}
+            />
 
             {blog.contentImage && (
-              <div className="publicBlogDetail-effects-image">
+              <div className="publicBlogDetail-effects-image" style={
+                blog.contentimagedimensions
+                  ? {
+                    width: `${blog.contentimagedimensions.width}px`,
+                    height: `${blog.contentimagedimensions.height}px`,
+                  }
+                  : {}
+              } >
+
                 <img
                   src={blog.contentImage || "/placeholder.svg"}
                   alt={blog.effectsTitle || "Imagen ilustrativa"}
@@ -49,3 +58,4 @@ export default function BlogContent({ blog }) {
     </div>
   )
 }
+

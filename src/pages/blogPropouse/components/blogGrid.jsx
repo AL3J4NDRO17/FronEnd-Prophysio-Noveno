@@ -4,11 +4,11 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useCategories } from "../hooks/useClientCategories"
 import "../styles/blogGrid.css"
-
+import EmptyBlogState from "./empty/emptyBlogGrid"
 export default function BlogGrid({ blogs = [] }) {
   const [currentPage, setCurrentPage] = useState(1)
   const navigate = useNavigate()
-  const postsPerPage = 6
+  const postsPerPage = 4
   const { categories } = useCategories()
 
   // Filtrar solo los blogs que están publicados
@@ -26,13 +26,18 @@ export default function BlogGrid({ blogs = [] }) {
   }
 
   if (!publishedBlogs.length) {
-    return <div>No hay blogs publicados para mostrar.</div>
+    return <EmptyBlogState/>
+  }
+  function stripHtmlTags(str) {
+    return str.replace(/<[^>]*>/g, ''); // Esto elimina todas las etiquetas HTML
   }
 
   return (
     <div className="blog-grid-container">
       <div className="tech_blog_posts_grid">
+
         {currentPosts.map((post) => (
+
           <article key={post.id} className="tech_blog_post_card">
             <img src={post.bannerImage || "/placeholder.svg"} alt={post.title} className="tech_blog_post_image" />
             <div className="tech_blog_post_content">
@@ -40,14 +45,16 @@ export default function BlogGrid({ blogs = [] }) {
                 <span className="tech_blog_post_date">{new Date(post.createdAt).toLocaleDateString()}</span>
                 <span className="tech_blog_post_category">{getCategoryName(post.categoryId)}</span>
               </div>
-              <h3>{post.title}</h3>
-              <p className="tech_blog_post_excerpt">{post.mainContent.substring(0, 300)}...</p>
+              <h3>{post.title.substring(0, 120)}...</h3>
+              <p className="tech_blog_post_excerpt">
+                {stripHtmlTags(post.mainContent).substring(0, 150)}...
+              </p>
               <div className="tech_blog_post_footer">
                 <p className="tech_blog_post_author">Por: {post.author}</p>
-                <button onClick={() => navigate(`/blog/${post.id}`)} className="read-more-button">
-                  Leer más
-                </button>
               </div>
+              <button onClick={() => navigate(`/blog/${post.id}`)} className="read-more-button">
+                Leer más
+              </button>
             </div>
           </article>
         ))}

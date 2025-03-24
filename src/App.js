@@ -35,7 +35,8 @@ function App() {
     "/maintenance",
     "/admin/adminBlogEditor",
     "/admin/adminAppointments",
-    "/admin/pruebaaa"
+    "/admin/pruebaaa",
+    "/admin/adminEstadisticas"
 
 
 

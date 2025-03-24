@@ -9,13 +9,22 @@
     color: var(--publicBlogDetail-color-text);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
-  
+  .publicBlogDetail-data{
+    max-width: 1200px;
+    align-self: center;
+    
+  }
+  .publicBlogDetail-relatedData{
+
+  }
   .publicContainer {
     max-width: 1200px;
     margin: 0 auto;
     width: 100%;
     display: flex;
-    gap:50px
+    flex-direction: column;
+
+    padding: 2rem;
   }
   
   /* Layout for main content and sidebar */

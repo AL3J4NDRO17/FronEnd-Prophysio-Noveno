@@ -19,7 +19,7 @@
   .p-blog-left-side {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+ 
     gap: 40px;
     width: 100%;
     max-width: 400px;

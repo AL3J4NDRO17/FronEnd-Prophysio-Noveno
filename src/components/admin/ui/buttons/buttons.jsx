@@ -1,7 +1,7 @@
 "use client"
 
 import "./buttons.css"
-import { Pen, Trash2, X, Plus, Upload, FileX, Eye, Filter, Settings, MoreVertical, ChevronDown } from "lucide-react"
+import { Pen, Trash2, X, Plus, Upload, FileX, Eye, EyeOff, Filter, Settings, MoreVertical, ChevronDown } from 'lucide-react'
 
 /* 📝 Botón Editar */
 export const EditButton = ({ onClick, className = "" }) => (
@@ -76,3 +76,15 @@ export const MoreButton = ({ onClick, className = "" }) => (
   </button>
 )
 
+/* 👁️ Botón Mostrar/Ocultar Contraseña */
+export const PasswordToggleButton = ({ showPassword, togglePassword, className = "" }) => (
+  <button 
+    className={`ui-btn ui-btnPassword ${showPassword ? 'ui-btnPassword-show' : 'ui-btnPassword-hide'} ${className}`} 
+    onClick={togglePassword} 
+    type="button"
+    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+    title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+  >
+    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+  </button>
+)

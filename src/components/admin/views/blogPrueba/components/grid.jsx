@@ -1,9 +1,22 @@
 
-import { Edit, Trash2, ImageIcon } from "lucide-react"
+import { Edit, Trash2, ImageIcon,Plus } from "lucide-react"
 import Swal from "sweetalert2"
-import { EditButton,PublishButton,UnpublishButton, DeleteButton, SeePreviewButton } from '@uiButtons'
+import { EditButton, PublishButton, UnpublishButton, DeleteButton, SeePreviewButton } from '@uiButtons'
 
 const BlogGrid = ({ blogs, categories, handleEdit, handleDelete, handleStatusChange }) => {
+
+  if (blogs.length === 0) {
+    return (
+      <div className="adminDashboard-blog-empty">
+        <p>No se encontraron blogs</p>
+        <button className="adminDashboard-secondary-button" onClick={ handleEdit}>
+          <Plus className="adminDashboard-button-icon" />
+          Agregar Blogs
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="blogAdmin-blog-grid">
       {blogs.map((blog) => (

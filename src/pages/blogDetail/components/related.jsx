@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom"
 
+// Función para eliminar las etiquetas HTML
+function stripHtmlTags(str) {
+  return str.replace(/<[^>]*>/g, ''); // Elimina todas las etiquetas HTML
+}
 
 export default function BlogRelated({ relatedBlogs }) {
   return (
@@ -18,7 +22,10 @@ export default function BlogRelated({ relatedBlogs }) {
             
             <div className="publicBlogDetail-related-content">
               <h3 className="publicBlogDetail-related-card-title">{relatedBlog.title}</h3>
-              <p className="publicBlogDetail-related-card-met">{relatedBlog.mainContent.substring(0, 120)}...</p>
+              {/* Eliminar etiquetas HTML antes de truncar el contenido */}
+              <p className="publicBlogDetail-related-card-met">
+                {stripHtmlTags(relatedBlog.mainContent).substring(0, 120)}...
+              </p>
               
               <p className="publicBlogDetail-related-card-meta">
                 {new Date(relatedBlog.publishDate || Date.now()).toLocaleDateString()}
@@ -30,4 +37,3 @@ export default function BlogRelated({ relatedBlogs }) {
     </div>
   )
 }
-
