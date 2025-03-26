@@ -1,6 +1,6 @@
 
 import axiosInstance from "@/components/api/axiosConfig"
-const API_URL="testimonial"
+const API_URL="public"
 
 // Get all testimonials
 export const getAllTestimonials = async () => {

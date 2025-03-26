@@ -1,29 +1,27 @@
-import React from 'react';
-import '../styles/topbannerServices.css';
-import IMG from '../assets/topBanner.webp'; // Asegúrate de mover la imagen a `src/assets/`
 
-const TopBannerServices = () => {
+
+export default function ContactBanner() {
   return (
-    <section className="top-banner-section">
-      <img 
-        src={IMG} 
-        alt="Nuestros Servicios - Soluciones profesionales para tu bienestar" 
-        className="top-banner-img"
-        width="1920"
-        height="450"
-        loading="eager"
-        fetchpriority="high"
-      />
-      <div className="top-banner-overlay">
-        <div className="top-banner-content">
-          <h1 className="top-banner-title">Nuestros Servicios</h1>
-          <p className="top-banner-subtitle">
-            Soluciones profesionales para tu bienestar y salud.
+    <section className="contact-banner">
+      <div className="contact-banner__overlay"></div>
+      <div className="contact-banner__container">
+        <div className="contact-banner__content">
+          <h2 className="contact-banner__title">¿Necesitas ayuda con tu rehabilitación?</h2>
+          <p className="contact-banner__text">
+            Nuestro equipo de profesionales está listo para ayudarte. Agenda una consulta hoy mismo y da el primer paso
+            hacia tu recuperación.
           </p>
+          <div className="contact-banner__actions">
+            <a href="/location" className="contact-banner__button contact-banner__button--primary">
+              Agendar cita
+            </a>
+            <a href="/contact" className="contact-banner__button contact-banner__button--secondary">
+              Contactar
+            </a>
+          </div>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default TopBannerServices;

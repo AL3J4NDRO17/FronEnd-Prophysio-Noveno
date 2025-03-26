@@ -8,7 +8,7 @@ import EmptyBlogState from "./empty/emptyBlogGrid"
 export default function BlogGrid({ blogs = [] }) {
   const [currentPage, setCurrentPage] = useState(1)
   const navigate = useNavigate()
-  const postsPerPage = 4
+  const postsPerPage = 6
   const { categories } = useCategories()
 
   // Filtrar solo los blogs que están publicados
@@ -29,7 +29,7 @@ export default function BlogGrid({ blogs = [] }) {
     return <EmptyBlogState/>
   }
   function stripHtmlTags(str) {
-    return str.replace(/<[^>]*>/g, ''); // Esto elimina todas las etiquetas HTML
+    return str.replace(/<[^>]*>/g, '',); // Esto elimina todas las etiquetas HTML
   }
 
   return (

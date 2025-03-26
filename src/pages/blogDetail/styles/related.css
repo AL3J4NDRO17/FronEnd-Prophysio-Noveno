@@ -6,7 +6,10 @@
     padding: 1.5rem;
     height: 100%;
   }
-  
+  .publicBlogDetail-related-grid{
+    display: flex;
+    gap:  30px;
+  }
   .publicBlogDetail-related-title {
     font-size: 1.25rem;
     font-weight: 600;

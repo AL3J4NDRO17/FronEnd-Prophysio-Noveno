@@ -83,6 +83,16 @@ export default function useRegister() {
     // Devolver `true` si no hay errores, `false` si hay errores
     return Object.keys(newErrors).length === 0
   }
+  const getAllPreguntasSecretas	 = async () => {
+    try {
+      const response = await registerService.getAllPreguntasSecretas()
+      return response.data
+    } catch (error) {
+      toast.error("Error al cargar las preguntas secretas.")
+      console.error("Error al cargar las preguntas secretas:", error)
+      return []
+    }
+  }
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault()

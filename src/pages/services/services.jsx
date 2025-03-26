@@ -1,14 +1,17 @@
-import ServicesGrid from './utils/servicesSection';
-import ContactBanner from './utils/bannerServices';
-import TopBannerServices from './utils/topbanner';
-
+import "./services.css"
+import TopBannerServices from "./utils/topbanner"
+import ServicesGrid from "./utils/servicesSection"
+import ContactBanner from "./utils/bannerServices"
 
 export default function ServicesSection() {
     return (
-     <>
-     <TopBannerServices/>
-     <ServicesGrid/>
-     <ContactBanner/>
-     </>
-    );
+        <div className="services-page">
+            <ContactBanner />
+
+            <ServicesGrid />
+            <TopBannerServices />
+
+        </div>
+    )
 }
+

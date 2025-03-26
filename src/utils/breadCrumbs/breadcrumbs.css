@@ -1,129 +1,206 @@
-.breadcrumb-nav {
+/* Breadcrumbs Styles */
+:root {
+    --color-primary: #2a9d8f;
+    --color-primary-hover: #0d9488;
+    --color-primary-light: #f0fdfa;
+    --color-secondary: #c4226b;
+    --color-secondary-hover: #9d1b55;
+    --text-normal: #374151;
+    --text-light: #6b7280;
+    --text-lighter: #9ca3af;
+    --background-white: #ffffff;
+    --background: #f9f9f9;
+    --background-secondary: #f9fafb;
+    --border: #e5e7eb;
+    --color-dark: #264653;  
+    --color-gray: #94a3b8;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius: 0.375rem;
+  }
+  
+  .site-breadcrumbs {
+    background-color: var(--background-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 0;
+    font-size: 0.875rem;
+  }
+  
+  .site-breadcrumbs__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
     display: flex;
-
-    z-index: 1;
     align-items: center;
-    background-color: #ffffff;
-    padding: 20px 20px 10px 300px;
-
-}
-
-.breadcrumb-back-button {
+    gap: 1rem;
+  }
+  
+  .site-breadcrumbs__back-button {
     display: flex;
     align-items: center;
-    background: none;
-    border: none;
-    color: #2b9c8f;
-    font-size: 16px;
+    gap: 0.5rem;
+    background-color: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    color: var(--text-light);
     cursor: pointer;
-    margin-right: 15px;
-    transition: color 0.3s ease;
-}
-
-.breadcrumb-back-button:hover {
-    color: #1e7268;
-}
-
-.breadcrumb-back-icon {
-    margin-right: 5px;
-}
-
-.breadcrumb-list {
+    transition: all 0.2s ease;
+  }
+  
+  .site-breadcrumbs__back-button:hover {
+    background-color: var(--background);
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+  
+  .site-breadcrumbs__back-icon {
+    font-size: 0.75rem;
+  }
+  
+  .site-breadcrumbs__list {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     list-style: none;
-    padding: 0;
     margin: 0;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-}
-
-.breadcrumb-item {
+    padding: 0;
+    align-items: center;
+  }
+  
+  .site-breadcrumbs__item {
     display: flex;
     align-items: center;
-    font-size: 16px;
-    white-space: nowrap;
-}
-
-.breadcrumb-link {
+    color: var(--text-light);
+  }
+  
+  .site-breadcrumbs__separator {
+    width: 14px;
+    height: 14px;
+    margin: 0 0.5rem;
+    color: var(--text-lighter);
+    flex-shrink: 0;
+  }
+  
+  .site-breadcrumbs__link {
     display: flex;
     align-items: center;
-    color: #2b9c8f;
+    color: var(--text-light);
     text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.breadcrumb-link:hover {
-    color: #1e7268;
-}
-
-.breadcrumb-current {
+    transition: color 0.2s ease;
+  }
+  
+  .site-breadcrumbs__link:hover {
+    color: var(--color-primary);
+  }
+  
+  .site-breadcrumbs__current {
     display: flex;
     align-items: center;
-    color: #e11d48;
     font-weight: 600;
-}
-
-.breadcrumb-icon {
-    margin-right: 5px;
-    font-size: 14px;
-}
-
-.breadcrumb-separator {
-    color: #9ca3af;
-    margin: 0 8px;
-}
-
-@media (max-width: 768px) {
-    .breadcrumb-nav {
-        margin: 15px 10%;
-        padding: 6px 15px;
+    color: var(--text-normal);
+  }
+  
+  .site-breadcrumbs__icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 0.375rem;
+  }
+  
+  .site-breadcrumbs__text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 768px) {
+    .site-breadcrumbs__container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
     }
-
-    .breadcrumb-back-button {
-        font-size: 14px;
-        margin-right: 10px;
+  
+    .site-breadcrumbs__back-button {
+      margin-bottom: 0.25rem;
     }
-
-    .breadcrumb-list {
-        font-size: 14px;
+  }
+  
+  @media (max-width: 640px) {
+    .site-breadcrumbs {
+      padding: 0.5rem 0;
     }
-
-    .breadcrumb-icon {
-        font-size: 12px;
+  
+    .site-breadcrumbs__text {
+      max-width: 120px;
     }
-
-    .breadcrumb-separator {
-        margin: 0 6px;
+  
+    .site-breadcrumbs__item:not(.site-breadcrumbs__item--active) .site-breadcrumbs__text {
+      display: none;
     }
-}
-
-@media (max-width: 480px) {
-    .breadcrumb-nav {
-        flex-direction: column;
-        align-items: flex-start;
-        margin: 10px 5%;
-        padding: 6px 10px;
+  
+    .site-breadcrumbs__item:not(.site-breadcrumbs__item--active) .site-breadcrumbs__link {
+      padding: 0.25rem;
+      background-color: var(--background);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
-    .breadcrumb-back-button {
-        margin-bottom: 8px;
+  
+    .site-breadcrumbs__item:not(.site-breadcrumbs__item--active) .site-breadcrumbs__icon {
+      margin-right: 0;
     }
-
-    .breadcrumb-list {
-        overflow-x: scroll;
-        width: 100%;
-    }
-
-    .breadcrumb-item {
-        font-size: 14px;
-    }
-
-    .breadcrumb-icon {
-        font-size: 12px;
-    }
-
-    .breadcrumb-separator {
-        margin: 0 4px;
-    }
-}
+  }
+  
+  /* Variantes de estilo */
+  /* Puedes añadir estas clases al componente para cambiar su apariencia */
+  
+  /* Variante con fondo */
+  .site-breadcrumbs--with-bg {
+    background-color: var(--color-primary-light);
+    border-bottom: none;
+  }
+  
+  /* Variante con sombra */
+  .site-breadcrumbs--with-shadow {
+    box-shadow: var(--shadow-sm);
+    border-bottom: none;
+  }
+  
+  /* Variante con estilo de tarjeta */
+  .site-breadcrumbs--card {
+    background-color: transparent;
+    border-bottom: none;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .site-breadcrumbs--card .site-breadcrumbs__container {
+    background-color: var(--background-white);
+    border-radius: var(--border-radius);
+    padding: 0.75rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  
+  /* Variante con estilo de píldora */
+  .site-breadcrumbs--pill .site-breadcrumbs__item {
+    position: relative;
+  }
+  
+  .site-breadcrumbs--pill .site-breadcrumbs__link,
+  .site-breadcrumbs--pill .site-breadcrumbs__current {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .site-breadcrumbs--pill .site-breadcrumbs__link:hover {
+    background-color: rgba(42, 157, 143, 0.1);
+  }
+  
+  .site-breadcrumbs--pill .site-breadcrumbs__current {
+    background-color: var(--color-primary-light);
+  }
+  
+  
