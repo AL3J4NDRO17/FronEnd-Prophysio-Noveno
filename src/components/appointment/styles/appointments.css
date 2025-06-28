@@ -1,0 +1,177 @@
+.agendar-cita-layout {
+  display: flex;
+  min-height: 100vh; /* Ocupa toda la altura de la ventana */
+  background-color: var(--bg-white); /* Fondo blanco por defecto para el layout */
+}
+
+/* Nuevo panel contenedor para el formulario y el stepper vertical */
+.agendar-cita-form-container {
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  flex: 1; /* Ocupa el espacio restante en el lado izquierdo */
+  background-color: var(--bg-white);
+  padding: 2rem;
+  display: flex; /* Para organizar el stepper y el contenido del paso */
+  flex-direction: column; /* Apila el título, el input de usuario y el stepper */
+  align-items: center; /* Centra el contenido horizontalmente */
+  overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+  padding-bottom: 2rem; /* Espacio extra al final del scroll */
+}
+
+/* Estilos para el header "¡Empecemos!" */
+.agendar-cita-header {
+  width: 100%;
+  
+  margin-bottom: 2rem;
+}
+
+.agendar-cita-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--txt-heading);
+  margin: 0 0 0.5rem 0;
+}
+
+.agendar-cita-subtitle {
+  color: var(--txt-secondary);
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+}
+
+.agendar-cita-info-box {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--txt-default);
+  font-size: 0.875rem;
+}
+
+.agendar-cita-info-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--txt-secondary);
+  flex-shrink: 0;
+}
+
+/* Estilos para la información del usuario autenticado */
+.agendar-cita-user-info {
+  width: 100%;
+
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background-color: var(--clr-brand-primary-light);
+  border: 1px solid var(--clr-brand-primary);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.agendar-cita-user-welcome {
+  font-size: 1rem;
+  color: var(--txt-default);
+  margin: 0 0 0.5rem 0;
+}
+
+.agendar-cita-user-id {
+  font-size: 0.875rem;
+  color: var(--txt-secondary);
+  margin: 0;
+}
+
+/* Panel visual con los SVGs, ahora a la derecha */
+.agendar-cita-visual-panel {
+  width: 400px; /* Ancho fijo para el panel visual */
+  background-color: var(--clr-gray-dark); /* Fondo oscuro usando tu variable */
+  color: var(--clr-white);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Empuja el contenido hacia arriba y abajo */
+  position: relative; /* Para posicionamiento absoluto de SVGs */
+  overflow: hidden; /* Oculta partes desbordadas de los SVGs */
+  flex-shrink: 0; /* Evita que se encoja en pantallas grandes */
+}
+
+.agendar-cita-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--clr-brand-primary); /* Color de marca para el logo */
+  margin-bottom: 2rem;
+}
+
+.agendar-cita-welcome-text {
+  font-size: 2.5rem;
+  font-weight: bold;
+  line-height: 1.2;
+  margin-bottom: auto; /* Empuja el contenido inferior hacia abajo */
+}
+
+/* SVGs de fondo y decoración */
+.agendar-cita-hose-svg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  background-image: url("../assets/undraw_booking_1ztt.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: translate(20%, -20%); /* Para que se vea asomando */
+  z-index: 0;
+}
+
+.agendar-cita-city-svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+ background-image: url("../assets/undraw_booking_1ztt.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.3; /* Sutil */
+  z-index: 1;
+}
+
+.agendar-cita-main-illustration-svg {
+  position: relative; /* Para estar sobre los edificios */
+  z-index: 2;
+  width: 100%;
+  height: 300px; /* Altura de la ilustración principal */
+  background-image: url("../assets/undraw_booking_1ztt.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center bottom; /* Posiciona la imagen en la parte inferior */
+}
+
+/* Ajustes para la responsividad */
+@media (max-width: 768px) {
+  .agendar-cita-layout {
+    flex-direction: column; /* Apila los paneles en pantallas pequeñas */
+  }
+  .agendar-cita-visual-panel {
+    width: 100%;
+    height: 200px; /* Altura más pequeña para móvil */
+    padding: 1rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    order: 2; /* Pone el panel visual abajo en móvil */
+  }
+  .agendar-cita-form-container {
+    padding: 1rem;
+    order: 1; /* Pone el panel del formulario arriba en móvil */
+  }
+  .agendar-cita-title {
+    font-size: 1.8rem;
+  }
+  /* Ocultar SVGs complejos en pantallas pequeñas para simplicidad y rendimiento */
+  .agendar-cita-hose-svg,
+  .agendar-cita-city-svg,
+  .agendar-cita-main-illustration-svg {
+    display: none;
+  }
+}

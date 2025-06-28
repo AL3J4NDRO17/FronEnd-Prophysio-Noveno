@@ -1,0 +1,81 @@
+.appointmentsAdmin-select {
+  appearance: none; /* Remove default browser styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: var(--bg-white);
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 2rem 0.5rem 0.75rem; /* Adjust padding for icon */
+  font-size: 0.875rem;
+  width: 100%; /* Full width by default */
+  color: var(--txt-default);
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1rem;
+  outline: none; /* Remove default outline */
+  box-shadow: var(--shd-sm);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.appointmentsAdmin-select:focus {
+  border-color: transparent;
+  box-shadow: 0 0 0 2px var(--clr-brand-primary);
+}
+
+.appointmentsAdmin-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  background-color: var(--bg-secondary);
+}
+
+/* Styles for custom select trigger/content if you were to build a fully custom select */
+.appointmentsAdmin-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-white);
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: var(--shd-sm);
+}
+
+.appointmentsAdmin-select-icon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--txt-secondary);
+  margin-left: 0.5rem;
+}
+
+.appointmentsAdmin-select-content {
+  /* This would be a popover for custom selects */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  margin-top: 0.25rem;
+  background-color: var(--bg-white);
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shd-md);
+  min-width: 100%;
+  overflow-y: auto;
+  max-height: 15rem;
+}
+
+.appointmentsAdmin-select-item {
+  /* Styles for individual options in a custom select */
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.appointmentsAdmin-select-item:hover {
+  background-color: var(--bg-secondary);
+}

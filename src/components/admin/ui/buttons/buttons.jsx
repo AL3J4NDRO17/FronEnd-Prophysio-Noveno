@@ -3,6 +3,10 @@
 import "./buttons.css"
 import { Pen, Trash2, X, Plus, Upload, FileX, Eye, EyeOff, Filter, Settings, MoreVertical, ChevronDown } from 'lucide-react'
 
+
+
+
+
 /* 📝 Botón Editar */
 export const EditButton = ({ onClick, className = "" }) => (
   <button title="Editar" className={`ui-btn ui-btnEdit ${className}`} onClick={onClick} aria-label="Editar">

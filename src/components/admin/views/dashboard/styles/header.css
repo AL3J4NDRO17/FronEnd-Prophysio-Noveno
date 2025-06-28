@@ -90,7 +90,7 @@
 .adminDashboard-search-input:focus {
   outline: none;
   border-color: transparent;
-  box-shadow: 0 0 0 2px var(--color-primary);
+  box-shadow: 0 0 0 2px var(--clr-brand-primary);
 }
 
 .adminDashboard-notification-button {

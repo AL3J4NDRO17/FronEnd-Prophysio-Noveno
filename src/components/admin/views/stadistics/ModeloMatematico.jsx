@@ -3,360 +3,621 @@
 import { useEffect, useRef, useState } from "react"
 import "./ModeloMatematico.css"
 
+// Datos de muestra de pacientes
+const pacientesMuestra = [
+  {
+    id: "1",
+    nombre: "Juan Pérez",
+    lesion: "Ruptura de ligamentos",
+    movilidadInicial: 60,
+    movilidadK: 84,
+    movilidadObjetivo: 108,
+    fechaInicial: "2025-01-07",
+    fechaK: "2025-01-28",
+  },
+  {
+    id: "2",
+    nombre: "María González",
+    lesion: "Fractura de tibia",
+    movilidadInicial: 45,
+    movilidadK: 65,
+    movilidadObjetivo: 95,
+    fechaInicial: "2025-02-10",
+    fechaK: "2025-03-01",
+  },
+  {
+    id: "3",
+    nombre: "Carlos Rodríguez",
+    lesion: "Tendinitis rotuliana",
+    movilidadInicial: 70,
+    movilidadK: 85,
+    movilidadObjetivo: 110,
+    fechaInicial: "2025-01-15",
+    fechaK: "2025-02-05",
+  },
+  {
+    id: "4",
+    nombre: "Ana Martínez",
+    lesion: "Esguince de tobillo",
+    movilidadInicial: 50,
+    movilidadK: 75,
+    movilidadObjetivo: 100,
+    fechaInicial: "2025-02-20",
+    fechaK: "2025-03-15",
+  },
+  {
+    id: "5",
+    nombre: "Roberto Sánchez",
+    lesion: "Lesión de menisco",
+    movilidadInicial: 55,
+    movilidadK: 70,
+    movilidadObjetivo: 105,
+    fechaInicial: "2025-01-20",
+    fechaK: "2025-02-15",
+  },
+]
+
 export default function PrediccionPaciente() {
-  // Estados para los datos del paciente
-  const [movilidadActual, setMovilidadActual] = useState(64)
-  const [movilidadObjetivo, setMovilidadObjetivo] = useState(90)
-  const [movilidadInicial, setMovilidadInicial] = useState(50)
-  const [sesionesCompletadas, setSesionesCompletadas] = useState(9)
-  const [sesionesProgramadas, setSesionesProgramadas] = useState(48)
-  const [idPaciente, setIdPaciente] = useState("P-12345")
-  const [tipoLesion, setTipoLesion] = useState("Lesión muscular postquirúrgica")
-  const [tratamiento, setTratamiento] = useState("Ejercicios funcionales + Electroestimulación")
+  const [pacienteSeleccionado, setPacienteSeleccionado] = useState(pacientesMuestra[0].id)
+  const [movilidadInicial, setMovilidadInicial] = useState(60)
+  const [movilidadK, setMovilidadK] = useState(84)
+  const [movilidadObjetivo, setMovilidadObjetivo] = useState(108)
+  const [fechaInicial, setFechaInicial] = useState("2025-01-07")
+  const [fechaK, setFechaK] = useState("2025-01-28")
+  const [constanteK, setConstanteK] = useState(null)
+  const [tiempoEstimado, setTiempoEstimado] = useState(null)
+  const [fechaEstimada, setFechaEstimada] = useState(null)
+  const [datosSemanales, setDatosSemanales] = useState([])
+  const [activeTab, setActiveTab] = useState("grafica")
+  const [patientId, setPatientId] = useState("1")
+  const [patientName, setPatientName] = useState("Juan Perez")
+  const [patientInjury, setPatientInjury] = useState("Ruptura de ligamentos")
 
-  // Constante para la ecuación diferencial (k)
-  const [constanteK, setConstanteK] = useState(0.15)
-
-  // Cálculo del tiempo estimado basado en la ecuación diferencial
-  const calcularTiempoEstimado = () => {
-    // M(t) = 50 + (M0 - 50)(1 - e^(-k*t))
-    // Despejando t: t = -ln(1 - (M - 50)/(M0 - 50))/k
-    if (movilidadObjetivo <= 50 || movilidadInicial <= 50) return 0
-
-    const numerador = 1 - (movilidadObjetivo - 50) / (movilidadInicial - 50)
-    if (numerador <= 0) return 0
-
-    const tiempo = -Math.log(numerador) / constanteK
-    return Math.ceil(tiempo)
-  }
-
-  const tiempoEstimado = calcularTiempoEstimado()
-
-  // Referencia para el canvas de la gráfica
   const canvasRef = useRef(null)
 
-  // Función para calcular la movilidad en un tiempo dado
-  const calcularMovilidad = (tiempoSemanas) => {
-    return 50 + (movilidadInicial - 50) * (1 - Math.exp(-constanteK * tiempoSemanas))
+  // Cargar datos del paciente seleccionado
+  useEffect(() => {
+    const paciente = pacientesMuestra.find((p) => p.id === pacienteSeleccionado)
+    if (paciente) {
+      setMovilidadInicial(paciente.movilidadInicial)
+      setMovilidadK(paciente.movilidadK)
+      setMovilidadObjetivo(paciente.movilidadObjetivo)
+      setFechaInicial(paciente.fechaInicial)
+      setFechaK(paciente.fechaK)
+      setPatientId(paciente.id)
+      setPatientName(paciente.nombre)
+      setPatientInjury(paciente.lesion)
+    }
+  }, [pacienteSeleccionado])
+
+  const calcularConstanteK = () => {
+    const t = (new Date(fechaK) - new Date(fechaInicial)) / (1000 * 60 * 60 * 24 * 7)
+    if (t <= 0) return null
+    const k = Math.log(movilidadK / movilidadInicial) / t
+    return k
   }
 
-  // Dibujar la gráfica
+  const calcularSemanasParaObjetivo = (k) => {
+    const t = Math.log(movilidadObjetivo / movilidadInicial) / k
+    return t
+  }
+
+  const calcularMovilidad = (t, k) => movilidadInicial * Math.exp(k * t)
+
+  const calcularFechaEstimada = (semanas) => {
+    if (semanas === null) return null
+    const fechaIni = new Date(fechaInicial)
+    const fechaEst = new Date(fechaIni)
+    fechaEst.setDate(fechaIni.getDate() + Math.round(semanas * 7))
+    return fechaEst.toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+  }
+
+  const generarDatosSemanales = (k) => {
+    if (!k) return []
+
+    const maxSemanas = Math.ceil(tiempoEstimado || 10)
+    const datos = []
+
+    for (let semana = 0; semana <= maxSemanas; semana++) {
+      const movilidad = calcularMovilidad(semana, k)
+      const fecha = new Date(fechaInicial)
+      fecha.setDate(fecha.getDate() + semana * 7)
+
+      // Ensure consistency with initial and evaluated points
+      let movilidadFinal = movilidad
+      if (semana === 0) {
+        movilidadFinal = movilidadInicial
+      } else if (Math.abs((new Date(fechaK) - new Date(fechaInicial)) / (1000 * 60 * 60 * 24 * 7) - semana) < 0.1) {
+        movilidadFinal = movilidadK
+      }
+
+      datos.push({
+        semana,
+        fecha: fecha.toLocaleDateString("es-ES", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }),
+        movilidad: movilidadFinal.toFixed(1),
+      })
+    }
+
+    return datos
+  }
+
+  useEffect(() => {
+    const k = calcularConstanteK()
+    setConstanteK(k)
+
+    if (k) {
+      const t = calcularSemanasParaObjetivo(k)
+      setTiempoEstimado(t)
+      setFechaEstimada(calcularFechaEstimada(t))
+      setDatosSemanales(generarDatosSemanales(k))
+    } else {
+      setTiempoEstimado(null)
+      setFechaEstimada(null)
+      setDatosSemanales([])
+    }
+  }, [movilidadInicial, movilidadK, movilidadObjetivo, fechaInicial, fechaK])
+
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas || !constanteK) return
 
     const ctx = canvas.getContext("2d")
     const width = canvas.width
     const height = canvas.height
-
-    // Limpiar canvas
     ctx.clearRect(0, 0, width, height)
 
-    // Configuración de la gráfica
-    const padding = 40
+    const padding = 50
     const graphWidth = width - padding * 2
     const graphHeight = height - padding * 2
 
-    // Dibujar ejes
+    // Background
+    ctx.fillStyle = "#f8fafc"
+    ctx.fillRect(0, 0, width, height)
+
+    // Grid
     ctx.beginPath()
-    ctx.strokeStyle = "#333"
+    ctx.strokeStyle = "#e2e8f0"
     ctx.lineWidth = 1
+
+    const maxT = Math.ceil(tiempoEstimado || 10) + 1
+    const maxM = movilidadObjetivo + 30
+
+    for (let i = 0; i <= maxT; i++) {
+      const x = padding + (i / maxT) * graphWidth
+      ctx.moveTo(x, padding)
+      ctx.lineTo(x, height - padding)
+    }
+
+    for (let i = 0; i <= maxM; i += 10) {
+      const y = height - padding - (i / maxM) * graphHeight
+      ctx.moveTo(padding, y)
+      ctx.lineTo(width - padding, y)
+    }
+    ctx.stroke()
+
+    // Axes
+    ctx.beginPath()
+    ctx.strokeStyle = "#64748b"
+    ctx.lineWidth = 2
     ctx.moveTo(padding, padding)
     ctx.lineTo(padding, height - padding)
     ctx.lineTo(width - padding, height - padding)
     ctx.stroke()
 
-    // Etiquetas de ejes
-    ctx.fillStyle = "#333"
-    ctx.font = "12px Arial"
+    // Labels
+    ctx.fillStyle = "#334155"
+    ctx.font = "14px Inter, system-ui, sans-serif"
     ctx.textAlign = "center"
     ctx.fillText("Tiempo (semanas)", width / 2, height - 10)
 
     ctx.save()
     ctx.translate(15, height / 2)
     ctx.rotate(-Math.PI / 2)
-    ctx.textAlign = "center"
-    ctx.fillText("Movilidad (%)", 0, 0)
+    ctx.fillText("Movilidad (°)", 0, 0)
     ctx.restore()
 
-    // Calcular puntos para la curva
-    const maxSemanas = Math.max(tiempoEstimado * 1.2, 20)
-    const maxMovilidad = Math.max(movilidadObjetivo * 1.1, 120)
-
-    // Dibujar líneas de cuadrícula
-    ctx.strokeStyle = "#ddd"
-    ctx.lineWidth = 0.5
-
-    // Líneas horizontales
-    for (let i = 0; i <= 100; i += 20) {
-      const y = height - padding - (i / maxMovilidad) * graphHeight
-      ctx.beginPath()
-      ctx.moveTo(padding, y)
-      ctx.lineTo(width - padding, y)
-      ctx.stroke()
-      ctx.fillText(i.toString(), padding - 15, y + 5)
+    // Axis values
+    ctx.font = "12px Inter, system-ui, sans-serif"
+    for (let i = 0; i <= maxT; i++) {
+      const x = padding + (i / maxT) * graphWidth
+      ctx.fillText(i.toString(), x, height - padding + 20)
     }
 
-    // Líneas verticales
-    for (let i = 0; i <= maxSemanas; i += 4) {
-      const x = padding + (i / maxSemanas) * graphWidth
-      ctx.beginPath()
-      ctx.moveTo(x, padding)
-      ctx.lineTo(x, height - padding)
-      ctx.stroke()
-      ctx.fillText(i.toString(), x, height - padding + 15)
+    for (let i = 0; i <= maxM; i += 10) {
+      const y = height - padding - (i / maxM) * graphHeight
+      ctx.textAlign = "right"
+      ctx.fillText(i + "°", padding - 10, y + 4)
     }
 
-    // Dibujar la curva de predicción
+    // Initial and evaluated points
+    const x0 = padding
+    const y0 = height - padding - (movilidadInicial / maxM) * graphHeight
+    const t1 = (new Date(fechaK) - new Date(fechaInicial)) / (1000 * 60 * 60 * 24 * 7)
+    const x1 = padding + (t1 / maxT) * graphWidth
+    const y1 = height - padding - (movilidadK / maxM) * graphHeight
+
+    // Target point
+    const xTarget = padding + (tiempoEstimado / maxT) * graphWidth
+    const yTarget = height - padding - (movilidadObjetivo / maxM) * graphHeight
+
+    // Curve
     ctx.beginPath()
     ctx.strokeStyle = "#3b82f6"
-    ctx.lineWidth = 2
-
-    for (let i = 0; i <= maxSemanas; i += 0.1) {
-      const movilidad = calcularMovilidad(i)
-      const x = padding + (i / maxSemanas) * graphWidth
-      const y = height - padding - (movilidad / maxMovilidad) * graphHeight
-
-      if (i === 0) {
-        ctx.moveTo(x, y)
-      } else {
-        ctx.lineTo(x, y)
-      }
+    ctx.lineWidth = 3
+    for (let t = 0; t <= maxT; t += 0.1) {
+      const m = calcularMovilidad(t, constanteK)
+      const x = padding + (t / maxT) * graphWidth
+      const y = height - padding - (m / maxM) * graphHeight
+      if (t === 0) ctx.moveTo(x, y)
+      else ctx.lineTo(x, y)
     }
     ctx.stroke()
 
-    // Marcar punto inicial
-    const xInicial = padding
-    const yInicial = height - padding - (movilidadInicial / maxMovilidad) * graphHeight
+    // Area under curve
     ctx.beginPath()
-    ctx.arc(xInicial, yInicial, 5, 0, Math.PI * 2)
-    ctx.fillStyle = "#3b82f6"
+    ctx.moveTo(padding, height - padding)
+    for (let t = 0; t <= maxT; t += 0.1) {
+      const m = calcularMovilidad(t, constanteK)
+      const x = padding + (t / maxT) * graphWidth
+      const y = height - padding - (m / maxM) * graphHeight
+      ctx.lineTo(x, y)
+    }
+    ctx.lineTo(padding + graphWidth, height - padding)
+    ctx.closePath()
+    ctx.fillStyle = "rgba(59, 130, 246, 0.1)"
     ctx.fill()
 
-    // Marcar punto actual
-    const tiempoActual = -Math.log(1 - (movilidadActual - 50) / (movilidadInicial - 50)) / constanteK
-    const xActual = padding + (tiempoActual / maxSemanas) * graphWidth
-    const yActual = height - padding - (movilidadActual / maxMovilidad) * graphHeight
-
+    // Points
+    // Initial point
     ctx.beginPath()
-    ctx.arc(xActual, yActual, 5, 0, Math.PI * 2)
+    ctx.arc(x0, y0, 6, 0, Math.PI * 2)
     ctx.fillStyle = "#10b981"
     ctx.fill()
-
-    // Marcar punto objetivo
-    const xObjetivo = padding + (tiempoEstimado / maxSemanas) * graphWidth
-    const yObjetivo = height - padding - (movilidadObjetivo / maxMovilidad) * graphHeight
-
-    ctx.beginPath()
-    ctx.arc(xObjetivo, yObjetivo, 5, 0, Math.PI * 2)
-    ctx.fillStyle = "#ef4444"
-    ctx.fill()
-
-    // Línea punteada hasta el objetivo
-    ctx.beginPath()
-    ctx.setLineDash([5, 3])
-    ctx.strokeStyle = "#ef4444"
-    ctx.moveTo(xActual, yActual)
-    ctx.lineTo(xObjetivo, yObjetivo)
+    ctx.strokeStyle = "#fff"
+    ctx.lineWidth = 2
     ctx.stroke()
-    ctx.setLineDash([])
 
-    // Leyenda
-    const leyendaX = width - padding - 150
-    const leyendaY = padding + 20
-
-    // Inicial
+    // Evaluated point
     ctx.beginPath()
-    ctx.arc(leyendaX, leyendaY, 5, 0, Math.PI * 2)
-    ctx.fillStyle = "#3b82f6"
+    ctx.arc(x1, y1, 6, 0, Math.PI * 2)
+    ctx.fillStyle = "#f59e0b"
     ctx.fill()
-    ctx.fillStyle = "#333"
-    ctx.textAlign = "left"
-    ctx.fillText("Inicio: Movilidad al " + movilidadInicial + "%", leyendaX + 10, leyendaY + 5)
+    ctx.strokeStyle = "#fff"
+    ctx.lineWidth = 2
+    ctx.stroke()
 
-    // Actual
+    // Target point
+    if (tiempoEstimado !== null) {
+      ctx.beginPath()
+      ctx.arc(xTarget, yTarget, 6, 0, Math.PI * 2)
+      ctx.fillStyle = "#ef4444"
+      ctx.fill()
+      ctx.strokeStyle = "#fff"
+      ctx.lineWidth = 2
+      ctx.stroke()
+
+      // Target line
+      ctx.beginPath()
+      ctx.setLineDash([5, 5])
+      ctx.strokeStyle = "#ef4444"
+      ctx.lineWidth = 1
+      ctx.moveTo(padding, yTarget)
+      ctx.lineTo(xTarget, yTarget)
+      ctx.lineTo(xTarget, height - padding)
+      ctx.stroke()
+      ctx.setLineDash([])
+    }
+
+    // Legend
+    const legendX = width - padding - 150
+    const legendY = padding + 20
+
+    ctx.font = "12px Inter, system-ui, sans-serif"
+    ctx.textAlign = "left"
+
+    // Initial
     ctx.beginPath()
-    ctx.arc(leyendaX, leyendaY + 20, 5, 0, Math.PI * 2)
+    ctx.arc(legendX, legendY, 5, 0, Math.PI * 2)
     ctx.fillStyle = "#10b981"
     ctx.fill()
-    ctx.fillStyle = "#333"
-    ctx.fillText("Actual: Movilidad al " + movilidadActual + "%", leyendaX + 10, leyendaY + 25)
+    ctx.strokeStyle = "#fff"
+    ctx.lineWidth = 1.5
+    ctx.stroke()
+    ctx.fillStyle = "#334155"
+    ctx.fillText("Inicial", legendX + 10, legendY + 4)
 
-    // Objetivo
+    // Evaluated
     ctx.beginPath()
-    ctx.arc(leyendaX, leyendaY + 40, 5, 0, Math.PI * 2)
+    ctx.arc(legendX, legendY + 20, 5, 0, Math.PI * 2)
+    ctx.fillStyle = "#f59e0b"
+    ctx.fill()
+    ctx.strokeStyle = "#fff"
+    ctx.lineWidth = 1.5
+    ctx.stroke()
+    ctx.fillStyle = "#334155"
+    ctx.fillText("Evaluada", legendX + 10, legendY + 24)
+
+    // Target
+    ctx.beginPath()
+    ctx.arc(legendX, legendY + 40, 5, 0, Math.PI * 2)
     ctx.fillStyle = "#ef4444"
     ctx.fill()
-    ctx.fillStyle = "#333"
-    ctx.fillText("Objetivo: Movilidad al " + movilidadObjetivo + "%", leyendaX + 10, leyendaY + 45)
-  }, [movilidadActual, movilidadObjetivo, movilidadInicial, constanteK, tiempoEstimado, calcularMovilidad])
-
-  // Calcular porcentaje faltante
-  const porcentajeFaltante = movilidadObjetivo - movilidadActual
-
-  // Calcular porcentaje de progreso desde el inicio
-  const progresoDesdeInicio = movilidadActual - movilidadInicial
-
-  // Calcular sesiones restantes
-  const sesionesRestantes = sesionesProgramadas - sesionesCompletadas
+    ctx.strokeStyle = "#fff"
+    ctx.lineWidth = 1.5
+    ctx.stroke()
+    ctx.fillStyle = "#334155"
+    ctx.fillText("Objetivo", legendX + 10, legendY + 44)
+  }, [constanteK, tiempoEstimado, movilidadInicial, movilidadK, movilidadObjetivo])
 
   return (
     <div className="prediccion-container">
-      <h1>Predicción de Recuperación del Paciente</h1>
-      <p className="subtitle">Modelo predictivo de movilidad usando ecuaciones diferenciales</p>
-
-      <div className="cards-container">
-        <div className="card">
-          <div className="card-header">
-            <h3>Movilidad Actual</h3>
-            <span className="icon">📈</span>
-          </div>
-          <div className="card-value">{movilidadActual}%</div>
-          <div className="progress-bar">
-            <div className="progress" style={{ width: `${movilidadActual}%` }}></div>
-          </div>
-          <p className="card-detail">+{progresoDesdeInicio}% desde el inicio del tratamiento</p>
-        </div>
-
-        <div className="card">
-          <div className="card-header">
-            <h3>Movilidad Objetivo</h3>
-            <span className="icon">🎯</span>
-          </div>
-          <div className="card-value">{movilidadObjetivo}%</div>
-          <div className="progress-bar">
-            <div className="progress" style={{ width: `${movilidadObjetivo}%` }}></div>
-          </div>
-          <p className="card-detail">Falta {porcentajeFaltante}% para completar</p>
-        </div>
-
-        <div className="card">
-          <div className="card-header">
-            <h3>Tiempo Estimado</h3>
-            <span className="icon">⏱️</span>
-          </div>
-          <div className="card-value">{tiempoEstimado} semanas</div>
-          <div className="progress-bar">
-            <div
-              className="progress"
-              style={{ width: `${(tiempoEstimado / 52) * 100 > 100 ? 100 : (tiempoEstimado / 52) * 100}%` }}
-            ></div>
-          </div>
-          <p className="card-detail">Para alcanzar al {movilidadObjetivo}% de movilidad</p>
-        </div>
-
-        <div className="card">
-          <div className="card-header">
-            <h3>Tratamientos</h3>
-            <span className="icon">📋</span>
-          </div>
-          <div className="card-value">
-            {sesionesCompletadas}/{sesionesProgramadas}
-          </div>
-          <div className="progress-bar">
-            <div className="progress" style={{ width: `${(sesionesCompletadas / sesionesProgramadas) * 100}%` }}></div>
-          </div>
-          <p className="card-detail">{sesionesRestantes} sesiones restantes</p>
-        </div>
+      <div className="header">
+        <h1>Predicción de Recuperación de Movilidad</h1>
+        <p>Modelo matemático para estimar el tiempo de recuperación basado en mediciones de movilidad</p>
       </div>
 
-      <div className="main-content">
-        <div className="graph-container">
-          <h2>Predicción de Evolución de Movilidad</h2>
-          <p>La gráfica muestra la evolución real y la predicción basada en el modelo matemático</p>
-          <canvas ref={canvasRef} width={800} height={400} className="graph-canvas"></canvas>
+      <div className="patient-selector">
+        <label htmlFor="paciente-select">Seleccionar Paciente:</label>
+        <select
+          id="paciente-select"
+          className="select-paciente"
+          value={pacienteSeleccionado}
+          onChange={(e) => setPacienteSeleccionado(e.target.value)}
+        >
+          {pacientesMuestra.map((paciente) => (
+            <option key={paciente.id} value={paciente.id}>
+              {paciente.id}: {paciente.nombre} - {paciente.lesion}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="main-grid">
+        <div className="patient-card">
+          <div className="card-header">
+            <div className="card-title">
+              <span className="icon-activity"></span>
+              Datos del Paciente
+            </div>
+            <div className="card-description">Ingrese los datos de movilidad y fechas de evaluación</div>
+          </div>
+          <div className="card-content">
+            <div className="form-group">
+              <label htmlFor="movilidadInicial" className="label-with-badge">
+                <span className="badge badge-green">Inicial</span>
+                Movilidad Inicial (°)
+              </label>
+              <input
+                id="movilidadInicial"
+                type="number"
+                value={movilidadInicial}
+                onChange={(e) => setMovilidadInicial(Number(e.target.value))}
+                className="input"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="fechaInicial" className="label-with-icon">
+                <span className="icon-calendar"></span>
+                Fecha Inicial
+              </label>
+              <div className="input-wrapper">
+                <input
+                  id="fechaInicial"
+                  type="date"
+                  value={fechaInicial}
+                  onChange={(e) => setFechaInicial(e.target.value)}
+                  className="input"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="movilidadK" className="label-with-badge">
+                <span className="badge badge-amber">Evaluada</span>
+                Movilidad Evaluada (°)
+              </label>
+              <input
+                id="movilidadK"
+                type="number"
+                value={movilidadK}
+                onChange={(e) => setMovilidadK(Number(e.target.value))}
+                className="input"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="fechaK" className="label-with-icon">
+                <span className="icon-calendar"></span>
+                Fecha Evaluada
+              </label>
+              <div className="input-wrapper">
+                <input
+                  id="fechaK"
+                  type="date"
+                  value={fechaK}
+                  onChange={(e) => setFechaK(e.target.value)}
+                  className="input"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="movilidadObjetivo" className="label-with-badge">
+                <span className="badge badge-red">Objetivo</span>
+                Movilidad Objetivo (°)
+              </label>
+              <input
+                id="movilidadObjetivo"
+                type="number"
+                value={movilidadObjetivo}
+                onChange={(e) => setMovilidadObjetivo(Number(e.target.value))}
+                className="input"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="patientId" className="label-with-icon">
+                <span className="icon-user"></span>
+                ID del Paciente
+              </label>
+              <input
+                id="patientId"
+                type="text"
+                value={patientId}
+                onChange={(e) => setPatientId(e.target.value)}
+                className="input"
+                readOnly
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="patientName" className="label-with-icon">
+                <span className="icon-user"></span>
+                Nombre del Paciente
+              </label>
+              <input
+                id="patientName"
+                type="text"
+                value={patientName}
+                onChange={(e) => setPatientName(e.target.value)}
+                className="input"
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="patientInjury" className="label-with-icon">
+                <span className="icon-activity"></span>
+                Lesión
+              </label>
+              <input
+                id="patientInjury"
+                type="text"
+                value={patientInjury}
+                onChange={(e) => setPatientInjury(e.target.value)}
+                className="input"
+              />
+            </div>
+
+            <div className="results-card">
+              <div className="result-item">
+                <h3>Constante de recuperación (k)</h3>
+                <p className="result-value">{constanteK ? constanteK.toFixed(4) : "No calculada"}</p>
+              </div>
+              <div className="result-item">
+                <h3>Tiempo estimado para {movilidadObjetivo}°</h3>
+                <p className="result-value">
+                  {tiempoEstimado !== null ? tiempoEstimado.toFixed(2) + " semanas" : "No calculado"}
+                </p>
+                {fechaEstimada && <p className="result-date">Fecha estimada: {fechaEstimada}</p>}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="patient-details">
-          <h2>Detalles del Paciente</h2>
-          <p>Información y parámetros del modelo</p>
-
-          <div className="detail-item">
-            <label>ID del Paciente</label>
-            <input type="text" value={idPaciente} onChange={(e) => setIdPaciente(e.target.value)} />
+        <div className="visualization-card">
+          <div className="visualization-header">
+            <div className="header-with-tabs">
+              <div className="card-title">
+                <span className="icon-chart"></span>
+                Visualización de Recuperación
+              </div>
+              <div className="tabs-list">
+                <button
+                  className={`tab ${activeTab === "grafica" ? "active" : ""}`}
+                  onClick={() => setActiveTab("grafica")}
+                >
+                  Gráfica
+                </button>
+                <button
+                  className={`tab ${activeTab === "tabla" ? "active" : ""}`}
+                  onClick={() => setActiveTab("tabla")}
+                >
+                  Tabla
+                </button>
+              </div>
+            </div>
+            <div className="card-description">Proyección de la recuperación de movilidad a lo largo del tiempo</div>
           </div>
-
-          <div className="detail-item">
-            <label>Tipo de Lesión</label>
-            <input type="text" value={tipoLesion} onChange={(e) => setTipoLesion(e.target.value)} />
+          <div className="patient-info-display">
+            <div className="patient-info-item">
+              <span className="patient-info-label">ID:</span> {patientId}
+            </div>
+            <div className="patient-info-item">
+              <span className="patient-info-label">Nombre:</span> {patientName}
+            </div>
+            <div className="patient-info-item">
+              <span className="patient-info-label">Lesión:</span> {patientInjury}
+            </div>
           </div>
-
-          <div className="detail-item">
-            <label>Tratamiento</label>
-            <input type="text" value={tratamiento} onChange={(e) => setTratamiento(e.target.value)} />
-          </div>
-
-          <div className="detail-item">
-            <label>Movilidad Inicial (%)</label>
-            <input
-              type="number"
-              value={movilidadInicial}
-              onChange={(e) => setMovilidadInicial(Number(e.target.value))}
-              min="0"
-              max="100"
-            />
-          </div>
-
-          <div className="detail-item">
-            <label>Movilidad Actual (%)</label>
-            <input
-              type="number"
-              value={movilidadActual}
-              onChange={(e) => setMovilidadActual(Number(e.target.value))}
-              min="0"
-              max="100"
-            />
-          </div>
-
-          <div className="detail-item">
-            <label>Movilidad Objetivo (%)</label>
-            <input
-              type="number"
-              value={movilidadObjetivo}
-              onChange={(e) => setMovilidadObjetivo(Number(e.target.value))}
-              min="0"
-              max="150"
-            />
-          </div>
-
-          <div className="detail-item">
-            <label>Constante de Recuperación (k)</label>
-            <input
-              type="number"
-              value={constanteK}
-              onChange={(e) => setConstanteK(Number(e.target.value))}
-              min="0.01"
-              max="1"
-              step="0.01"
-            />
-          </div>
-
-          <div className="detail-item">
-            <label>Sesiones Completadas</label>
-            <input
-              type="number"
-              value={sesionesCompletadas}
-              onChange={(e) => setSesionesCompletadas(Number(e.target.value))}
-              min="0"
-              max={sesionesProgramadas}
-            />
-          </div>
-
-          <div className="detail-item">
-            <label>Sesiones Programadas</label>
-            <input
-              type="number"
-              value={sesionesProgramadas}
-              onChange={(e) => setSesionesProgramadas(Number(e.target.value))}
-              min="1"
-            />
-          </div>
-
-          <div className="equation-box">
-            <h3>Ecuación aplicada</h3>
-            <p className="equation">
-              M(t) = 50 + (M₀ - 50)(1 - e<sup>-{constanteK}t</sup>)
-            </p>
+          <div className="visualization-content">
+            <div className={`tab-content ${activeTab === "grafica" ? "active" : ""}`}>
+              <div className="graph-container">
+                <canvas ref={canvasRef} width={800} height={500} className="graph-canvas" />
+              </div>
+              <div className="summary-cards">
+                <div className="summary-card">
+                  <div className="color-dot green"></div>
+                  <div className="summary-text">
+                    <p className="summary-label">Movilidad Inicial</p>
+                    <p className="summary-value">{movilidadInicial}°</p>
+                  </div>
+                </div>
+                <div className="summary-card">
+                  <div className="color-dot amber"></div>
+                  <div className="summary-text">
+                    <p className="summary-label">Movilidad Evaluada</p>
+                    <p className="summary-value">{movilidadK}°</p>
+                  </div>
+                </div>
+                <div className="summary-card">
+                  <div className="color-dot red"></div>
+                  <div className="summary-text">
+                    <p className="summary-label">Movilidad Objetivo</p>
+                    <p className="summary-value">{movilidadObjetivo}°</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={`tab-content ${activeTab === "tabla" ? "active" : ""}`}>
+              <div className="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Semana</th>
+                      <th>Fecha</th>
+                      <th>Movilidad (°)</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {datosSemanales.map((dato) => (
+                      <tr key={dato.semana}>
+                        <td className="cell-semana">{dato.semana}</td>
+                        <td>{dato.fecha}</td>
+                        <td>{dato.movilidad}°</td>
+                        <td>
+                          {dato.semana === 0 ? (
+                            <span className="badge badge-green">Inicial</span>
+                          ) : Number(dato.movilidad) >= movilidadObjetivo ? (
+                            <span className="badge badge-blue">Objetivo alcanzado</span>
+                          ) : (
+                            <span className="badge badge-gray">En progreso</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>

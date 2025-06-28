@@ -1,8 +1,8 @@
-/* Variables CSS */
+/* Variables CSS corregir */
 :root {
-    --color-primary:  #2a9d8f;;
-    --color-primary-hover: #0d9488;
-    --color-primary-light: #f0fdfa;
+    
+    --clr-brand-primary-hover: #0d9488;
+    --clr-brand-primary-light: #f0fdfa;
     --color-secondary: #c4226b;
     --color-secondary-hover: #9d1b55;
 
@@ -21,7 +21,6 @@
     --background-secondary: #f9fafb;
     --border:#e5e7eb;
 
-
     --admin-text: #374151;
     
     --text-lighter: #9ca3af;
@@ -29,9 +28,6 @@
     --admin-background: #f9fafb;
     --admin-white: #ffffff;
     
-   
-    --blogAdmin-color-primary: #14b8a6;
-    --blogAdmin-color-primary-hover: #0d9488;
     --blogAdmin-color-text: #111827;
     --blogAdmin-color-text-secondary: #6b7280;
     --blogAdmin-color-border: #e5e7eb;
@@ -56,7 +52,7 @@
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-    --color-primary-hover: #0d9488;
+    --clr-brand-primary-hover: #0d9488;
     --publicBlogDetail-color-text: #111827;
     --publicBlogDetail-color-text-secondary: #6b7280;
     --publicBlogDetail-color-border: #e5e7eb;

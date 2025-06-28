@@ -4,7 +4,7 @@ import Error400 from "./Error400";
 import MaintenancePage from "./Maintenance";
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => {
-    console.log(error?.code, error?.response);
+
     if (error?.code === "ECONNREFUSED") {
         return <MaintenancePage />; // Muestra la página de mantenimiento
     }

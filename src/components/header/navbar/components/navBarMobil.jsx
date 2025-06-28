@@ -1,55 +1,66 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState, useRef, useEffect } from "react"
+import { Link } from "react-router-dom"
+import { ChevronDown, ChevronUp } from "lucide-react"
 
-const Dropdown = ({ mobile, onItemClick }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const NavDropdown = ({ title, items, mobile, onItemClick }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const dropdownRef = useRef(null)
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false)
+      }
+    }
+
+    if (!mobile) {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [mobile])
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+    setIsOpen(!isOpen)
+  }
 
   const handleItemClick = () => {
-    setIsOpen(false);
+    setIsOpen(false)
     if (onItemClick) {
-      onItemClick();
+      onItemClick()
     }
-  };
+  }
 
   return (
-    <div className="nav-item">
+    <div className="nav-dropdown" ref={dropdownRef}>
       <button
-        className="nav-link"
-        onClick={mobile ? toggleDropdown : undefined}
+        className="nav-link dropdown-toggle"
+        onClick={toggleDropdown}
         onMouseEnter={!mobile ? () => setIsOpen(true) : undefined}
-        onMouseLeave={!mobile ? () => setIsOpen(false) : undefined}
         aria-expanded={isOpen}
       >
-        Servicios
-        {mobile && (isOpen ? <ChevronUp className="icon-chevDrown" /> : <ChevronDown className="icon-chevDrown" />)}
+        {title}
+        {isOpen ? <ChevronUp className="dropdown-icon" /> : <ChevronDown className="dropdown-icon" />}
       </button>
 
-      {(isOpen || (!mobile && isOpen)) && (
-        <div
-          className="dropdown"
-          onMouseEnter={!mobile ? () => setIsOpen(true) : undefined}
-          onMouseLeave={!mobile ? () => setIsOpen(false) : undefined}
-        >
-          <Link to="/service1" className="dropdown-item" onClick={handleItemClick}>
-            Fisioterapia Pediátrica
+      <div
+        className={`dropdown-menu ${isOpen ? "open" : ""}`}
+        onMouseLeave={!mobile ? () => setIsOpen(false) : undefined}
+      >
+        {items.map((item, index) => (
+          <Link key={index} to={item.path} className="dropdown-item" onClick={handleItemClick}>
+            {item.title}
           </Link>
-          <Link to="/service2" className="dropdown-item" onClick={handleItemClick}>
-            Fisioterapia Ortopédica
-          </Link>
-          <Link to="/service3" className="dropdown-item" onClick={handleItemClick}>
-            Fisioterapia Oncológica
-          </Link>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default Dropdown;
+export default NavDropdown
+

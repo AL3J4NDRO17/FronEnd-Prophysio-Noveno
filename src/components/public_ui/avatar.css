@@ -1,0 +1,24 @@
+.appointmentsAdmin-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0; /* Prevent shrinking in flex containers */
+}
+
+.appointmentsAdmin-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.appointmentsAdmin-avatar-fallback {
+  font-weight: 500;
+  font-size: 0.75rem;
+  color: var(--clr-brand-primary);
+  text-transform: uppercase;
+}

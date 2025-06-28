@@ -218,6 +218,7 @@
   .user-dashboard-sidebar {
     transform: translateX(-100%);
     z-index: 100;
+    position: absolute;
   }
 
   .user-dashboard-sidebar.mobile-open {

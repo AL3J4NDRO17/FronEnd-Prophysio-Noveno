@@ -109,7 +109,7 @@
 .adminDashboard-search-input:focus {
   outline: none;
   border-color: transparent;
-  box-shadow: 0 0 0 2px var(--color-primary);
+  box-shadow: 0 0 0 2px var(--clr-brand-primary);
 }
 
 .adminDashboard-select {
@@ -237,7 +237,7 @@
 .adminDashboard-blog-card-category {
   font-size: 0.75rem;
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--clr-brand-primary);
   margin-bottom: 0.5rem;
 }
 
@@ -443,9 +443,9 @@
 }
 
 .adminDashboard-alignment-button.active {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: var(--clr-brand-primary-light);
+  color: var(--clr-brand-primary);
+  border-color: var(--clr-brand-primary);
 }
 
 .adminDashboard-editor-main {
@@ -671,8 +671,8 @@
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem 0.5rem;
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
+  background-color: var(--clr-brand-primary-light);
+  color: var(--clr-brand-primary);
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 500;
@@ -684,13 +684,13 @@
   justify-content: center;
   background: none;
   border: none;
-  color: var(--color-primary);
+  color: var(--clr-brand-primary);
   cursor: pointer;
   padding: 0;
 }
 
 .adminDashboard-tag-remove:hover {
-  color: var(--color-primary-hover);
+  color: var(--clr-brand-primary-hover);
 }
 
 /* Preview */
@@ -802,7 +802,7 @@
 }
 
 .adminDashboard-preview-category {
-  color: var(--color-primary);
+  color: var(--clr-brand-primary);
 }
 
 .adminDashboard-preview-placeholder {
@@ -849,8 +849,8 @@
 
 .adminDashboard-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px var(--color-primary-light);
+  border-color: var(--clr-brand-primary);
+  box-shadow: 0 0 0 2px var(--clr-brand-primary-light);
 }
 
 .adminDashboard-textarea {
@@ -866,8 +866,8 @@
 
 .adminDashboard-textarea:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px var(--color-primary-light);
+  border-color: var(--clr-brand-primary);
+  box-shadow: 0 0 0 2px var(--clr-brand-primary-light);
 }
 
 /* Responsive */

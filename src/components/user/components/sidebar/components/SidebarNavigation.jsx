@@ -7,7 +7,7 @@ const SidebarNavigation = ({ isActive, handleNavigation }) => {
   const menuItems = [
     { path: "/user", icon: Home, label: "Inicio" },
     { path: "/user/profile", icon: User, label: "Mi Perfil" },
-    { path: "/user/appointments", icon: Calendar, label: "Agendar Cita" },
+    { path: "/user/sheduler", icon: Calendar, label: "Agendar Cita" },
     { path: "/user/history", icon: Clock, label: "Historial de Citas" },
     { path: "/user/medical-history", icon: FileText, label: "Historial Clínico" },
   ]

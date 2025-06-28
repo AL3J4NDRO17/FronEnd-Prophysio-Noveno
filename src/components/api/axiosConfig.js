@@ -1,7 +1,10 @@
 import axios from "axios";
 
+const URL_BACKEND="https://prophysio-prophysiobk.ibudeg.easypanel.host"
+const URL_LOCAL="http://localhost:5000";
+
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api/",
+  baseURL: `${URL_LOCAL}/api/`,
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
   timeout: 10000,
@@ -25,10 +28,10 @@ export const fetchCsrfToken = async () => {
   try {
     const response = await axiosInstance.get("/csrf-token");
     const csrfToken = response.headers["x-csrf-token"]; // 📌 Extraer el token de los headers
-
+  
     if (csrfToken) {
       axiosInstance.defaults.headers.common["X-CSRF-Token"] = csrfToken; // ✅ Guardarlo en Axios
-      console.log("✅ CSRF Token guardado en Axios:", csrfToken);
+    
     } else {
       console.error("❌ No se encontró CSRF Token en los headers.");
     }
@@ -50,7 +53,6 @@ axiosInstance.interceptors.request.use(async (config) => {
     }
   }
 
-  console.log("🔹 Headers antes de la petición:", config.headers);
   return config;
 }, (error) => Promise.reject(error));
 

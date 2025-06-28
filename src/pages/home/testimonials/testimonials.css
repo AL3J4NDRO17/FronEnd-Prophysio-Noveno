@@ -47,17 +47,18 @@
 }
 
 .testimonials-row::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
+  background: var(--clr-brand-primary);
   border-radius: 4px;
 }
 
 .testimonials-row::-webkit-scrollbar-thumb:hover {
-  background: var(--color-primary-dark);
+  background: var(--clr-brand-primary-dark);
 }
 
 .testimonial-card {
   background: white;
   padding: 2rem;
+  gap:20px;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;

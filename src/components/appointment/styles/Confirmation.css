@@ -1,0 +1,105 @@
+/* src/styles/confirmation.css */
+
+.confirmation-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-page); /* Usar variable global */
+  padding: 1rem;
+}
+
+.confirmation-card {
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--bg-white); /* Usar variable global */
+  border-radius: var(--radius-md); /* Usar variable global */
+  box-shadow: var(--shd-lg); /* Usar variable global */
+  overflow: hidden;
+  text-align: center;
+}
+
+.confirmation-card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--brd-default); /* Usar variable global */
+}
+
+.confirmation-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--txt-heading); /* Usar variable global */
+  margin-bottom: 0.5rem;
+}
+
+.confirmation-card-description {
+  font-size: 0.9rem;
+  color: var(--txt-secondary); /* Usar variable global */
+}
+
+.confirmation-card-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.confirmation-status-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.confirmation-status-message p {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--txt-default); /* Usar variable global */
+}
+
+.confirmation-status-message.success p {
+  color: var(--clr-status-success); /* Usar variable global */
+  font-weight: 500;
+}
+
+.confirmation-status-message.error p {
+  color: var(--clr-status-danger); /* Usar variable global */
+  font-weight: 500;
+}
+
+.confirmation-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.success-icon {
+  color: var(--clr-status-success); /* Usar variable global */
+}
+
+.error-icon {
+  color: var(--clr-status-danger); /* Usar variable global */
+}
+
+.loading-icon {
+  color: var(--clr-brand-primary); /* Usar variable global */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.confirmation-card-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--brd-default); /* Usar variable global */
+  display: flex;
+  justify-content: center;
+}
+
+/* El estilo del botón se hereda de components/ui-custom/button.css */

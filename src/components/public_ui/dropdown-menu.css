@@ -1,0 +1,49 @@
+.appointmentsAdmin-dropdown-menu {
+  position: relative;
+  display: inline-block; /* Or block, depending on usage */
+}
+
+.appointmentsAdmin-dropdown-menu-content {
+  position: absolute;
+  top: 100%; /* Position below the trigger */
+  right: 0; /* Align to the right of the trigger */
+  z-index: 50; /* Ensure it's above other content */
+  margin-top: 0.25rem; /* Small gap below trigger */
+  background-color: var(--bg-white);
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shd-md);
+  min-width: 10rem; /* Minimum width for readability */
+  padding: 0.5rem 0;
+  list-style: none; /* Remove default list styling */
+}
+
+.appointmentsAdmin-dropdown-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--txt-default);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.appointmentsAdmin-dropdown-menu-item:hover,
+.appointmentsAdmin-dropdown-menu-item:focus {
+  background-color: var(--bg-secondary);
+  outline: none; /* Remove focus outline */
+}
+
+.appointmentsAdmin-dropdown-menu-separator {
+  height: 1px;
+  background-color: var(--brd-default);
+  margin: 0.5rem 0;
+}
+
+.appointmentsAdmin-dropdown-menu-label {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: var(--txt-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+}

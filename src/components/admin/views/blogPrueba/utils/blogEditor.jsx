@@ -23,7 +23,7 @@ const BlogEditor = ({ onClose, existingBlog, categories }) => {
   const categoriesList = categories && Array.isArray(categories) ? categories : [];
 
   useEffect(() => {
-    console.log("Tamaño de la imagen actualizado:", contentImageSize);
+  
   }, [contentImageSize]);
 
   const updateContentImageSize = (newSize) => {

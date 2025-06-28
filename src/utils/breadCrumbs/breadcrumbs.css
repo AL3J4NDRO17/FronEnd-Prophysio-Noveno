@@ -1,8 +1,8 @@
 /* Breadcrumbs Styles */
 :root {
-    --color-primary: #2a9d8f;
-    --color-primary-hover: #0d9488;
-    --color-primary-light: #f0fdfa;
+    --clr-brand-primary: #2a9d8f;
+    --clr-brand-primary-hover: #0d9488;
+    --clr-brand-primary-light: #f0fdfa;
     --color-secondary: #c4226b;
     --color-secondary-hover: #9d1b55;
     --text-normal: #374151;
@@ -51,8 +51,8 @@
   
   .site-breadcrumbs__back-button:hover {
     background-color: var(--background);
-    color: var(--color-primary);
-    border-color: var(--color-primary);
+    color: var(--clr-brand-primary);
+    border-color: var(--clr-brand-primary);
   }
   
   .site-breadcrumbs__back-icon {
@@ -91,7 +91,7 @@
   }
   
   .site-breadcrumbs__link:hover {
-    color: var(--color-primary);
+    color: var(--clr-brand-primary);
   }
   
   .site-breadcrumbs__current {
@@ -158,7 +158,7 @@
   
   /* Variante con fondo */
   .site-breadcrumbs--with-bg {
-    background-color: var(--color-primary-light);
+    background-color: var(--clr-brand-primary-light);
     border-bottom: none;
   }
   
@@ -200,7 +200,7 @@
   }
   
   .site-breadcrumbs--pill .site-breadcrumbs__current {
-    background-color: var(--color-primary-light);
+    background-color: var(--clr-brand-primary-light);
   }
   
   

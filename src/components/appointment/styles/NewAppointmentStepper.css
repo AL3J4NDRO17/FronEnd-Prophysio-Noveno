@@ -1,0 +1,186 @@
+/* Vertical Stepper Styles */
+
+.publicAppointment-stepper-outer-wrapper {
+  /* Este es el contenedor principal del stepper dentro del form-container */
+  width: 100%;
+  max-width: 800px; /* Limita el ancho total si es muy ancho */
+  margin: 0 auto; /* Centrar dentro del form-container */
+}
+
+.newAppointment-stepper-layout {
+  display: flex;
+  gap: 2.5rem; /* Espacio entre el stepper vertical y el contenido del paso */
+  width: 100%;
+  align-items: flex-start; /* Alinea los ítems arriba */
+}
+
+.newAppointment-stepper-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra los dots */
+  position: relative;
+  padding: 0.5rem 0; /* Espacio superior e inferior para los puntos */
+}
+
+.newAppointment-stepper-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: var(--brd-default); /* Color de la línea */
+  transform: translateX(-50%);
+  z-index: 0; /* Detrás de los puntos */
+}
+
+.newAppointment-stepper-step {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Espacio entre el punto y el título del paso */
+  margin-bottom: 2rem; /* Espacio entre los pasos */
+  position: relative;
+  z-index: 1; /* Para que los puntos estén sobre la línea */
+}
+
+.newAppointment-stepper-step:last-child {
+  margin-bottom: 0; /* No hay margen inferior en el último paso */
+}
+
+.newAppointment-stepper-dot {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--bg-white);
+  border: 2px solid var(--brd-default);
+  color: var(--txt-secondary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
+  flex-shrink: 0; /* Evita que el dot se encoja */
+}
+
+.newAppointment-stepper-dot--active {
+  background-color: var(--clr-brand-primary);
+  color: var(--clr-white);
+  border-color: var(--clr-brand-primary);
+  box-shadow: var(--shd-md);
+  transform: scale(1.05);
+}
+
+.newAppointment-stepper-dot--completed {
+  background-color: var(--clr-brand-primary); /* Mismo color que active para completado */
+  color: var(--clr-white);
+  border-color: var(--clr-brand-primary);
+  box-shadow: var(--shd-md);
+}
+
+.newAppointment-stepper-dot--completed::before {
+  content: "✔"; /* Icono de checkmark */
+  font-size: 1.2rem;
+  line-height: 1; /* Ajustar para centrar el check */
+}
+
+.newAppointment-stepper-dot--completed.newAppointment-stepper-dot--active::before {
+  content: ""; /* Asegurar que el checkmark permanece al ser completado y activo (raro, pero por si acaso) */
+}
+
+/* Oculta el número si ya tiene check y no es el paso activo */
+.newAppointment-stepper-dot--completed:not(.newAppointment-stepper-dot--active) span {
+  display: none;
+}
+
+/* Muestra el número en el paso activo */
+.newAppointment-stepper-dot--active span {
+  display: block;
+}
+
+.newAppointment-stepper-step-title {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600; /* font-semibold */
+  color: var(--txt-default);
+  white-space: nowrap; /* Evita que el título se rompa en varias líneas */
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shd-sm);
+  transition: all 0.3s ease-in-out;
+}
+
+.newAppointment-stepper-step-title--active {
+  background-color: var(--clr-gray-dark); /* Color oscuro para el paso activo */
+  color: var(--clr-white); /* Texto blanco para el paso activo */
+}
+
+.newAppointment-stepper-content-area {
+  flex: 1; /* Ocupa el resto del espacio horizontal */
+  padding-left: 1rem; /* Espacio entre los títulos y el contenido del paso */
+}
+
+/* Los estilos de resumen se han movido a app/citas/appointments.css */
+
+/* Estilos para el nuevo ConfirmationStep */
+.publicAppointment-confirmation-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem; /* p-6 */
+  gap: 1rem; /* space-y-4 */
+}
+
+.publicAppointment-confirmation-icon {
+  height: 4rem; /* h-16 */
+  width: 4rem; /* w-16 */
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--clr-brand-primary); /* text-teal-500 */
+}
+
+.publicAppointment-confirmation-text-lg {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600; /* font-semibold */
+  color: var(--txt-heading); /* text-gray-800 */
+}
+
+.publicAppointment-confirmation-text-base {
+  font-size: 1rem; /* text-base */
+  color: var(--txt-secondary); /* text-gray-600 */
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .newAppointment-stepper-layout {
+    flex-direction: column; /* Apila el stepper y el contenido */
+    gap: 1.5rem;
+  }
+  .newAppointment-stepper-progress {
+    flex-direction: row; /* Stepper vuelve a ser horizontal en móvil */
+    padding: 0;
+    margin-bottom: 1rem;
+    justify-content: center;
+  }
+  .newAppointment-stepper-line {
+    display: none; /* Oculta la línea vertical en móvil */
+  }
+  .newAppointment-stepper-step {
+    flex-direction: column; /* Apila el dot y el título en móvil */
+    gap: 0.25rem;
+    margin-bottom: 0;
+    text-align: center;
+  }
+  .newAppointment-stepper-step-title {
+    font-size: 0.875rem; /* Texto más pequeño */
+    padding: 0.25rem 0.5rem;
+  }
+  .newAppointment-stepper-dot {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.875rem;
+  }
+  .newAppointment-stepper-content-area {
+    padding-left: 0; /* No padding a la izquierda */
+  }
+}

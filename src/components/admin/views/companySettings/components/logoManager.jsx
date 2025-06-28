@@ -33,7 +33,7 @@ const LogoManager = ({ companyId, currentLogo, onLogoUpdate }) => {
     try {
       const logos = await getCompanyLogos(companyId);
       setLogoHistory(logos.history || []);
-      console.log(logos.history)
+
     } catch (error) {
       console.error("Error al obtener historial de logos:", error);
     }

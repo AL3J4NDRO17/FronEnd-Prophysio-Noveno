@@ -1,24 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import useRegister from "../hooks/registerState"
 import "../styles/registerForm.css"
 import IMG from "../assets/usuario.png"
 import { FaEye, FaEyeSlash } from "react-icons/fa6" // 🔥 Iconos para mostrar/ocultar contraseña
 import ReCAPTCHA from "react-google-recaptcha" // 🔥 reCAPTCHA para seguridad
 import { PasswordToggleButton } from "@uiButtons";
+import {getAllPreguntasSecretasService} from "../services/registerServices"
 import ValidationWindow from "@/components/admin/ui/validationWindow/validationWindow";
 const SITE_KEY = "6LdFN18qAAAAAB5WT437-hRS9w4jTFRoGKjIdIBe" // 🔥 Reemplaza con tu clave pública de Google reCAPTCHA
 
 // Lista de preguntas secretas
-const PREGUNTAS_SECRETAS = [
-  { id: 0, texto: "Selecciona una pregunta secreta" },
-  { id: 1, texto: "¿Cuál es el nombre de tu primera mascota?" },
-  { id: 2, texto: "¿En qué ciudad naciste?" },
-  { id: 3, texto: "¿Cuál es el nombre de tu escuela primaria?" },
-  { id: 4, texto: "¿Cuál es tu película favorita?" },
-  { id: 5, texto: "¿Cuál es el segundo nombre de tu madre?" },
-]
 
 const RegisterForm = () => {
   const {
@@ -39,14 +32,30 @@ const RegisterForm = () => {
     isLoading,
     errors, // 🔥 Capturar errores de validación
     handleRegisterSubmit,
+    getAllPreguntasSecretas,
   } = useRegister()
 
+  const [preguntasSecretas, setPreguntasSecretas] = useState([]); // Estado para almacenar las preguntas secretas
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isPasswordFocused, setIsPasswordFocused] = useState(false)
 
   const togglePassword = () => setShowPassword(!showPassword)
   const toggleConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword)
+
+  useEffect(() => {
+    const fetchPreguntasSecretas = async () => {
+      try {
+        const preguntas = await getAllPreguntasSecretasService(); // ✅ Llama correctamente a la API
+       
+        setPreguntasSecretas(preguntas) // ✅ Actualiza el estado correctamente
+      } catch (error) {
+        console.error("Error al obtener las preguntas secretas:", error)
+      }
+    }
+
+    fetchPreguntasSecretas() // ✅ Llama la función correctamente
+  }, [getAllPreguntasSecretas]) // ✅ Dependencia correcta
 
   return (
     <div className="signup-container">
@@ -88,7 +97,7 @@ const RegisterForm = () => {
               placeholder="correo@ejemplo.com"
               value={email}
               onChange={(e) => {
-                console.log("Email ingresado:", e.target.value); // 🛠 Muestra en consola cada cambio
+               
                 setEmail(e.target.value);
               }}
             />
@@ -115,7 +124,7 @@ const RegisterForm = () => {
               <ValidationWindow password={password} isVisible={isPasswordFocused} />
             </div>
           </div>
-          
+
           <div className="signup-form-group">
             <label htmlFor="confirmPassword" className="signup-form-label">
               Confirmar contraseña
@@ -133,7 +142,6 @@ const RegisterForm = () => {
             </div>
           </div>
 
-          {/* Pregunta secreta */}
           <div className="signup-form-group">
             <label htmlFor="preguntaSecreta" className="signup-form-label">
               Pregunta secreta
@@ -144,9 +152,10 @@ const RegisterForm = () => {
               value={preguntaSecreta}
               onChange={(e) => setPreguntaSecreta(e.target.value)}
             >
-              {PREGUNTAS_SECRETAS.map((pregunta) => (
-                <option key={pregunta.id} value={pregunta.id}>
-                  {pregunta.texto}
+              <option value="">Selecciona una pregunta secreta</option>
+              {preguntasSecretas.map((pregunta) => (
+                <option key={pregunta.id_pregunta} value={pregunta.id_pregunta}>
+                  {pregunta.pregunta}
                 </option>
               ))}
             </select>

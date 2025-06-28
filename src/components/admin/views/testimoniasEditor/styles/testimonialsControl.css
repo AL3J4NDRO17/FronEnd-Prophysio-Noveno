@@ -63,8 +63,8 @@
 
 .adminDashboard-search-input:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px var(--color-primary-light);
+  border-color: var(--clr-brand-primary);
+  box-shadow: 0 0 0 2px var(--clr-brand-primary-light);
 }
 
 .adminDashboard-filter-button {
@@ -179,7 +179,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--color-primary);
+  background-color: var(--clr-brand-primary);
   color: white;
   font-weight: 600;
   font-size: 1rem;
@@ -382,8 +382,8 @@
 .adminDashboard-testimonials-form-group select:focus,
 .adminDashboard-testimonials-form-group textarea:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px var(--color-primary-light);
+  border-color: var(--clr-brand-primary);
+  box-shadow: 0 0 0 2px var(--clr-brand-primary-light);
 }
 
 /* Checkbox group */

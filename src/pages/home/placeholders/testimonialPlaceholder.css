@@ -1,0 +1,97 @@
+/* Estilos para el componente TestimonialsPlaceholder */
+.testimonials-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  gap: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: none;
+  margin: auto;
+  width: 100%;
+  min-height: 350px;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.testimonials-placeholder-icon-group {
+  position: relative;
+  width: 100%;
+  height: 120px; /* Altura para el grupo de iconos */
+  margin-bottom: 2rem; /* Espacio antes del texto */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.testimonials-placeholder-main-icon {
+  color: #60a5fa; /* Un azul suave para la burbuja principal */
+  font-size: 80px; /* Tamaño grande para el icono principal */
+  position: relative;
+  z-index: 1;
+}
+
+.testimonials-placeholder-star-icon {
+  position: absolute;
+  color: #fcd34d; /* Amarillo para las estrellas */
+  font-size: 24px; /* Tamaño de las estrellas */
+  z-index: 2;
+}
+
+/* Posicionamiento de las estrellas alrededor de la burbuja principal */
+.testimonials-placeholder-star-icon.star-1 {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateX(-60px) translateY(-10px);
+}
+.testimonials-placeholder-star-icon.star-2 {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateX(60px) translateY(-10px);
+}
+.testimonials-placeholder-star-icon.star-3 {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateX(-40px) translateY(10px);
+}
+.testimonials-placeholder-star-icon.star-4 {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateX(40px) translateY(10px);
+}
+
+.testimonials-placeholder-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.testimonials-placeholder-message {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.6;
+  max-width: 500px;
+  margin-bottom: 0.5rem;
+}
+
+.testimonials-placeholder-message.sub {
+  font-style: italic;
+}

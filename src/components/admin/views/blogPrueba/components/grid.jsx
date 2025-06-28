@@ -1,15 +1,15 @@
 
-import { Edit, Trash2, ImageIcon,Plus } from "lucide-react"
+import { Edit, Trash2, ImageIcon, Plus } from "lucide-react"
 import Swal from "sweetalert2"
 import { EditButton, PublishButton, UnpublishButton, DeleteButton, SeePreviewButton } from '@uiButtons'
 
-const BlogGrid = ({ blogs, categories, handleEdit, handleDelete, handleStatusChange }) => {
+const BlogGrid = ({ blogs, categories, handleEdit, handleDelete, handleStatusChange, setIsModalOpen }) => {
 
   if (blogs.length === 0) {
     return (
       <div className="adminDashboard-blog-empty">
         <p>No se encontraron blogs</p>
-        <button className="adminDashboard-secondary-button" onClick={ handleEdit}>
+        <button className="adminDashboard-secondary-button" onClick={() => setIsModalOpen(true)}>
           <Plus className="adminDashboard-button-icon" />
           Agregar Blogs
         </button>
@@ -58,20 +58,7 @@ const BlogGrid = ({ blogs, categories, handleEdit, handleDelete, handleStatusCha
             </button>
             <button
               className="blogAdmin-icon-button-small"
-              onClick={() => {
-                Swal.fire({
-                  title: "¿Estás seguro?",
-                  text: "No podrás revertir esta acción",
-                  icon: "warning",
-                  showCancelButton: true,
-                  confirmButtonText: "Sí, eliminar",
-                  cancelButtonText: "Cancelar",
-                }).then((result) => {
-                  if (result.isConfirmed) {
-                    handleDelete(blog.id)
-                  }
-                })
-              }}
+              onClick={() => handleDelete(blog.id)}
               title="Eliminar"
             >
               <DeleteButton />

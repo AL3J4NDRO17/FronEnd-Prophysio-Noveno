@@ -1,0 +1,95 @@
+/* Estilos para el componente NoArticlesPlaceholder */
+.no-articles-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem; /* Ajustado para un espacio más amplio */
+  gap: 1.5rem; /* Espacio entre elementos */
+  background-color: #ffffff; /* Fondo blanco puro */
+  border-radius: 8px;
+  box-shadow: none; /* Sin sombra */
+  margin-top: 0;
+  min-height: 350px; /* Altura mínima para el contenido */
+  border: none;
+  position: relative; /* Para posicionar los iconos */
+  overflow: hidden; /* Asegura que los iconos no se salgan */
+}
+
+.no-articles-placeholder-icon-group {
+  position: relative;
+  width: 100%;
+  height: 120px; /* Altura para el grupo de iconos */
+  margin-bottom: 2rem; /* Espacio antes del texto */
+}
+
+.no-articles-placeholder-main-circle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  background-color: #fcd34d; /* Amarillo */
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.no-articles-placeholder-icon {
+  position: absolute;
+  color: #333; /* Color oscuro para los iconos */
+  z-index: 2;
+}
+
+.no-articles-placeholder-icon.lightbulb {
+  top: 0;
+  left: calc(50% + 60px); /* Posición relativa al círculo */
+  transform: translateX(-50%);
+  color: #fcd34d; /* Amarillo para la bombilla */
+}
+
+.no-articles-placeholder-icon.coffee {
+  top: 60px;
+  left: calc(50% - 80px);
+  transform: translateX(-50%);
+  color: #8b5e3c; /* Marrón para el café */
+}
+
+.no-articles-placeholder-icon.document {
+  top: 60px;
+  left: calc(50% - 40px);
+  transform: translateX(-50%);
+}
+
+.no-articles-placeholder-icon.book {
+  top: 60px;
+  left: calc(50% + 0px);
+  transform: translateX(-50%);
+}
+
+.no-articles-placeholder-icon.feather {
+  top: 60px;
+  left: calc(50% + 80px);
+  transform: translateX(-50%);
+}
+
+.no-articles-placeholder-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.no-articles-placeholder-message {
+  font-size: 1rem;
+  color: #4b5563;
+  line-height: 1.6;
+  max-width: 500px;
+  margin-bottom: 0.5rem; /* Espacio entre las dos líneas de mensaje */
+}
+
+.no-articles-placeholder-message.sub {
+  font-style: italic; /* Para la pregunta */
+}

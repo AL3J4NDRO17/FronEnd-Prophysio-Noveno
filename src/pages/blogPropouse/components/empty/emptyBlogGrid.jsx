@@ -43,17 +43,11 @@ const EmptyBlogState = ({ onCreateNew }) => {
       <p className="adminDashboard-empty-blog-message">
         Parece que nuestro escritor está tomando un café mientras piensa en el próximo artículo increíble.
         <br />
-        ¿Por qué no ser el primero en compartir conocimiento?
+
       </p>
 
       <div className="adminDashboard-empty-blog-tips">
-        <h3>Consejos para empezar:</h3>
-        <ul>
-          <li>Escribe sobre temas que te apasionen</li>
-          <li>Incluye imágenes para hacer tu contenido más atractivo</li>
-          <li>Mantén un tono conversacional y amigable</li>
-          <li>Comparte experiencias personales o casos de estudio</li>
-        </ul>
+       <center><p> Vuelve mas tarde a consultar nuestros articulos....</p></center>
       </div>
     </div>
   )

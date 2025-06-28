@@ -235,7 +235,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background-color: var(--blogAdmin-color-primary);
+    background-color: var(--clr-brand-primary);
     color: white;
     border: none;
     border-radius: var(--blogAdmin-border-radius);
@@ -246,7 +246,7 @@
 }
 
 .blogAdmin-primary-button:hover {
-    background-color: var(--blogAdmin-color-primary-hover);
+    background-color: var(--clr-brand-primary-hover);
 }
 
 .blogAdmin-secondary-button {

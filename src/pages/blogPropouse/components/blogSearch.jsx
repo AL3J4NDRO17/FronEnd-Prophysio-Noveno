@@ -22,7 +22,9 @@ export default function BlogSearch({ blogs = [], onSearch }) {
     navigate(`/blog/${id}`)
     setSearchTerm("")
   }
-
+  function stripHtmlTags(str) {
+    return str.replace(/<[^>]*>/g, '',); // Esto elimina todas las etiquetas HTML
+  }
   const highlightMatch = (text, term) => {
     if (!term.trim()) return text
     const regex = new RegExp(`(${term})`, "gi")
@@ -52,8 +54,10 @@ export default function BlogSearch({ blogs = [], onSearch }) {
           {blogs.filter((blog) => blog.title.toLowerCase().includes(searchTerm.toLowerCase())).map((blog) => (
             <li key={blog.id} className="search-item" onClick={() => handleNavigate(blog.id)}>
               <h3>{highlightMatch(blog.title, searchTerm)}</h3>
-              <p className="">
-                {blog.mainContent ? `${blog.mainContent.substring(0, 100)}...` : 'No disponible'}
+              <p className="post-meta">
+                {stripHtmlTags(blog.mainContent)
+                  ? `${stripHtmlTags(blog.mainContent).substring(0, 100)}...`
+                  : 'No disponible'}
               </p>
             </li>
           ))}

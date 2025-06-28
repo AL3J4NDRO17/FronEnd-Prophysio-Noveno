@@ -7,7 +7,7 @@ const SplashScreenView = () => {
         <div className="splash-screen-section">
             <div className="splash-screen">
                 <div className="splash-content">
-                    <img src={Logo} alt="Company Logo" className="splash-logo" />
+                    <img src={Logo || "/placeholder.svg"} alt="Company Logo" className="splash-logo" />
                 </div>
             </div>
         </div>

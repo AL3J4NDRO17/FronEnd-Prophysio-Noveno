@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f9fafb;
+  background-color: var( --background-white);
   padding: 1rem;
   position: relative;
   overflow: hidden;

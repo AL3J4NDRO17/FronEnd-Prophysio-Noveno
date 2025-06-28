@@ -72,6 +72,7 @@ const LoginForm = ({ onEmailSubmit, setEmail, setStep }) => { // 🔥 Agregamos 
                                 id="password"     
                                 type={showPassword ? "text" : "password"}
                                 className="form-input"
+                                 placeholder="************"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required

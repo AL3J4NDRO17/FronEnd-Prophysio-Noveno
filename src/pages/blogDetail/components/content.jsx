@@ -1,7 +1,7 @@
 export default function BlogContent({ blog }) {
   function stripHtmlTags(str) {
-  return str.replace(/<[^>]*>/g, ''); // Esto elimina todas las etiquetas HTML
-}
+    return str.replace(/<[^>]*>/g, ''); // Esto elimina todas las etiquetas HTML
+  }
 
   return (
     <div className="publicBlogDetail-content">
@@ -32,8 +32,8 @@ export default function BlogContent({ blog }) {
               <div className="publicBlogDetail-effects-image" style={
                 blog.contentimagedimensions
                   ? {
-                    width: `${blog.contentimagedimensions.width}px`,
-                    height: `${blog.contentimagedimensions.height}px`,
+                    maxWidth: `${blog.contentimagedimensions.width}px`,
+                    maxHeight: `${blog.contentimagedimensions.height}px`,
                   }
                   : {}
               } >
@@ -41,14 +41,7 @@ export default function BlogContent({ blog }) {
                 <img
                   src={blog.contentImage || "/placeholder.svg"}
                   alt={blog.effectsTitle || "Imagen ilustrativa"}
-                  style={
-                    blog.contentimagedimensions
-                      ? {
-                        width: `${blog.contentimagedimensions.width}px`,
-                        height: `${blog.contentimagedimensions.height}px`,
-                      }
-                      : {}
-                  }
+                  
                 />
               </div>
             )}

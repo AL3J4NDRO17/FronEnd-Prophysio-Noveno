@@ -4,7 +4,7 @@ export const SplashScreen = () => {
   
   useEffect(() => {
     // Simulamos un tiempo de carga inicial para el splash
-    const timer = setTimeout(() => setShowSplash(false), 2000); // Ocultar el splash después de 2 segundos
+    const timer = setTimeout(() => setShowSplash(false), 1400); // Ocultar el splash después de 2 segundos
     return () => clearTimeout(timer);
   }, []); 
 

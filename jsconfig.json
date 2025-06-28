@@ -11,7 +11,12 @@
       "@axiosInstance":["api/axiosConfig.js"],
       "@uiButtons":["components/admin/ui/buttons/buttons.jsx"],
       "@uiValidationWindow":["components/admin/ui/validationWindow/validationWindow.jsx"],
-      "@authContext": ["context/authContext.js"]
+      "@authContext": ["context/authContext.js"],
+      "@Input":["components/admin/ui/input/input.jsx"],
+      "@Label": ["components/admin/ui/label/label.jsx"],
+      "@Dropdown": ["components/admin/ui/dropmenu/dropdown.jsx"],
+      "@Checkbox": ["components/admin/ui/checkbox/checkbox.jsx"],
+      "@Button": ["components/admin/ui/generalButton/button.jsx"]
     }
   }
 }

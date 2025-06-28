@@ -115,7 +115,7 @@ const TestimonialsManager = () => {
 
   // Guardar un testimonio (crear o actualizar)
   const handleSaveTestimonial = (testimonialData) => {
-    console.log(testimonialData)
+
     if (testimonialData.id_testimonio) {
       updateMutation.mutate({ id: testimonialData.id_testimonio, testimonioData: testimonialData });
     } else {

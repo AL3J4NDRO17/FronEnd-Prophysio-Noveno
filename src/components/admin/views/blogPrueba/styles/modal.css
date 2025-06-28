@@ -159,8 +159,8 @@
 
 .blogAdmin-alignment-button.active {
   background-color: rgba(20, 184, 166, 0.1);
-  color: var(--blogAdmin-color-primary);
-  border-color: var(--blogAdmin-color-primary);
+  color: var(--clr-brand-primary);
+  border-color: var(--clr-brand-primary);
 }
 
 .blogAdmin-editor-main {
@@ -387,7 +387,7 @@
 
 .blogAdmin-input:focus {
   outline: none;
-  border-color: var(--blogAdmin-color-primary);
+  border-color: var(--clr-brand-primary);
   box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.1);
 }
 
@@ -500,7 +500,7 @@
 }
 
 .blogAdmin-preview-category {
-  color: var(--blogAdmin-color-primary);
+  color: var(--clr-brand-primary);
 }
 
 .blogAdmin-preview-placeholder {

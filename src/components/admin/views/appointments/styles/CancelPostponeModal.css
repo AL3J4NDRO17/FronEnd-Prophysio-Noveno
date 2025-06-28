@@ -1,0 +1,100 @@
+.CancelPostponeModal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001; /* Encima del modal de formulario si ambos estuvieran abiertos */
+}
+
+.CancelPostponeModal-content {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 450px;
+}
+
+.CancelPostponeModal-content h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.3em;
+  color: #333;
+  text-align: center;
+}
+
+.CancelPostponeModal-formGroup {
+  margin-bottom: 15px;
+}
+
+.CancelPostponeModal-formGroup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 0.9em;
+  color: #444;
+}
+
+.CancelPostponeModal-formGroup textarea,
+.CancelPostponeModal-formGroup input[type="date"],
+.CancelPostponeModal-formGroup input[type="time"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  box-sizing: border-box; /* Para que el padding no aumente el ancho */
+}
+
+.CancelPostponeModal-formGroup textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.CancelPostponeModal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.CancelPostponeModal-confirmButton,
+.CancelPostponeModal-cancelButton {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: bold;
+}
+
+.CancelPostponeModal-confirmButton {
+  background-color: #dc3545; /* Rojo para cancelar, podría cambiar si es postergar */
+  color: white;
+}
+.CancelPostponeModal-confirmButton:hover {
+  background-color: #c82333;
+}
+
+/* Estilos para el botón de confirmación en modo POSTERGAR */
+.CancelPostponeModal-content--postpone .CancelPostponeModal-confirmButton {
+  background-color: #17a2b8; /* Azul claro para postergar */
+  color: white;
+}
+
+.CancelPostponeModal-content--postpone .CancelPostponeModal-confirmButton:hover {
+  background-color: #117a8b; /* Hover azul claro */
+}
+
+.CancelPostponeModal-cancelButton {
+  background-color: #6c757d;
+  color: white;
+}
+.CancelPostponeModal-cancelButton:hover {
+  background-color: #5a6268;
+}

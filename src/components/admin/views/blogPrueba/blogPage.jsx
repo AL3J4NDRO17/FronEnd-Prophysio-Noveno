@@ -108,6 +108,7 @@ export default function BlogPage() {
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
                 handleStatusChange={handleStatusChange}
+                setIsModalOpen={setIsModalOpen}
               />
             )}
           </div>

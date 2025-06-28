@@ -46,7 +46,7 @@
   height: 12px;
   border-radius: 50%;
   margin: 0 4px;
-  background-color: var(--color-primary);
+  background-color: var(--clr-brand-primary);
   animation: adminDashboard-loader-pulse 1.5s infinite ease-in-out;
 }
 
@@ -97,7 +97,7 @@
 
 /* Variantes de color */
 .adminDashboard-loader-primary .adminDashboard-loader-circle {
-  background-color: var(--color-primary);
+  background-color: var(--clr-brand-primary);
 }
 
 .adminDashboard-loader-secondary .adminDashboard-loader-circle {

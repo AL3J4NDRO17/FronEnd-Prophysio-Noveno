@@ -1,0 +1,49 @@
+/* Estilos de pestañas */
+.tab-container {
+  margin-bottom: 1.5rem;
+}
+
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.tab-list {
+  display: flex;
+  background-color: var(--tab-background-secondary);
+  border-radius: var(--tab-border-radius);
+  padding: 0.25rem;
+}
+
+.tab-trigger {
+  padding: 0.5rem 1rem;
+  border-radius: var(--tab-border-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--tab-foreground-secondary);
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.tab-trigger.tab-active {
+  background-color: var(--tab-background);
+  color: var(--tab-foreground);
+  box-shadow: var(--tab-shadow-sm);
+}
+
+.tab-text {
+  display: inline-block;
+}
+
+.tab-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tab-content {
+  /* Estilos para el contenido de la pestaña, si es necesario */
+}

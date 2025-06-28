@@ -1,6 +1,6 @@
 
 const SidebarUserInfo = ({avatar, userData }) => {
-  console.log(avatar)
+
   return (
     <div className="sidebar-user-info">
       <div className="sidebar-avatar">

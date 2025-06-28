@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { toast } from "react-toastify"
-import { registerService } from "../services/registerServices" // Servicio para manejar el registro
+import { registerService, getAllPreguntasSecretasService} from "../services/registerServices" // Servicio para manejar el registro
 import { useNavigate } from "react-router-dom"
 
 const SITE_KEY = "6LdDDl0qAAAAAGQd0JluGGMC45SVseGltEUsrs-p" // 🔥 Usa tu clave pública de Google reCAPTCHA
@@ -85,7 +85,7 @@ export default function useRegister() {
   }
   const getAllPreguntasSecretas	 = async () => {
     try {
-      const response = await registerService.getAllPreguntasSecretas()
+      const response = await getAllPreguntasSecretasService();
       return response.data
     } catch (error) {
       toast.error("Error al cargar las preguntas secretas.")
@@ -136,6 +136,7 @@ export default function useRegister() {
     isLoading,
     errors,
     handleRegisterSubmit,
+    getAllPreguntasSecretas
   }
 }
 

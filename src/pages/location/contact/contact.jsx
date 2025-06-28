@@ -35,7 +35,7 @@ export default function ContactForm() {
   const handleSubmit = (e) => {
     e.preventDefault()
     // Aquí iría la lógica de envío del formulario
-    console.log("Formulario enviado:", formData)
+ 
   }
 
   return (

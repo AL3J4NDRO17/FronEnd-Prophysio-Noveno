@@ -61,7 +61,7 @@
   width: 2rem;
   height: 2rem;
   border-radius: 9999px;
-  background-color: var(--color-primary);
+  background-color: var(--clr-brand-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,7 +74,7 @@
 }
 
 .adminDashboard-logo-name {
-  color: var(--color-primary);
+  color: var(--clr-brand-primary);
   font-size: 1.25rem;
   font-weight: bold;
   white-space: nowrap;
@@ -144,8 +144,8 @@
 }
 
 .adminDashboard-nav-item-active {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
+  background-color: var(--clr-brand-primary-light);
+  color: var(--clr-brand-primary);
 }
 
 .adminDashboard-nav-icon {
@@ -156,8 +156,8 @@
 
 .adminDashboard-badge {
   margin-left: auto;
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
+  background-color: var(--clr-brand-primary-light);
+  color: var(--clr-brand-primary);
   padding: 0.125rem 0.375rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -196,8 +196,8 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 9999px;
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
+  background-color: var(--clr-brand-primary-light);
+  color: var(--clr-brand-primary);
   display: flex;
   align-items: center;
   justify-content: center;

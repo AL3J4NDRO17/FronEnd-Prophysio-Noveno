@@ -1,142 +1,163 @@
+/* Base styles */
+:root {
+  --clr-brand-primary: #2a9d8f;
+  --clr-brand-primary-hover: #238a7d;
+  --color-secondary: #e76f51;
+  --color-secondary-hover: #d15a3c;
+  --color-dark: #264653;
+  --color-light: #f8f9fa;
+  --border-color: #e9ecef;
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --border-radius: 6px;
+}
+
+/* Navbar container */
 .navbar {
   background-color: white;
   position: sticky;
-  top: 0px;
-  /* Ajusta este valor a la altura de .topBar */
+  top: 0;
   z-index: 1000;
-  transition: all 0.3s ease;
-  border-bottom: 1px solid var(--border);
+  transition: all var(--transition-normal);
+  border-bottom: 1px solid var(--border-color);
 }
-
 
 .navbar.scrolled {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
-.navContainer {
+.nav-container {
   max-width: 1300px;
   margin: 0 auto;
   padding: 0 24px;
 }
 
-.navContent {
+.nav-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 80px;
 }
 
-.logoLink {
+/* Logo */
+.logo-link {
   display: flex;
   align-items: center;
 }
 
-.logoImage {
+.logo-image {
   height: 60px;
   width: auto;
   object-fit: contain;
 }
 
-.mobileMenuButton {
+/* Mobile menu button */
+.mobile-menu-button {
   display: none;
   background: none;
   border: none;
   color: var(--color-dark);
   cursor: pointer;
   padding: 8px;
+  transition: color var(--transition-fast);
 }
 
-.navMenu {
+.mobile-menu-button:hover {
+  color: var(--clr-brand-primary);
+}
+
+/* Navigation menu */
+.nav-menu {
   display: flex;
   align-items: center;
   gap: 48px;
 }
 
-.navLinks {
+.nav-links {
   display: flex;
   gap: 32px;
+  align-items: center;
 }
 
-.navLink {
+.nav-link {
   color: var(--color-dark);
   font-weight: 500;
-
   text-decoration: none;
-  transition: color .2s;
+  transition: color var(--transition-fast);
   position: relative;
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
 }
 
-.navLink::after {
+.nav-link::after {
   content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
-  background-color: var(--color-primary);
-  transition: width 0.3s ease;
+  background-color: var(--clr-brand-primary);
+  transition: width var(--transition-normal);
 }
 
-.navLink:hover::after {
+.nav-link:hover {
+  color: var(--clr-brand-primary);
+}
+
+.nav-link:hover::after {
   width: 100%;
 }
 
-.authSection {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.userControls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.iconButton {
-  background: none;
-  border: none;
-  padding: 8px;
-  color: var(--color-dark);
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.iconButton:hover {
-  color: var(--color-primary);
-}
-
-.userDropdown {
+/* Dropdown styles */
+.nav-dropdown {
   position: relative;
 }
 
-.dropdownContent {
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.dropdown-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+  transition: transform var(--transition-fast);
+}
+
+.dropdown-menu {
   position: absolute;
   top: 100%;
-  right: 0;
+  left: 0;
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  min-width: 220px;
   padding: 8px 0;
   opacity: 0;
   visibility: hidden;
   transform: translateY(10px);
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
+  z-index: 1001;
 }
 
-.userDropdown:hover .dropdownContent {
+.dropdown-menu.open {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
-.dropdownItem {
+.dropdown-item {
   display: block;
   padding: 12px 16px;
   color: var(--color-dark);
   text-decoration: none;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--transition-fast);
   width: 100%;
   text-align: left;
   border: none;
@@ -145,55 +166,115 @@
   cursor: pointer;
 }
 
-.dropdownItem:hover {
+.dropdown-item:hover {
   background-color: #f5f5f5;
+  color: var(--clr-brand-primary);
 }
 
-.authButtons {
+/* User dropdown */
+.user-dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  min-width: 200px;
+  padding: 8px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all var(--transition-fast);
+  z-index: 1001;
+}
+
+.dropdown-content.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Auth section */
+.auth-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  color: var(--color-dark);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.icon-button:hover {
+  color: var(--clr-brand-primary);
+}
+
+.auth-buttons {
   display: flex;
   gap: 16px;
   align-items: center;
 }
 
-.loginButton {
-  color: var(--color-primary);
-  border: 1px solid var(--color-primary);
-  background-color: #0000;
+.login-button {
+  color: var(--clr-brand-primary);
+  border: 1px solid var(--clr-brand-primary);
+  background-color: transparent;
   text-decoration: none;
-  
   font-weight: 600;
   padding: 8px 16px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-
-
+  border-radius: var(--border-radius);
+  transition: all var(--transition-fast);
 }
 
-.loginButton:hover {
+.login-button:hover {
   background-color: rgba(42, 157, 143, 0.1);
 }
 
-.registerButton {
+.register-button {
   background-color: var(--color-secondary);
   color: white;
   text-decoration: none;
   font-weight: 600;
   padding: 8px 16px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  border-radius: var(--border-radius);
+  transition: all var(--transition-fast);
 }
 
-.registerButton:hover {
+.register-button:hover {
   background-color: var(--color-secondary-hover);
 }
 
+.logout-button {
+  color: #dc3545;
+}
+
+.logout-button:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Responsive styles */
 @media (max-width: 1024px) {
-  .mobileMenuButton {
+  .mobile-menu-button {
     display: block;
   }
 
-  .navMenu {
-    position: absolute;
+  .nav-menu {
+    position: fixed;
     top: 80px;
     left: 0;
     right: 0;
@@ -201,61 +282,81 @@
     flex-direction: column;
     padding: 24px;
     gap: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
   }
 
-  .navMenu.isOpen {
+  .nav-menu.is-open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
   }
 
-  .navLinks {
+  .nav-links {
     flex-direction: column;
     width: 100%;
     gap: 16px;
   }
 
-  .navLink {
-    display: block;
+  .nav-link {
+    display: flex;
+    justify-content: center;
     text-align: center;
     padding: 12px;
+    width: 100%;
   }
 
-  .navLink::after {
+  .nav-link::after {
     display: none;
   }
 
-  .authSection {
-    width: 100%;
+  .dropdown-toggle {
     justify-content: center;
+    width: 100%;
   }
 
-  .userControls {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .dropdownContent {
+  .dropdown-menu {
     position: static;
     box-shadow: none;
-    opacity: 1;
-    visibility: visible;
-    transform: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-top: 8px;
+    width: 100%;
   }
 
-  .authButtons {
+  .dropdown-content {
+    position: static;
+    box-shadow: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .auth-section {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .user-controls {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .auth-buttons {
     width: 100%;
     flex-direction: column;
   }
 
-  .loginButton,
-  .registerButton {
+  .login-button,
+  .register-button {
     width: 100%;
     text-align: center;
   }
 }
+

@@ -10,7 +10,7 @@ import { useAuth } from "@authContext" // Import useAuth
 const UserDashboardLayout = () => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
   const { user } = useAuth()
-  console.log(user.id)
+
   const toggleMobileSidebar = () => {
     setIsMobileSidebarOpen(!isMobileSidebarOpen)
   }

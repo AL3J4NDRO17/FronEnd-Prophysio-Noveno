@@ -1,0 +1,47 @@
+.publicAppointment-card-step {
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  background-color: #fff;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.publicAppointment-summary-section {
+  margin-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
+}
+
+.publicAppointment-summary-heading {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.125rem;
+  color: #0f766e;
+  margin-bottom: 0.75rem;
+}
+
+.publicAppointment-summary-item {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.publicAppointment-summary-label {
+  font-weight: 500;
+  width: 180px;
+  color: #374151;
+}
+
+.publicAppointment-summary-value {
+  color: #1f2937;
+  font-weight: 400;
+  flex: 1;
+}
+
+.publicAppointment-card-footer-between {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}

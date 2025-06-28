@@ -1,0 +1,7 @@
+.appointmentsAdmin-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--appointmentsAdmin-color-text);
+  line-height: 1.25rem;
+  cursor: default; /* Labels are not interactive by default */
+}

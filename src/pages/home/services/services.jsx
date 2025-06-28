@@ -7,7 +7,7 @@ const services = [
     icon: Heart,
     title: "Fisioterapia Pediátrica",
     description: "Atención especializada para niños, enfocada en su desarrollo y bienestar físico.",
-    color: "var(--color-primary)",
+    color: "var(--clr-brand-primary)",
   },
   {
     icon: Activity,

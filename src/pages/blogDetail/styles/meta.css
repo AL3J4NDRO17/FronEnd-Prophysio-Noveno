@@ -28,7 +28,7 @@
   .publicBlogDetail-meta-icon {
     width: 1rem;
     height: 1rem;
-    color: var(--color-primary);
+    color: var(--clr-brand-primary);
   }
   
   .publicBlogDetail-meta-right {

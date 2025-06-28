@@ -22,8 +22,7 @@ import "./styles/ProfileHeader.css"
 
 const ProfileSettings = () => {
   const {user} = useOutletContext()
-  console.log(user)
-
+  
   const userId = user?.id_Perfil   // Usar el ID del usuario actual o un valor por defecto
   const { perfiles: perfil, loading, actualizarPerfil } = usePerfilUsuario(userId)
   const [activeTab, setActiveTab] = useState("personal")

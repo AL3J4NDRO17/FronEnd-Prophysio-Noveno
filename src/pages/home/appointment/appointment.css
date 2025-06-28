@@ -36,7 +36,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: var(--color-primary);
+  background-color: var(--clr-brand-primary);
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -47,7 +47,7 @@
 }
 
 .appointment-button:hover {
-  background-color: var(--color-primary-dark);
+  background-color: var(--clr-brand-primary-dark);
 }
 
 .contact-details {

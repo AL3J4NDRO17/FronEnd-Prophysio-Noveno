@@ -1,8 +1,8 @@
 /* Variables CSS */
 :root {
-    --color-primary: #14b8a6;
-    --color-primary-hover: #0d9488;
-    --color-primary-light: #f0fdfa;
+    --clr-brand-primary: #14b8a6;
+    --clr-brand-primary-hover: #0d9488;
+    --clr-brand-primary-light: #f0fdfa;
     --admin-text: #374151;
     --text-light: #6b7280;
     --text-lighter: #9ca3af;

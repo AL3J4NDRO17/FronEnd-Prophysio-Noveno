@@ -40,7 +40,7 @@ const EditorInputs = ({
       }));
     }
   };
-  console.log(blogData)
+  
 
   return (
     <div className="editor-content">

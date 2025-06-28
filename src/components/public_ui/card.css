@@ -1,0 +1,37 @@
+.appointmentsAdmin-card {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shd-default);
+ 
+  margin-bottom: 1.5rem; /* Added for spacing between cards */
+}
+
+.appointmentsAdmin-card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--brd-default);
+}
+
+.appointmentsAdmin-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--txt-default);
+}
+
+.appointmentsAdmin-card-description {
+  font-size: 0.875rem;
+  color: var(--txt-secondary);
+  margin: 0.25rem 0 0;
+}
+
+.appointmentsAdmin-card-content {
+  padding: 1.5rem;
+}
+
+.appointmentsAdmin-card-footer {
+  padding: 1rem 1.5rem 1.5rem;
+  border-top: 1px solid var(--brd-default);
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 0.5rem; /* Space between buttons */
+}

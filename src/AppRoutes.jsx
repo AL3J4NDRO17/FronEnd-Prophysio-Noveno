@@ -35,7 +35,7 @@ const TermsAndPolicies = lazy(() => import("./pages/termsAndPolicies/termsAndPol
 
 const RequestActivation = lazy(() => import("./components/auth/requestActivation/requestActivation.jsx"));
 const AccountActivation = lazy(() => import("./components/auth/accountActivation/accountActivation.jsx"));
-const AppointmentScheduler = lazy(() => import("./components/sheduler/sheduler.jsx"));
+const AppointmentScheduler = lazy(() => import("./components/appointment/appointments.jsx"));
 const AdminAppointments = lazy(() => import("./components/admin/views/appointments/appointments.jsx"));
 
 
@@ -58,7 +58,7 @@ const UserDashboardLayout = lazy(() => import("./components/user/userLayout.jsx"
 const UserProfileEdit = lazy(() => import("./components/user/components/profile/profile.jsx"));
 const UserDashboard = lazy(() => import("./components/user/components/welcome/welcome.jsx"));
 const UserHistorySheduler = lazy(() => import("./components/user/components/shedulerHistory/shedulerHistory.jsx"));
-
+const UserConfirmationAppointment = lazy(() => import("./components/appointment/utils/VerifyAppointment.jsx"));
 // 🔥 VARIANTES DE ANIMACIÓN PARA TRANSICIONES MÁS FLUIDAS
 const pageVariants = {
   initial: { opacity: 0, y: 10 },
@@ -142,6 +142,7 @@ const AppContent = ({ showSplash, location }) => {
                 <Route path="dashboard" element={<UserDashboard />} />
                 <Route path="sheduler" element={<AppointmentScheduler />} />
                 <Route path="profile" element={<UserProfileEdit />} />
+                <Route path="confirmAppointment" element={<UserConfirmationAppointment />} />
              
               </Route>
             </Route>

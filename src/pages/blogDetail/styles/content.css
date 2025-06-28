@@ -45,10 +45,7 @@
   .publicBlogDetail-effects-image {
     position: relative;
     user-select: auto;
-    width: 475px;
-    height: 258px;
     box-sizing: border-box;
- 
     overflow: hidden;
   }
   
