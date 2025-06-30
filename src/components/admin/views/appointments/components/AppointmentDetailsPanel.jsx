@@ -8,36 +8,27 @@ import {
   Mail,
   Phone,
   Stethoscope,
-  MapPin,
-  Cake,
-  ShieldCheck,
-  MoreVertical,
   MessageSquare,
+  MoreVertical,
 } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../../../public_ui/card"
 import { Button } from "../../../../public_ui/button"
 import { Avatar, AvatarFallback } from "../../../../public_ui/avatar"
-import { Badge } from "../../../../public_ui/badge"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../../../../public_ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../../../public_ui/dropdown-menu"
 import { useEffect, useRef, useState } from "react"
-import "../styles/AppointmentDetailsPanel.css" // Assuming you have a CSS file for styles
-import { useCitas } from "../hooks/use-appointment" // Importa el hook useCitas
-import { citaService } from "../services/appointment-service" // Importa el hook useCitas
+import "../styles/AppointmentDetailsPanel.css" // Ruta actualizada
+import { useCitas } from "../hooks/useCitas" // Ruta actualizada
+import { citaService } from "../services/appointment-service" // Ruta actualizada
 
 const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPostpone }) => {
   const panelRef = useRef(null)
   const [isPanelVisible, setIsPanelVisible] = useState(false)
-  const [showHistory, setShowHistory] = useState(false) // Nuevo estado para mostrar historial
-  const [patientProfile, setPatientProfile] = useState(null) // Estado para el perfil detallado del paciente
-  const [profileLoading, setProfileLoading] = useState(true) // Estado de carga del perfil
-  const [profileError, setProfileError] = useState(null) // Estado de error del perfil
+  const [showHistory, setShowHistory] = useState(false)
+  const [patientProfile, setPatientProfile] = useState(null)
+  const [profileLoading, setProfileLoading] = useState(true)
+  const [profileError, setProfileError] = useState(null)
 
-  const { citas } = useCitas() // Obtener todas las citas para filtrar el historial
+  const { citas } = useCitas()
 
   useEffect(() => {
     const handleEscape = (event) => {
@@ -52,14 +43,14 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
       }, 10)
       document.addEventListener("keydown", handleEscape)
 
-      // Cargar el perfil detallado del paciente cuando el panel se abre
       const fetchPatientProfile = async () => {
         setProfileLoading(true)
         setProfileError(null)
         try {
           if (appointment?.id_cita) {
-            const data = await citaService.obtenerPerfilPorCita(appointment.id_cita) // <-- Aquí se llama a la función
-            setPatientProfile(data) // Asume que el perfil viene en data.perfil
+            // La función obtenerPerfilPorCita ya devuelve el usuario anidado
+            const data = await citaService.obtenerPerfilPorCita(appointment.id_cita)
+            setPatientProfile(data)
           }
         } catch (err) {
           console.error("Error al cargar el perfil del paciente:", err)
@@ -73,10 +64,10 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
       return () => {
         clearTimeout(timer)
         document.removeEventListener("keydown", handleEscape)
-        setPatientProfile(null) // Limpiar el perfil al cerrar
+        setPatientProfile(null)
         setProfileLoading(true)
         setProfileError(null)
-        setShowHistory(false) // Resetear la vista de historial
+        setShowHistory(false)
       }
     } else {
       setIsPanelVisible(false)
@@ -86,7 +77,7 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
     return () => {
       document.removeEventListener("keydown", handleEscape)
     }
-  }, [isOpen, onClose, appointment?.id_cita]) // Dependencia de id_cita para recargar si cambia la cita
+  }, [isOpen, onClose, appointment?.id_cita])
 
   if (!isOpen || !appointment) return null
 
@@ -120,12 +111,8 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
 
   // Filtrar historial de citas usando el id_usuario del objeto 'usuario' anidado
   const patientHistory = citas
-    .filter(
-      (cita) =>
-        (cita.usuario?.id_usuario || cita.id_paciente) ===
-        (appointment.usuario?.id_usuario || appointment.id_paciente) && cita.estado === "completada",
-    )
-    .sort((a, b) => new Date(b.fecha_hora).getTime() - new Date(a.fecha_hora).getTime()) // Ordenar de más reciente a más antigua
+    .filter((cita) => cita.id_usuario === appointment.id_usuario && cita.estado === "completada")
+    .sort((a, b) => new Date(b.fecha_hora).getTime() - new Date(a.fecha_hora).getTime())
 
   return (
     <div className="appointmentsAdmin-details-panel-overlay" onClick={onClose}>
@@ -156,14 +143,14 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
                       <Mail className="appointmentsAdmin-detail-icon" />
                       <div>
                         <p className="appointmentsAdmin-detail-label">Email</p>
-                        <p className="appointmentsAdmin-detail-value">{patientProfile?.usuario.email || "N/A"}</p>
+                        <p className="appointmentsAdmin-detail-value">{patientProfile?.usuario?.email || "N/A"}</p>
                       </div>
                     </div>
                     <div className="appointmentsAdmin-detail-item">
                       <Phone className="appointmentsAdmin-detail-icon" />
                       <div>
                         <p className="appointmentsAdmin-detail-label">Teléfono</p>
-                        <p className="appointmentsAdmin-detail-value">{patientProfile?.perfil.telefono || "N/A"}</p>
+                        <p className="appointmentsAdmin-detail-value">{patientProfile?.perfil?.telefono || "N/A"}</p>
                       </div>
                     </div>
                   </div>
@@ -184,7 +171,7 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
                     <Stethoscope className="appointmentsAdmin-detail-icon" />
                     <div>
                       <p className="appointmentsAdmin-detail-label">Tipo de Cita</p>
-                      <p className="appointmentsAdmin-detail-value">{appointment.motivo_consulta || "N/A"}</p>
+                      <p className="appointmentsAdmin-detail-value">{appointment.notes || "N/A"}</p>
                     </div>
                   </div>
 
@@ -211,13 +198,15 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
                     <FileText className="appointmentsAdmin-detail-icon appointmentsAdmin-detail-icon-top" />
                     <div>
                       <p className="appointmentsAdmin-detail-label">Notas</p>
-                      {appointment.notes
-                        ? appointment.notes.split("|").map((line, index) => (
+                      {appointment.notes ? (
+                        appointment.notes.split("|").map((line, index) => (
                           <p key={index} className="appointmentsAdmin-detail-value">
                             {line.trim()}
                           </p>
                         ))
-                        : <p className="appointmentsAdmin-detail-value">Sin notas adicionales.</p>}
+                      ) : (
+                        <p className="appointmentsAdmin-detail-value">Sin notas adicionales.</p>
+                      )}
                     </div>
                   </div>
 
@@ -287,20 +276,18 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
                       <div className="appointmentsAdmin-patient-info-header appointmentsAdmin-details-section-spacing">
                         <Avatar className="appointmentsAdmin-patient-avatar">
                           <AvatarFallback className="appointmentsAdmin-patient-avatar-fallback">
-                            {getInitials(patientProfile?.nombre_completo || appointment.usuario?.nombre)}
+                            {getInitials(patientProfile?.usuario?.nombre || "")}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="appointmentsAdmin-patient-name">
-                            {patientProfile?.nombre_completo || appointment.usuario?.nombre || "N/A"}
-                          </p>
+                          <p className="appointmentsAdmin-patient-name">{patientProfile?.usuario?.nombre || "N/A"}</p>
                           <p className="appointmentsAdmin-patient-meta">
-                            {patientProfile?.sexo === "masculino"
+                            {patientProfile?.perfil?.sexo === "Masculino"
                               ? "Masculino"
-                              : patientProfile?.sexo === "femenino"
+                              : patientProfile?.perfil?.sexo === "Femenino"
                                 ? "Femenino"
                                 : "N/A"}
-                            , {patientProfile?.edad || "N/A"} años
+                            , {patientProfile?.perfil?.edad || "N/A"} años
                           </p>
                         </div>
                       </div>
@@ -311,7 +298,7 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
                           <Phone className="appointmentsAdmin-patient-action-icon" />
                           Llamar
                         </Button>
-                        <Button variant="outline" className="appointmentsAdmin-patient-action-button">
+                        <Button variant="outline" className="appointmentsAdmin-patient-action-button bg-transparent">
                           <MessageSquare className="appointmentsAdmin-patient-action-icon" />
                           Mensaje
                         </Button>
@@ -323,8 +310,7 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem>Abrir en Expediente</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setShowHistory(true)}>Ver Historial</DropdownMenuItem>{" "}
-                            {/* Modificado */}
+                            <DropdownMenuItem onClick={() => setShowHistory(true)}>Ver Historial</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
@@ -335,24 +321,22 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
                           <User className="appointmentsAdmin-detail-icon" />
                           <div>
                             <p className="appointmentsAdmin-detail-label">Nombre Completo</p>
-                            <p className="appointmentsAdmin-detail-value">{patientProfile?.usuario.nombre || "N/A"}</p>
+                            <p className="appointmentsAdmin-detail-value">{patientProfile?.usuario?.nombre || "N/A"}</p>
                           </div>
                         </div>
                         <div className="appointmentsAdmin-detail-item">
                           <Calendar className="appointmentsAdmin-detail-icon" />
                           <div>
                             <p className="appointmentsAdmin-detail-label">Edad</p>
-                            <p className="appointmentsAdmin-detail-value">
-                              {patientProfile?.perfil.edad || "N/A"}
-                            </p>
+                            <p className="appointmentsAdmin-detail-value">{patientProfile?.perfil?.edad || "N/A"}</p>
                           </div>
                         </div>
-                        <div className="appointmentsAdmin-detail-item">
-                          <FileText className="appointmentsAdmin-detail-icon" />
+                        <div className="appointmentsAdmin-detail-item-start">
+                          <FileText className="appointmentsAdmin-detail-icon appointmentsAdmin-detail-icon-top" />
                           <div>
                             <p className="appointmentsAdmin-detail-label">Historial Médico</p>
                             <p className="appointmentsAdmin-detail-value">
-                              {patientProfile?.historial_medico || "Sin información."}
+                              {patientProfile?.perfil?.historial_medico || "Sin información."}
                             </p>
                           </div>
                         </div>
@@ -363,6 +347,16 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
               </div>
             )}
           </CardContent>
+          <div className="appointmentsAdmin-modal-footer-panel">
+            {appointment.estado !== "cancelada" && appointment.estado !== "completada" && (
+              <>
+                <Button variant="outline" onClick={onCancel}>
+                  Cancelar Cita
+                </Button>
+                <Button onClick={onPostpone}>Postergar Cita</Button>
+              </>
+            )}
+          </div>
         </Card>
       </div>
     </div>
@@ -371,4 +365,3 @@ const AppointmentDetailsPanel = ({ isOpen, onClose, appointment, onCancel, onPos
 
 
 export default AppointmentDetailsPanel
-

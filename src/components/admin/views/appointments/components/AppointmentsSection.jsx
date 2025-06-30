@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useCitas } from "../hooks/use-appointment"
+import { useCitas } from "../hooks/useCitas"
 import AppointmentItem from "./AppointmentItem"
 import AppointmentFormModal from "./AppointmentFormModal"
 import CancelPostponeModal from "./CancelPostponeModal"

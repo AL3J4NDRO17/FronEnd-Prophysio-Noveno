@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Swal from "sweetalert2"
-import "../styles/CancelPostponeModal.css"
+import "../styles/CancelPostponeModal.css" // Ruta actualizada
 
 const isSlotWithinWorkHours = (dateTime, workHoursConfig) => {
   const selectedDay = new Date(dateTime).getDay() // 0 for Sunday, 1 for Monday, etc.
@@ -42,7 +42,6 @@ const CancelPostponeModal = ({ isOpen, onClose, onConfirm, appointmentFechaHora,
   const [nuevaHora, setNuevaHora] = useState("")
 
   useEffect(() => {
-    // Resetear campos cuando el modal se abre o cambia el modo
     setMotivo("")
     setNuevaFecha("")
     setNuevaHora("")
@@ -63,14 +62,13 @@ const CancelPostponeModal = ({ isOpen, onClose, onConfirm, appointmentFechaHora,
       const fechaHoraISO = new Date(`${nuevaFecha}T${nuevaHora}:00`).toISOString()
       details.nuevaFecha = fechaHoraISO
 
-      // Validar que la nueva fecha no sea anterior a la fecha original de la cita
       if (new Date(details.nuevaFecha) < new Date(appointmentFechaHora)) {
         Swal.fire("Error", "La nueva fecha no puede ser anterior a la fecha original de la cita.", "error")
         return
       }
 
       if (!isSlotWithinWorkHours(details.nuevaFecha, workHours)) {
-        return // Stop if not within work hours
+        return
       }
     }
 
@@ -82,7 +80,6 @@ const CancelPostponeModal = ({ isOpen, onClose, onConfirm, appointmentFechaHora,
   const title = mode === "cancel" ? "Cancelar Cita" : "Postergar Cita"
   const confirmButtonText = mode === "cancel" ? "Sí, Cancelar Cita" : "Sí, Postergar Cita"
 
-  // Usaremos un modal custom simple para este formulario
   return (
     <div className="CancelPostponeModal-overlay">
       <div className={`CancelPostponeModal-content CancelPostponeModal-content--${mode}`}>

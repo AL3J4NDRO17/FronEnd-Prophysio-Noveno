@@ -1,0 +1,145 @@
+/* src/styles/payment-form.css */
+
+.payment-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  padding: 1rem;
+}
+
+.payment-card {
+  width: 100%;
+  max-width: 500px;
+  background-color: var(--bg-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shd-lg);
+  overflow: hidden;
+  text-align: center;
+}
+
+.payment-card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--brd-default);
+}
+
+.payment-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--txt-heading);
+  margin-bottom: 0.5rem;
+}
+
+.payment-card-description {
+  font-size: 0.9rem;
+  color: var(--txt-secondary);
+}
+
+.payment-card-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem; /* Espacio aumentado para mejor separación */
+}
+
+.payment-method-selection {
+  width: 100%;
+  text-align: left;
+  display: flex; /* Añadido para los botones de selección */
+  flex-direction: column; /* Añadido para los botones de selección */
+  gap: 1rem; /* Espacio entre los botones de selección */
+}
+
+.payment-method-button {
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid var(--brd-default);
+  background-color: var(--bg-white);
+  color: var(--txt-heading);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.payment-method-button:hover {
+  border-color: var(--clr-brand-primary);
+  box-shadow: var(--shd-md);
+}
+
+.payment-method-button.selected {
+  border-color: var(--clr-brand-primary);
+  background-color: var(--clr-brand-primary-light);
+  color: var(--clr-brand-primary);
+  box-shadow: var(--shd-md);
+}
+
+.paypal-section h3 {
+  font-size: 1.2rem;
+  color: var(--txt-default);
+  margin-bottom: 0.75rem;
+}
+
+.paypal-section p {
+  font-size: 1rem;
+  color: var(--txt-secondary);
+  margin-bottom: 1rem;
+}
+
+.paypal-button-container {
+  min-height: 50px; /* Asegura espacio para el botón */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed var(--brd-default); /* Pista visual de dónde aparecerá el botón */
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  margin-top: 1rem; /* Espacio para el contenido específico */
+}
+
+.error-message {
+  color: var(--clr-status-danger);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.payment-card-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--brd-default);
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  background-color: var(--clr-brand-primary);
+  color: var(--clr-white);
+  border: none;
+}
+
+.button:hover {
+  background-color: var(--clr-brand-primary-hover);
+}
+
+.payment-info-message {
+  background-color: var(--bg-info-light);
+  color: var(--clr-info);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: left;
+}

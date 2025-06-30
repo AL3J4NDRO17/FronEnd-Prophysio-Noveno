@@ -144,11 +144,6 @@
   height: 3rem; /* h-12 */
 }
 
-.appointmentsAdmin-patient-avatar-fallback {
-  background-color: var(--clr-brand-primary); /* bg-teal-500 */
-  color: var(--clr-white); /* text-white */
-  font-size: 1.125rem; /* text-lg */
-}
 
 .appointmentsAdmin-patient-name {
   font-weight: 600; /* font-semibold */
@@ -191,4 +186,17 @@
   padding: 1rem; /* p-4 */
   border-top: 1px solid var(--brd-default); /* border-t border-gray-200 */
   gap: 0.75rem; /* gap-3 */
+}
+
+/* Nuevos estilos para el historial de citas en PatientDetailsPanel */
+.appointmentsAdmin-history-card {
+  border-left-width: 4px; /* border-l-4 */
+  border-left-color: #60a5fa; /* border-blue-400 */
+  box-shadow: var(--appointmentsAdmin-shadow-sm); /* shadow-sm */
+}
+
+.appointmentsAdmin-history-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

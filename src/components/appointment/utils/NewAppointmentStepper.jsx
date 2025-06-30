@@ -2,25 +2,31 @@
 
 import { useState, useEffect } from "react"
 import { toast } from "react-toastify"
-import { useCitas } from "../hooks/useCitas" // Todavía necesario para obtener citas existentes para validación
-import { useAgendarCita } from "../hooks/useAddCitas" // Nuevo hook
-import ConfirmationStep from "../components/ConfirmationStep" // Nuevo componente de confirmación
+import { useCitas } from "../hooks/useCitas" // Ruta actualizada
+import { useAgendarCita } from "../hooks/useAddCitas" // Ruta actualizada
+import ConfirmationStep from "../components/ConfirmationStep"
 import TermsAndConditionsStep from "../components/TermsAndConditionsStep"
 import ClientDetailsStep from "../components/ClientDetailsStep"
 import AppointmentDetailsStep from "../components/AppointmentDetailsStep"
-import SummaryStep from "../components/SummaryStep" // Importar el nuevo componente de resumen
-import PaymentOptionStep from "../components/PaymentOptionStep"
-import { Card, CardContent } from "../../public_ui/card"
+import SummaryStep from "../components/SummaryStep"
+import PaymentOptionStep from "../components/PaymentOptionStep" // Nuevo componente de pago
 import "../styles/NewAppointmentStepper.css"
+import { horarioService } from "../services/clinicHoursService" // Ruta actualizada
 
-// Default work hours (example) - Should ideally come from a global config or API
-const DEFAULT_WORK_HOURS = {
-  days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], // Días en inglés
-  startTime: "09:00",
-  endTime: "18:00",
+
+const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+const SPANISH_TO_ENGLISH_DAY_MAP = {
+  Domingo: "Sunday",
+  Lunes: "Monday",
+  Martes: "Tuesday",
+  Miércoles: "Wednesday",
+  Jueves: "Thursday",
+  Viernes: "Friday",
+  Sábado: "Saturday",
 }
+
 const NewAppointmentStepper = ({ userId }) => {
-  // Recibe userId como prop
   const {
     perfil,
     loading: hookLoading,
@@ -30,31 +36,64 @@ const NewAppointmentStepper = ({ userId }) => {
     citaCreada,
     guardarDatosCliente,
     agendarCita,
-  } = useAgendarCita(userId) // Pasa userId al hook
+  } = useAgendarCita(userId)
 
-  // Estado local para los datos del formulario que se irán recolectando
   const [formData, setFormData] = useState({
     termsAccepted: false,
-    // Client Details (se precargarán desde 'perfil' si existe)
     nombre_paciente: "",
     sexo: "",
     telefono: "",
-    // email: "", // Campo de email eliminado
-    // Appointment Details & Health
-    alergias: "", // maps to datosExtra.alergias
-    motivo_consulta: "", // new field, maps to datosExtra.motivo_consulta
-    fecha_cita: "", // YYYY-MM-DD
-    hora_cita: "", // HH:MM
-    radiografias: null, // Nuevo campo para archivos (File o FileList)
-    // Payment
+    alergias: "",
+    motivo_consulta: "",
+    fecha_cita: "",
+    hora_cita: "",
+    radiografias: null,
     metodo_pago: "",
-    estado: "pendiente", // Default state for new appointments
+    estado: "pendiente",
   })
 
-  // Cargar citas existentes para la validación de solapamiento
   const { citas, loading: citasLoading } = useCitas()
+  const [clinicWorkHours, setClinicWorkHours] = useState([])
+  const [appointmentDuration, setAppointmentDuration] = useState(null)
+  const [configLoading, setConfigLoading] = useState(true)
 
-  // Sincronizar el estado del formulario con el perfil cargado
+  // Cargar horarios de la clínica y obtener la duración de la sesión
+  useEffect(() => {
+    const loadClinicData = async () => {
+      try {
+        setConfigLoading(true)
+        console.log("NewAppointmentStepper: Intentando cargar horarios de la clínica...")
+        const hours = await horarioService.getHorariosClinica()
+        console.log("NewAppointmentStepper: Horarios de la clínica cargados (raw):", hours)
+
+        // Normalizar los nombres de los días a inglés para consistencia
+        const normalizedHours = hours.map((schedule) => ({
+          ...schedule,
+          dia: SPANISH_TO_ENGLISH_DAY_MAP[schedule.dia] || schedule.dia, // Convierte si es español, mantiene si ya es inglés o desconocido
+        }))
+        console.log("NewAppointmentStepper: Horarios de la clínica normalizados (English):", normalizedHours)
+
+        setClinicWorkHours(normalizedHours)
+
+        if (normalizedHours.length > 0 && normalizedHours[0].duracion_sesion) {
+          setAppointmentDuration(normalizedHours[0].duracion_sesion)
+        } else {
+          setAppointmentDuration(60)
+          console.warn(
+            "NewAppointmentStepper: No se encontró 'duracion_sesion' en los horarios, usando 60 minutos por defecto.",
+          )
+        }
+      } catch (err) {
+        console.error("NewAppointmentStepper: Error al cargar horarios de la clínica:", err)
+        toast.error("No se pudieron cargar los horarios de la clínica.")
+        setAppointmentDuration(60)
+      } finally {
+        setConfigLoading(false)
+      }
+    }
+    loadClinicData()
+  }, [])
+
   useEffect(() => {
     if (perfil) {
       setFormData((prev) => ({
@@ -62,44 +101,26 @@ const NewAppointmentStepper = ({ userId }) => {
         nombre_paciente: perfil.nombre_completo || "",
         sexo: perfil.sexo || "",
         telefono: perfil.telefono || "",
-        email: perfil.email || "", // Aunque se eliminó el input, si el perfil lo tiene, se carga
+        email: perfil.email || "",
       }))
     }
   }, [perfil])
 
-  // Sincronizar el paso del hook con el estado local del stepper
   const [currentStep, setCurrentStep] = useState(1)
   useEffect(() => {
-    // Si el hook indica que la cita fue creada (paso 4), podemos resetear el stepper
-    // o manejar la redirección/mensaje de éxito aquí si es necesario.
-    // Por ahora, el AgendarCitaPage ya maneja la visualización de UserAppointmentDetails
-    // cuando citaCreada es true.
+    console.log("NewAppointmentStepper: Paso actual del hook useAgendarCita:", paso)
     if (citaCreada && paso === 4) {
-      // Opcional: resetear el formulario si el usuario va a agendar otra cita
-      // setFormData(...)
-      // setCurrentStep(1)
+      setCurrentStep(6)
     } else {
       setCurrentStep(paso)
     }
   }, [paso, citaCreada])
 
-  // Manejar errores del hook
   useEffect(() => {
     if (hookError) {
       toast.error(hookError)
     }
   }, [hookError])
-
-  // Simulate fetching work hours (in a real app, this would be from localStorage or an API)
-  const [workHours, setWorkHours] = useState(DEFAULT_WORK_HOURS)
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("prophysioWorkHours")
-      if (saved) {
-        setWorkHours(JSON.parse(saved))
-      }
-    }
-  }, [])
 
   const handleFormChange = (name, value) => {
     if (name === "radiografias") {
@@ -135,26 +156,30 @@ const NewAppointmentStepper = ({ userId }) => {
       )
     } else if (currentStep === 3) {
       const { fecha_cita, hora_cita, motivo_consulta } = formData
-      const defaultDuration = "30"
 
       if (!fecha_cita || !hora_cita || !motivo_consulta) {
         toast.error("Por favor, complete la fecha, hora y motivo de la cita.")
         return
       }
 
-      const combinedDateTime = `${fecha_cita}T${hora_cita}:00`
-      if (!isTimeSlotAvailable(combinedDateTime, defaultDuration, citas, workHours)) {
+      if (appointmentDuration === null) {
+        toast.error("La duración de la cita no está configurada. Por favor, intente de nuevo más tarde.")
         return
       }
-      setCurrentStep(4) // Avanza al paso de pago
+
+      const combinedDateTime = `${fecha_cita}T${hora_cita}:00`
+      console.log("NewAppointmentStepper: Validando disponibilidad para:", combinedDateTime)
+      if (!isTimeSlotAvailable(combinedDateTime, appointmentDuration, citas, clinicWorkHours)) {
+        return
+      }
+      setCurrentStep(4)
     } else if (currentStep === 4) {
       if (!formData.metodo_pago) {
         toast.error("Por favor, seleccione un método de pago.")
         return
       }
-      setCurrentStep(5) // Avanza al paso de resumen
+      setCurrentStep(5)
     } else if (currentStep === 5) {
-      // Desde el resumen, avanza al nuevo paso de confirmación
       setCurrentStep(6)
     }
   }
@@ -164,9 +189,7 @@ const NewAppointmentStepper = ({ userId }) => {
   }
 
   const handleSubmitAppointment = async () => {
-    // Esta función ahora se llama desde ConfirmationStep
     const combinedDateTime = `${formData.fecha_cita}T${formData.hora_cita}:00`
-    const defaultDuration = 30
 
     const citaFormData = new FormData()
     citaFormData.append("id_usuario", userId)
@@ -176,47 +199,52 @@ const NewAppointmentStepper = ({ userId }) => {
       `Motivo: ${formData.motivo_consulta || "N/A"} | Alergias: ${formData.alergias || "Ninguna"}`,
     )
     citaFormData.append("estado", formData.estado)
-    citaFormData.append("duracion", defaultDuration.toString())
-    citaFormData.append("metodo_pago", formData.metodo_pago) // Asegúrate de enviar el método de pago
+    citaFormData.append("duracion", appointmentDuration.toString())
+    citaFormData.append("metodo_pago", formData.metodo_pago)
 
     if (formData.radiografias) {
       citaFormData.append("radiografias", formData.radiografias)
     }
 
     await agendarCita(citaFormData)
-
-    // El hook se encarga de actualizar 'paso' a 4 si la cita se creó exitosamente.
-    // El AgendarCitaPage detectará esto y mostrará UserAppointmentDetails.
-    // No es necesario resetear el formulario aquí, ya que el AgendarCitaPage cambiará la vista.
   }
 
-  const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-
-  const isTimeSlotAvailable = (dateTime, duration, existingAppointments, workHoursConfig) => {
+  const isTimeSlotAvailable = (dateTime, duration, existingAppointments, clinicWorkHoursData) => {
     const newAppStartTime = new Date(dateTime).getTime()
     const newAppEndTime = newAppStartTime + Number.parseInt(duration) * 60 * 1000
 
-    const selectedDay = new Date(dateTime).getDay()
-    const dayName = ENGLISH_DAYS_OF_WEEK[selectedDay]
+    const selectedDayIndex = new Date(dateTime).getDay()
+    const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[selectedDayIndex]
+    console.log("NewAppointmentStepper: Día seleccionado (inglés):", selectedDayNameEnglish)
 
-    if (!workHoursConfig.days.includes(dayName)) {
-      toast.error(`La clínica no trabaja los ${dayName}s.`)
+    // clinicWorkHoursData ahora contiene nombres de días en inglés
+    const daySchedules = clinicWorkHoursData.filter((schedule) => schedule.dia === selectedDayNameEnglish)
+    console.log("NewAppointmentStepper: Horarios filtrados para el día:", daySchedules)
+
+    if (daySchedules.length === 0) {
+      toast.error(`La clínica no trabaja los ${selectedDayNameEnglish}s.`)
       return false
     }
 
-    const workStartTimeParts = workHoursConfig.startTime.split(":")
-    const workEndTimeParts = workHoursConfig.endTime.split(":")
+    let isWithinWorkHours = false
+    for (const schedule of daySchedules) {
+      const workStartTimeParts = schedule.hora_inicio.split(":")
+      const workEndTimeParts = schedule.hora_fin.split(":")
 
-    const workStartDateTime = new Date(dateTime)
-    workStartDateTime.setHours(Number.parseInt(workStartTimeParts[0]), Number.parseInt(workStartTimeParts[1]), 0, 0)
+      const workStartDateTime = new Date(dateTime)
+      workStartDateTime.setHours(Number.parseInt(workStartTimeParts[0]), Number.parseInt(workStartTimeParts[1]), 0, 0)
 
-    const workEndDateTime = new Date(dateTime)
-    workEndDateTime.setHours(Number.parseInt(workEndTimeParts[0]), Number.parseInt(workEndTimeParts[1]), 0, 0)
+      const workEndDateTime = new Date(dateTime)
+      workEndDateTime.setHours(Number.parseInt(workEndTimeParts[0]), Number.parseInt(workEndTimeParts[1]), 0, 0)
 
-    if (newAppStartTime < workStartDateTime.getTime() || newAppEndTime > workEndDateTime.getTime()) {
-      toast.error(
-        `El horario seleccionado está fuera del horario laboral (${workHoursConfig.startTime} - ${workHoursConfig.endTime}).`,
-      )
+      if (newAppStartTime >= workStartDateTime.getTime() && newAppEndTime <= workEndDateTime.getTime()) {
+        isWithinWorkHours = true
+        break
+      }
+    }
+
+    if (!isWithinWorkHours) {
+      toast.error("El horario seleccionado está fuera del horario laboral de la clínica para este día.")
       return false
     }
 
@@ -224,7 +252,8 @@ const NewAppointmentStepper = ({ userId }) => {
       if (app.estado === "cancelada" || app.estado === "completada") continue
 
       const existingAppStartTime = new Date(app.fecha_cita).getTime()
-      const existingAppEndTime = existingAppStartTime + (app.duracion || 30) * 60 * 1000
+      const existingAppDuration = app.duracion || duration
+      const existingAppEndTime = existingAppStartTime + existingAppDuration * 60 * 1000
 
       if (newAppStartTime < existingAppEndTime && newAppEndTime > existingAppStartTime) {
         toast.error("El horario seleccionado se superpone con otra cita existente.")
@@ -234,15 +263,26 @@ const NewAppointmentStepper = ({ userId }) => {
     return true
   }
 
-  // Actualizado para 5 pasos + 1 de confirmación
   const stepTitles = [
     "Términos y Condiciones",
     "Datos del Cliente",
     "Detalles de la Cita y Salud",
     "Opciones de Pago",
     "Resumen de la Cita",
-    "Confirmación Final", // Nuevo paso
+    "Confirmación Final",
   ]
+
+  if (configLoading || appointmentDuration === null) {
+    return (
+      <div className="publicAppointment-stepper-outer-wrapper">
+        <div className="newAppointment-stepper-layout">
+          <div className="newAppointment-stepper-content-area">
+            <p>Cargando configuración de la clínica...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const renderStepComponent = () => {
     switch (currentStep) {
@@ -264,8 +304,9 @@ const NewAppointmentStepper = ({ userId }) => {
             onPrev={handlePrevStep}
             formData={formData}
             onFormChange={handleFormChange}
-            workHours={workHours}
+            clinicWorkHours={clinicWorkHours} // Ahora con días en inglés
             existingAppointments={citas}
+            appointmentDuration={appointmentDuration}
           />
         )
       case 4:
@@ -282,20 +323,14 @@ const NewAppointmentStepper = ({ userId }) => {
         return (
           <SummaryStep
             onPrev={handlePrevStep}
-            onNext={handleNextStep} // Ahora avanza al siguiente paso, no envía
+            onNext={handleNextStep}
             onSubmit={handleSubmitAppointment}
             formData={formData}
             loading={hookLoading || citasLoading}
           />
         )
-      case 6: // Nuevo paso de confirmación
-        return (
-          <ConfirmationStep
-  
-        
-            loading={hookLoading || citasLoading}
-          />
-        )
+      case 6:
+        return <ConfirmationStep loading={hookLoading || citasLoading} />
       default:
         return null
     }
@@ -326,6 +361,4 @@ const NewAppointmentStepper = ({ userId }) => {
     </div>
   )
 }
-
-
 export default NewAppointmentStepper

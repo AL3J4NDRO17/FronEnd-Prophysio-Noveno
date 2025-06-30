@@ -49,7 +49,7 @@ const AboutClinic = lazy(() => import("./pages/about/about.jsx"));
 const AdminTestimonials = lazy(() => import("./components/admin/views/testimoniasEditor/testimonialsControl.jsx"));
 const CompanySettings = lazy(() => import("./components/admin/views/companySettings/companySettings.jsx"));
 const AdminDashboard = lazy(() => import("./components/admin/views/dashboard/adminDashboard.jsx"));
-const PatientDatabase = lazy(() => import("./components/admin/views/users/adminUsers.jsx"));
+const PatientDatabase = lazy(() => import("./components/admin/views/appointments/patients.jsx"));
 const BlogEditor = lazy(() => import("./components/admin/views/blogPrueba/blogPage.jsx"));
 const AdminStadics= lazy(() => import("./components/admin/views/stadistics/ModeloMatematico.jsx"));
 

@@ -1,18 +1,24 @@
 "use client"
 
+import "./styles/CancelPostponeModal.css"
+import "./styles/NewAppointmentStepper.css" // Importa el CSS del stepper
+import "./styles/appointments.css" // Importa el CSS de citas  
+import "./styles/userAppointmentsDetails.css" // Importa el CSS de detalles de citas
+import "./styles/SummaryStep.css"
+import "./styles/VeriftAppointment.css"
+import "./styles/Confirmation.css"
+import "./styles/PaymentForm.css"
+import { useOutletContext } from "react-router-dom" // Importar desde next/navigation para compatibilidad con Next.js App Router
 import { useState, useEffect } from "react"
 import NewAppointmentStepper from "./utils/NewAppointmentStepper"
 import UserAppointmentDetails from "./utils/UserAppointmentDetails"
 import CancelPostponeModal from "./components/CancelPostponeModal"
-import { ToastContainer, toast } from "react-toastify"
+import { toast } from "react-toastify"
 import { Info } from "lucide-react" // Importar icono de información
-import { Input } from "../public_ui/input"
-import { Label } from "../public_ui/label"
-
 
 import { useCitas } from "./hooks/useCitas"
-import "./styles/appointments.css" // Importa el nuevo CSS de la página
-import { useOutletContext } from "react-router-dom"
+
+// import { useOutletContext } from "react-router-dom" // Eliminado para compatibilidad con Next.js App Router
 
 // Default work hours (example) - Should ideally come from a global config or API
 const DEFAULT_WORK_HOURS = {
@@ -22,9 +28,10 @@ const DEFAULT_WORK_HOURS = {
 }
 
 export default function AgendarCitaPage() {
-  // Obtener el usuario del contexto
+  // Simulación de useOutletContext para obtener el usuario
   const { user } = useOutletContext()
   const userId = user?.id_Perfil
+ 
 
   const { citas, loading: citasLoading, cargarCitas, cancelarCita, postergarCita } = useCitas()
   const [activeAppointment, setActiveAppointment] = useState(null)
@@ -162,7 +169,6 @@ export default function AgendarCitaPage() {
     <div className="agendar-cita-layout">
       {/* Panel Izquierdo (Formulario con Stepper Vertical) */}
       <div className="agendar-cita-form-container">
-
         {/* Header "Let's Start!" y mensaje de info */}
         <div className="agendar-cita-header">
           <h1 className="agendar-cita-title">¡Empecemos!</h1>
@@ -178,7 +184,6 @@ export default function AgendarCitaPage() {
           <p className="agendar-cita-user-welcome">
             Bienvenido, <strong>{user.nombre || "Usuario"}</strong>
           </p>
-          
         </div>
 
         {citasLoading ? (

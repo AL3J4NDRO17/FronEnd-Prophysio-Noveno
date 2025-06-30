@@ -1,0 +1,86 @@
+/* src/styles/AppointmentsCalendarView.css */
+
+.calendar-view-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* Ensures content doesn't overflow */
+}
+.calendar-grid{
+    height: 100vh
+}
+/* El encabezado del calendario ahora es manejado por react-big-calendar's .rbc-toolbar */
+/* Si necesitas estilos adicionales para el contenedor del toolbar, puedes aplicarlos aquí */
+/* Por ejemplo, si el toolbar de react-big-calendar no tiene un padding o fondo que te guste */
+/* .rbc-toolbar { ... } */
+.rbc-row-bg {
+
+  right: 0px;
+}
+.rbc-day-slot .rbc-events-container {
+    bottom: 0;
+    left: 0;
+    position: static;
+    right: 0;
+    margin-right: 10px;
+    top: 0;
+}
+.rbc-event {
+  background-color: var(--appointmentsAdmin-color-confirmed);
+  color: white;
+  padding: 2px 6px;
+  border-radius: var(--appointmentsAdmin-border-radius); /* --radius-sm */
+  font-size: 0.8rem;
+  box-shadow: var(--appointmentsAdmin-shadow-sm); /* --shd-sm */
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border: none;
+}
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f8f8;
+}
+
+.calendar-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calendar-header-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 10px;
+  white-space: nowrap; /* Prevent wrapping */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .calendar-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 15px;
+  }
+
+  .calendar-nav-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .calendar-header-title {
+    font-size: 1.1rem;
+  }
+}

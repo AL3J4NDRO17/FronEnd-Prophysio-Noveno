@@ -2,29 +2,54 @@
 :root {
   --appointmentsAdmin-color-primary: #14b8a6;
   --appointmentsAdmin-color-primary-hover: #0d9488;
-  --appointmentsAdmin-color-text: #111827;
-  --appointmentsAdmin-color-text-secondary: #6b7280;
-  --appointmentsAdmin-color-border: #e5e7eb;
+  --appointmentsAdmin-color-text: #333333;
+  /* Ligeramente más suave */
+  --appointmentsAdmin-color-text-secondary: #777777;
+  /* Ligeramente más suave */
+  --appointmentsAdmin-color-border: #e0e0e0;
+  /* Borde más claro */
   --appointmentsAdmin-color-background: #ffffff;
-  --appointmentsAdmin-color-background-secondary: #f9fafb;
+  --appointmentsAdmin-color-background-secondary: #f8f8f8;
+  /* Fondo secundario más claro */
+
+  /* Colores de estado de citas (mantener la distinción, pero los fondos serán más suaves) */
   --appointmentsAdmin-color-confirmed: #10b981;
   --appointmentsAdmin-color-pending: #f59e0b;
   --appointmentsAdmin-color-cancelled: #ef4444;
-  --appointmentsAdmin-color-confirmed-bg: #dcfce7;
-  --appointmentsAdmin-color-pending-bg: #fef3c7;
-  --appointmentsAdmin-color-cancelled-bg: #fee2e2;
+  --appointmentsAdmin-color-inasistencia: #ef4444;
+
+  /* Fondos de estado de citas más suaves */
+  --appointmentsAdmin-color-confirmed-bg: #e6ffe6;
+  /* Verde más suave */
+  --appointmentsAdmin-color-pending-bg: #fffbe6;
+  /* Amarillo más suave */
+  --appointmentsAdmin-color-cancelled-bg: #ffe6e6;
+  /* Rojo más suave */
+  --appointmentsAdmin-color-inasistencia-bg: #ffe6e6;
+  /* Rojo más suave */
+  --appointmentsAdmin-color-postergada-bg: #e6f7ff;
+  /* Azul más suave para postergada */
+  --appointmentsAdmin-color-completada-bg: #f0f0f0;
+  /* Gris más suave para completada */
+
   --appointmentsAdmin-border-radius: 0.375rem;
-  --appointmentsAdmin-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --appointmentsAdmin-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --appointmentsAdmin-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --appointmentsAdmin-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --appointmentsAdmin-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  /* Sombra más suave */
+  --appointmentsAdmin-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  /* Sombra más suave */
+  --appointmentsAdmin-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  /* Sombra más suave */
+  --appointmentsAdmin-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  /* Sombra más suave */
 }
 
 /* Estilos generales */
 .appointmentsAdmin-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color: var(--appointmentsAdmin-color-text);
   line-height: 1.5;
@@ -32,25 +57,49 @@
 
 /* Estilos del encabezado */
 .appointmentsAdmin-header {
-  background-color: var(--appointmentsAdmin-color-background);
-  border-bottom: 1px solid var(--appointmentsAdmin-color-border);
   padding: 1rem 1.5rem;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+
 .appointmentsAdmin-header-title h1 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--appointmentsAdmin-color-text);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
   margin: 0;
 }
 
 .appointmentsAdmin-header-actions {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  gap: 10px;
+}
+
+/* Estilos del encabezado en pantallas pequeñas */
+@media (max-width: 768px) {
+  .appointmentsAdmin-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .appointmentsAdmin-header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .appointmentsAdmin-header-title h1 {
+    font-size: 1.75rem;
+  }
+
+  .appointmentsAdmin-container {
+    padding: 15px;
+  }
 }
 
 .appointmentsAdmin-search-container {
@@ -127,15 +176,17 @@
 }
 
 .appointmentsAdmin-btn-icon {
-  padding: 0.5rem;
-  border: 1px solid var(--appointmentsAdmin-color-border);
+  border-radius: 8px;
+  padding: 8px;
   background-color: transparent;
-  border-radius: var(--appointmentsAdmin-border-radius);
+  border: 1px solid var(--appointmentsAdmin-color-border);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2rem;
   height: 2rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .appointmentsAdmin-btn-icon:hover {
@@ -143,12 +194,12 @@
 }
 
 .appointmentsAdmin-icon-sm {
-  width: 1rem;
-  height: 1rem;
+  width: 18px;
+  height: 18px;
 }
 
 .appointmentsAdmin-icon-mr {
-  margin-right: 0.5rem;
+  margin-right: 8px;
 }
 
 .appointmentsAdmin-icon-ml {
@@ -162,6 +213,12 @@
   overflow: hidden;
 }
 
+.appointmentsAdmin-content-wrapper {
+  display: flex;
+  flex-grow: 1;
+  
+}
+
 /* Barra lateral */
 .appointmentsAdmin-sidebar {
   width: 16rem;
@@ -170,6 +227,110 @@
   padding: 1rem;
   overflow-y: auto;
   display: none;
+}
+
+.calendar-sidebar {
+  width: 300px;
+  /* Fixed width for the sidebar */
+  flex-shrink: 0;
+  /* Prevent shrinking */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 10px;
+}
+
+.calendar-sidebar .card {
+  border: none;
+  border-radius: 0;
+}
+
+.calendar-sidebar .card-header {
+  padding-bottom: 10px;
+}
+
+.calendar-sidebar .card-title {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+}
+
+.sidebar-tabs {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.sidebar-tab-button {
+  flex: 1;
+  padding: 10px 0;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+  color: #777;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.sidebar-tab-button.active {
+  color: var(--appointmentsAdmin-color-primary);
+  /* Primary color */
+  border-color: var(--appointmentsAdmin-color-primary);
+  font-weight: 600;
+}
+
+.sidebar-tab-button:hover:not(.active) {
+  color: #333;
+}
+
+.sidebar-appointment-list {
+  padding: 16px;
+}
+
+.sidebar-appointment-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.sidebar-appointment-item:last-child {
+  border-bottom: none;
+}
+
+.sidebar-appointment-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 0.8rem;
+}
+
+.sidebar-appointment-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.sidebar-appointment-patient-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.sidebar-appointment-date-time {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.sidebar-appointment-status {
+  /* Reusing badge styles from AppointmentItemRow */
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 @media (min-width: 768px) {
@@ -214,88 +375,20 @@
   color: var(--appointmentsAdmin-color-text);
 }
 
-/* Calendario */
-.appointmentsAdmin-calendar {
-  border: 1px solid var(--appointmentsAdmin-color-border);
-  border-radius: var(--appointmentsAdmin-border-radius);
-  overflow: hidden;
-}
-
-.appointmentsAdmin-calendar-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem;
-  background-color: var(--appointmentsAdmin-color-background-secondary);
-  border-bottom: 1px solid var(--appointmentsAdmin-color-border);
-}
-
-.appointmentsAdmin-calendar-title {
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.appointmentsAdmin-calendar-nav-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem;
-  border-radius: var(--appointmentsAdmin-border-radius);
-}
-
-.appointmentsAdmin-calendar-nav-btn:hover {
-  background-color: var(--appointmentsAdmin-color-border);
-}
-
-.appointmentsAdmin-calendar-days-header {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  border-bottom: 1px solid var(--appointmentsAdmin-color-border);
-}
-
-.appointmentsAdmin-calendar-weekday {
-  font-size: 0.75rem;
-  padding: 0.5rem 0;
-  color: var(--appointmentsAdmin-color-text-secondary);
-}
-
-.appointmentsAdmin-calendar-days-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-}
-
-.appointmentsAdmin-calendar-day {
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  cursor: pointer;
-}
-
-.appointmentsAdmin-calendar-day:hover {
-  background-color: var(--appointmentsAdmin-color-background-secondary);
-}
-
-.appointmentsAdmin-calendar-day.current {
-  background-color: var(--appointmentsAdmin-color-primary);
-  color: white;
-  font-weight: 500;
-}
-
-.appointmentsAdmin-calendar-day.empty {
-  cursor: default;
-}
-
 /* Contenido principal */
 .appointmentsAdmin-main {
   flex: 1;
   overflow-y: auto;
   padding: 1.5rem;
+}
+
+.appointmentsAdmin-main-content {
+  flex-grow: 1;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  /* Ensures calendar content stays within bounds */
 }
 
 .appointmentsAdmin-date-navigation {
@@ -345,7 +438,7 @@
   background-color: var(--appointmentsAdmin-color-background);
   border-radius: var(--appointmentsAdmin-border-radius);
   box-shadow: var(--appointmentsAdmin-shadow);
- 
+
   margin-bottom: 1.5rem;
 }
 
@@ -460,6 +553,12 @@
 .appointmentsAdmin-badge-cancelled {
   background-color: var(--appointmentsAdmin-color-cancelled-bg);
   color: var(--appointmentsAdmin-color-cancelled);
+}
+
+.appointmentsAdmin-badge-inasistencia {
+  /* Nuevo estilo para inasistencia */
+  background-color: var(--appointmentsAdmin-color-inasistencia-bg);
+  color: var(--appointmentsAdmin-color-inasistencia);
 }
 
 /* Estadísticas */
@@ -637,7 +736,6 @@
   box-shadow: var(--appointmentsAdmin-shadow-md);
 }
 
-
 .appointmentsAdmin-patient-info {
   display: flex;
   align-items: center;
@@ -645,7 +743,8 @@
 }
 
 .appointmentsAdmin-td-actions {
-  width: 120px; /* Fixed width for actions column */
+  width: 120px;
+  /* Fixed width for actions column */
   text-align: right;
 }
 
@@ -653,19 +752,6 @@
   display: flex;
   gap: 0.25rem;
   justify-content: flex-end;
-}
-
-.appointmentsAdmin-icon-sm {
-  width: 1rem;
-  height: 1rem;
-}
-
-.appointmentsAdmin-icon-mr {
-  margin-right: 0.5rem;
-}
-
-.appointmentsAdmin-icon-ml {
-  margin-left: 0.5rem;
 }
 
 /* Modal styles (reused from previous components) */
@@ -683,10 +769,10 @@
 }
 
 .appointmentsAdmin-modal {
-  background-color: var(--bg-white);
+  background-color: var(--appointmentsAdmin-color-background);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: var(--shd-lg);
+  box-shadow: var(--appointmentsAdmin-shadow-lg);
   width: 80%;
   max-width: 600px;
   display: flex;
@@ -695,7 +781,7 @@
 }
 
 .appointmentsAdmin-modal-header {
-  border-bottom: 1px solid var(--brd-default);
+  border-bottom: 1px solid var(--appointmentsAdmin-color-border);
   padding-bottom: 10px;
 }
 
@@ -707,13 +793,14 @@
 
 .appointmentsAdmin-modal-description {
   font-size: 0.875rem;
-  color: var(--txt-secondary);
+  color: var(--appointmentsAdmin-color-text-secondary);
 }
 
 .appointmentsAdmin-modal-content {
   flex-grow: 1;
   overflow-y: auto;
-  padding-right: 0.5rem; /* For scrollbar */
+  padding-right: 0.5rem;
+  /* For scrollbar */
 }
 
 .appointmentsAdmin-form-group {
@@ -726,19 +813,19 @@
   font-size: 0.875rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
-  color: var(--txt-default);
+  color: var(--appointmentsAdmin-color-text);
 }
 
 .appointmentsAdmin-form-textarea {
   width: 100%;
   min-height: 80px;
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--brd-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--appointmentsAdmin-color-border);
+  border-radius: var(--appointmentsAdmin-border-radius);
   font-size: 0.875rem;
-  color: var(--txt-default);
-  background-color: var(--bg-white);
-  box-shadow: var(--shd-sm);
+  color: var(--appointmentsAdmin-color-text);
+  background-color: var(--appointmentsAdmin-color-background);
+  box-shadow: var(--appointmentsAdmin-shadow-sm);
   transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
   resize: vertical;
@@ -746,7 +833,7 @@
 
 .appointmentsAdmin-form-textarea:focus {
   border-color: transparent;
-  box-shadow: 0 0 0 2px var(--clr-brand-primary);
+  box-shadow: 0 0 0 2px var(--appointmentsAdmin-color-primary);
 }
 
 .appointmentsAdmin-modal-footer {
@@ -754,92 +841,10 @@
   justify-content: flex-end;
   gap: 0.75rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--brd-default);
+  border-top: 1px solid var(--appointmentsAdmin-color-border);
 }
 
-/* Calendar styles (reused) */
-.appointmentsAdmin-calendar {
-  border: 1px solid var(--brd-default);
-  border-radius: var(--radius-md);
-  background-color: var(--bg-white);
-  
-  width: 100%;
-  max-width: 300px;
-  box-shadow: var(--shd-sm);
-}
-
-.appointmentsAdmin-calendar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.appointmentsAdmin-calendar-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--txt-default);
-}
-
-.appointmentsAdmin-calendar-days-header {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--txt-secondary);
-  margin-bottom: 0.5rem;
-}
-
-.appointmentsAdmin-calendar-weekday {
-  padding: 0.25rem;
-}
-
-.appointmentsAdmin-calendar-days-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.25rem;
-}
-
-.appointmentsAdmin-calendar-day {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-  color: var(--txt-default);
-}
-
-.appointmentsAdmin-calendar-day.empty {
-  background-color: transparent;
-  cursor: default;
-  opacity: 0.5;
-}
-
-.appointmentsAdmin-calendar-day:not(.empty):hover {
-  background-color: var(--bg-secondary);
-}
-
-.appointmentsAdmin-calendar-day.current {
-  background-color: var(--clr-brand-primary);
-  color: white;
-  font-weight: 600;
-}
-
-.appointmentsAdmin-calendar-day.current:hover {
-  background-color: var(--clr-brand-primary-hover);
-}
-
-.appointmentsAdmin-calendar-day.disabled-day {
-  color: var(--txt-secondary);
-  background-color: var(--bg-secondary);
-  cursor: not-allowed;
-  opacity: 0.7;
-}
+/* Calendar styles (reused) - REMOVED */
 
 /* Styles for the new details panel */
 .appointmentsAdmin-details-panel-overlay {
@@ -850,38 +855,45 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: flex-end; /* Align to the right */
-  align-items: stretch; /* Stretch vertically */
+  justify-content: flex-end;
+  /* Align to the right */
+  align-items: stretch;
+  /* Stretch vertically */
   z-index: 1000;
 }
 
 .appointmentsAdmin-details-panel {
-  background-color: var(--bg-white);
-  width: 400px; /* Ancho del panel */
-  max-width: 90%; /* Máximo ancho en pantallas pequeñas */
-  box-shadow: var(--shd-lg);
-  transform: translateX(100%); /* Inicia fuera de la pantalla a la derecha */
-  transition: transform 0.3s ease-out; /* Transición para el movimiento */
+  background-color: var(--appointmentsAdmin-color-background);
+  width: 400px;
+  /* Ancho del panel */
+  max-width: 90%;
+  /* Máximo ancho en pantallas pequeñas */
+  box-shadow: var(--appointmentsAdmin-shadow-lg);
+  transform: translateX(100%);
+  /* Inicia fuera de la pantalla a la derecha */
+  transition: transform 0.3s ease-out;
+  /* Transición para el movimiento */
   display: flex;
   flex-direction: column;
 }
 
 .appointmentsAdmin-details-panel.is-open {
-  transform: translateX(0%); /* Se desliza a la posición visible */
+  transform: translateX(0%);
+  /* Se desliza a la posición visible */
 }
 
 /* Reused summary styles from NewAppointmentStepper.css - MOVED HERE */
 .appointmentsAdmin-summary-section {
-  border: 1px solid var(--brd-default);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--appointmentsAdmin-color-border);
+  border-radius: var(--appointmentsAdmin-border-radius);
   padding: 1rem;
-  background-color: var(--bg-off-white);
+  background-color: var(--appointmentsAdmin-color-background-secondary);
 }
 
 .appointmentsAdmin-summary-heading {
   font-size: 1.125rem;
   font-weight: 600;
-  color: var(--txt-heading);
+  color: var(--appointmentsAdmin-color-text);
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -891,7 +903,7 @@
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 0;
-  border-bottom: 1px dashed var(--brd-default);
+  border-bottom: 1px dashed var(--appointmentsAdmin-color-border);
 }
 
 .appointmentsAdmin-summary-item:last-child {
@@ -900,26 +912,89 @@
 
 .appointmentsAdmin-summary-label {
   font-weight: 500;
-  color: var(--txt-default);
+  color: var(--appointmentsAdmin-color-text);
 }
 
 .appointmentsAdmin-summary-value {
-  color: var(--txt-secondary);
+  color: var(--appointmentsAdmin-color-text-secondary);
   text-align: right;
-  word-break: break-word; /* Allow long words to break */
-  max-width: 60%; /* Limit width to prevent overflow */
+  word-break: break-word;
+  /* Allow long words to break */
+  max-width: 60%;
+  /* Limit width to prevent overflow */
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
-  .appointmentsAdmin-content {
-    flex-direction: column; /* Stack sidebar and main content */
+@media (max-width: 1024px) {
+  .appointmentsAdmin-content-wrapper {
+    flex-direction: column;
   }
-  .appointmentsAdmin-sidebar {
-    width: 100%; /* Full width for sidebar on small screens */
-    max-width: none;
+
+  .calendar-sidebar {
+    width: 100%;
+    max-height: 300px;
+    /* Limit height on smaller screens */
   }
-  .appointmentsAdmin-details-panel {
-    width: 100%; /* Full width for panel on small screens */
-  }
+}
+
+/* Estilos para el desplegable de búsqueda de usuarios en el modal */
+.appointmentsAdmin-user-search-results {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  background-color: var(--appointmentsAdmin-color-background);
+  /* bg-white */
+  border: 1px solid var(--appointmentsAdmin-color-border);
+  /* border border-gray-200 */
+  border-radius: var(--appointmentsAdmin-border-radius);
+  /* rounded-md */
+  box-shadow: var(--appointmentsAdmin-shadow-md);
+  /* shadow-lg */
+  margin-top: 0.25rem;
+  /* mt-1 */
+  max-height: 15rem;
+  /* max-h-60 (15rem) */
+  overflow-y: auto;
+}
+
+.appointmentsAdmin-user-search-item {
+  padding: 0.5rem 1rem;
+  /* px-4 py-2 */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* gap-2 */
+  font-size: 0.875rem;
+  /* text-sm */
+  color: var(--appointmentsAdmin-color-text);
+}
+
+.appointmentsAdmin-user-search-item:hover {
+  background-color: var(--appointmentsAdmin-color-background-secondary);
+  /* hover:bg-gray-100 */
+}
+
+.appointmentsAdmin-user-search-item .appointmentsAdmin-icon-sm {
+  /* Dirigido al icono de User */
+  color: var(--appointmentsAdmin-color-text-secondary);
+  /* text-gray-500 */
+}
+
+/* Nuevos estilos para el texto dentro del item de búsqueda de usuario */
+.appointmentsAdmin-user-search-item-text-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.appointmentsAdmin-user-search-item-name {
+  font-weight: 500;
+  /* font-medium */
+}
+
+.appointmentsAdmin-user-search-item-email {
+  font-size: 0.75rem;
+  /* text-xs */
+  color: var(--appointmentsAdmin-color-text-secondary);
+  /* text-gray-500 */
 }

@@ -1,26 +1,32 @@
 "use client"
 
+import { CheckCircle, Loader } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../public_ui/card"
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle} from "../../public_ui/card"
-import { CheckCircle } from "lucide-react" // Icono para la confirmación
-
-const ConfirmationStep = ({ onPrev, onSubmit, loading }) => {
+export default function ConfirmationStep({ loading }) {
   return (
     <Card className="publicAppointment-card-step">
       <CardHeader>
-        <CardTitle>Paso 5: Confirmación Final</CardTitle> {/* Actualizado a Paso 5 */}
-        <CardDescription>Por favor, revise los detalles y confirme su cita.</CardDescription>
+        <CardTitle>Confirmación de Cita</CardTitle>
+        <CardDescription>
+          {loading ? "Procesando su cita..." : "Su cita ha sido agendada exitosamente."}
+        </CardDescription>
       </CardHeader>
       <CardContent className="publicAppointment-confirmation-content">
-        <CheckCircle className="publicAppointment-confirmation-icon" />
-        <p className="publicAppointment-confirmation-text-lg">¡Todo listo para confirmar!</p>
-        <p className="publicAppointment-confirmation-text-base">
-         Se ha finalizado el proceso de agendado de cita, por favor verifique el enlace que se le envio a su correo electronico para confirmar la cita...
+        {loading ? (
+          <Loader className="publicAppointment-confirmation-icon loading-icon" />
+        ) : (
+          <CheckCircle className="publicAppointment-confirmation-icon success-icon" />
+        )}
+        <p className="publicAppointment-confirmation-text-lg">
+          {loading ? "Por favor, espere..." : "¡Gracias por agendar su cita!"}
         </p>
+        {!loading && (
+          <p className="publicAppointment-confirmation-text-base">
+            Recibirá un correo electrónico de confirmación con los detalles.
+          </p>
+        )}
       </CardContent>
-      
     </Card>
   )
 }
-
-export default ConfirmationStep

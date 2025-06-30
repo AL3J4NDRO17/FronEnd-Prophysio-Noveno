@@ -1,151 +1,66 @@
-"use client"
-
-import React, { useState, useEffect, useCallback } from "react"
+import { DayPicker } from "react-day-picker"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "./button"
-import { toast } from "react-toastify"
-import "./calendar.css"
 
-// Días en español para la visualización en el calendario (encabezados)
-const DAY_TRANSLATIONS_DISPLAY = ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"]
-// Días en inglés para la lógica interna (comparación con workHours)
-const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-const MONTH_NAMES = [
-  "Enero",
-  "Febrero",
-  "Marzo",
-  "Abril",
-  "Mayo",
-  "Junio",
-  "Julio",
-  "Agosto",
-  "Septiembre",
-  "Octubre",
-  "Noviembre",
-  "Diciembre",
-]
+// Función de utilidad para unir clases (equivalente a cn de shadcn/ui)
+// Necesitarás instalar 'clsx' y 'tailwind-merge'
+// npm install clsx tailwind-merge
+import { clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 
-const Calendar = React.forwardRef(
-  ({ className, selectedDate, onSelect, workHours, minDate, maxDate, ...props }, ref) => {
-    const [displayDate, setDisplayDate] = useState(selectedDate || new Date())
+export function cn(...inputs) {
+  return twMerge(clsx(inputs))
+}
 
-    useEffect(() => {
-      if (selectedDate) {
-        setDisplayDate(selectedDate)
-      }
-    }, [selectedDate])
-
-    const getDaysInMonth = useCallback((date) => {
-      const year = date.getFullYear()
-      const month = date.getMonth()
-      const firstDayOfMonth = new Date(year, month, 1)
-      const lastDayOfMonth = new Date(year, month + 1, 0)
-      const daysInMonth = lastDayOfMonth.getDate()
-      const startDayOfWeek = firstDayOfMonth.getDay() // 0 = Sunday, 1 = Monday ...
-
-      const days = []
-      // Fill leading empty days
-      for (let i = 0; i < startDayOfWeek; i++) {
-        days.push(null)
-      }
-
-      // Fill days of the month
-      for (let day = 1; day <= daysInMonth; day++) {
-        days.push(new Date(year, month, day))
-      }
-      return days
-    }, [])
-
-    const handlePrevMonth = () => {
-      setDisplayDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1))
-    }
-
-    const handleNextMonth = () => {
-      setDisplayDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1))
-    }
-
-    const handleDayClick = (dayDate) => {
-      if (!dayDate) return
-
-      const dayNameOfWeekEnglish = ENGLISH_DAYS_OF_WEEK[dayDate.getDay()] // Obtiene el nombre del día en inglés
-      const isWorkingDay = workHours?.days.includes(dayNameOfWeekEnglish) // Compara con los días en inglés
-
-      if (!isWorkingDay) {
-        // Puedes usar la traducción para el mensaje de error si lo deseas
-        const dayNameOfWeekSpanish = DAY_TRANSLATIONS_DISPLAY[dayDate.getDay()]
-        toast.info(`El día seleccionado (${dayNameOfWeekSpanish}) no es un día laboral.`)
-        return
-      }
-
-      // Check minDate and maxDate
-      if (minDate && dayDate < new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate())) {
-        toast.info("No puedes seleccionar una fecha anterior a la fecha mínima permitida.")
-        return
-      }
-      if (maxDate && dayDate > new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate())) {
-        toast.info("No puedes seleccionar una fecha posterior a la fecha máxima permitida.")
-        return
-      }
-
-      onSelect(dayDate)
-    }
-
-    const days = getDaysInMonth(displayDate)
-
-    return (
-      <div className={`appointmentsAdmin-calendar-component ${className || ""}`} ref={ref} {...props}>
-        <div className="appointmentsAdmin-calendar-header">
-          <Button variant="ghost" size="icon" onClick={handlePrevMonth}>
-            <ChevronLeft className="appointmentsAdmin-icon-sm" />
-          </Button>
-          <h3 className="appointmentsAdmin-calendar-title">
-            {MONTH_NAMES[displayDate.getMonth()]} {displayDate.getFullYear()}
-          </h3>
-          <Button variant="ghost" size="icon" onClick={handleNextMonth}>
-            <ChevronRight className="appointmentsAdmin-icon-sm" />
-          </Button>
-        </div>
-        <div className="appointmentsAdmin-calendar-weekdays">
-          {DAY_TRANSLATIONS_DISPLAY.map((day) => (
-            <div key={day} className="appointmentsAdmin-calendar-weekday">
-              {day}
-            </div>
-          ))}
-        </div>
-        <div className="appointmentsAdmin-calendar-grid">
-          {days.map((dayDate, index) => {
-            const isCurrentMonth = dayDate && dayDate.getMonth() === displayDate.getMonth()
-            const isSelected =
-              selectedDate &&
-              dayDate &&
-              dayDate.getDate() === selectedDate.getDate() &&
-              dayDate.getMonth() === selectedDate.getMonth() &&
-              dayDate.getFullYear() === selectedDate.getFullYear()
-
-            const dayNameOfWeekEnglish = dayDate ? ENGLISH_DAYS_OF_WEEK[dayDate.getDay()] : null // Obtiene el nombre del día en inglés
-            const isWorkingDay = dayDate && workHours?.days.includes(dayNameOfWeekEnglish) // Compara con los días en inglés
-
-            return (
-              <div
-                key={index}
-                className={`
-                  appointmentsAdmin-calendar-day-cell
-                  ${!dayDate || !isCurrentMonth ? "empty" : ""}
-                  ${isSelected ? "selected" : ""}
-                  ${!isWorkingDay && dayDate ? "non-working-day" : ""}
-                  ${(!minDate || dayDate >= new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate())) && (!maxDate || dayDate <= new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate())) ? "" : "disabled-range"}
-                `}
-                onClick={() => handleDayClick(dayDate)}
-              >
-                {dayDate ? dayDate.getDate() : ""}
-              </div>
-            )
-          })}
-        </div>
-      </div>
-    )
-  },
-)
-Calendar.displayName = "Calendar"
-
-export { Calendar }
+export function Calendar({
+  className,
+  classNames,
+  showHead = true, // Controla la visibilidad de los días de la semana
+  ...props
+}) {
+  return (
+    <DayPicker
+      showHead={showHead}
+      className={cn("p-3", className)}
+      classNames={{
+        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+        month: "space-y-4",
+        caption: "flex justify-center pt-1 relative items-center",
+        caption_label: "text-sm font-medium",
+        nav: "space-x-1 flex items-center",
+        nav_button: cn(
+          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+          "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        ),
+        nav_button_previous: "absolute left-1",
+        nav_button_next: "absolute right-1",
+        table: "w-full border-collapse space-y-1",
+        head_row: "flex",
+        head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+        row: "flex w-full mt-2",
+        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-range-start)]:rounded-l-md [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+        day: cn(
+          "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
+          "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          "hover:bg-accent hover:text-accent-foreground",
+          "data-[state=selected]:bg-primary data-[state=selected]:text-primary-foreground data-[state=selected]:hover:bg-primary data-[state=selected]:hover:text-primary-foreground",
+          "data-[state=disabled]:text-muted-foreground data-[state=disabled]:opacity-50", // Estilo para días deshabilitados
+        ),
+        day_range_start: "day-range-start",
+        day_range_end: "day-range-end",
+        day_selected:
+          "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+        day_today: "bg-accent text-accent-foreground",
+        day_outside: "text-muted-foreground opacity-50",
+        day_disabled: "text-muted-foreground opacity-50", // Asegura que los días deshabilitados se vean atenuados
+        day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+        day_hidden: "invisible",
+        ...classNames,
+      }}
+      components={{
+        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
+        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+      }}
+      {...props}
+    />
+  )
+}

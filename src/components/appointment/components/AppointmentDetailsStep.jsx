@@ -1,229 +1,271 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../public_ui/card"
 import { Button } from "../../public_ui/button"
 import { Input } from "../../public_ui/input"
 import { Label } from "../../public_ui/label"
-import { Select, SelectItem } from "../../public_ui/select"
-import { Textarea } from "../../public_ui/textarea" // Nuevo Textarea
-import { Calendar } from "../../public_ui/calendar" // Nuevo Calendar
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../public_ui/card" // Nuevo Card
 import { toast } from "react-toastify"
+import { Textarea } from "../../public_ui/textarea"
+import { Select } from "../../public_ui/select"
+import Swal from "sweetalert2"
 
-const AppointmentDetailsStep = ({ onNext, onPrev, formData, onFormChange, workHours, existingAppointments }) => {
-  const [showCalendar, setShowCalendar] = useState(false)
+const ENGLISH_DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday"]
+// Mantenemos los nombres en español si se necesitan para la visualización
+const SPANISH_DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+
+export default function AppointmentDetailsStep({
+  onNext,
+  onPrev,
+  formData,
+  onFormChange,
+  clinicWorkHours, // Ahora se espera que 'dia' esté en inglés
+  existingAppointments,
+  appointmentDuration,
+}) {
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([])
+
+  // Función para verificar si un día es laborable para la clínica
+  const isDayAvailable = (dateString, clinicWorkHoursData) => {
+    if (!dateString || !clinicWorkHoursData || clinicWorkHoursData.length === 0) {
+      return false
+    }
+    const selectedDate = new Date(dateString)
+    const dayOfWeekIndex = selectedDate.getDay()
+    const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex] // Obtener el nombre del día en inglés
+
+    // Comprobar si existe algún horario para el día seleccionado (ahora 'dia' en clinicWorkHoursData es inglés)
+    return clinicWorkHoursData.some((schedule) => schedule.dia === selectedDayNameEnglish)
+  }
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target
-    // Si es un input de tipo 'file', pasa los archivos
-    if (type === "file") {
-      onFormChange(name, files)
-    } else {
-      onFormChange(name, value)
-    }
+    const { name, value } = e.target
+    onFormChange(name, value)
   }
 
-  const handleDateSelect = (date) => {
-    onFormChange("fecha_cita", date.toISOString().split("T")[0]) // YYYY-MM-DD
-    setShowCalendar(false)
+  const handleFileChange = (e) => {
+    onFormChange("radiografias", e.target.files)
   }
 
-  // Array para mapear getDay() (0-6) a nombres de días en inglés
-  const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  // Función para generar franjas horarias
+  const generateTimeSlots = (startTime, endTime, intervalMinutes) => {
+    const slots = []
+    const parsedStartTime = startTime.substring(0, 5)
+    const parsedEndTime = endTime.substring(0, 5)
 
-  const isTimeSlotAvailable = (dateTime, duration, appointments) => {
-    const newAppStartTime = new Date(dateTime).getTime()
-    const newAppEndTime = newAppStartTime + Number.parseInt(duration) * 60 * 1000
+    const current = new Date(`2000-01-01T${parsedStartTime}:00`)
+    const end = new Date(`2000-01-01T${parsedEndTime}:00`)
 
-    // Check against work hours (already done in Calendar component, but good to re-check)
-    const selectedDay = new Date(dateTime).getDay() // 0 for Sunday, 1 for Monday, etc.
-    const dayName = ENGLISH_DAYS_OF_WEEK[selectedDay] // Obtiene el nombre del día en inglés
-
-    if (!workHours.days.includes(dayName)) {
-      toast.error(`La clínica no trabaja los ${dayName}s.`)
-      return false
-    }
-
-    const workStartTimeParts = workHours.startTime.split(":")
-    const workEndTimeParts = workHours.endTime.split(":")
-
-    const workStartDateTime = new Date(dateTime)
-    workStartDateTime.setHours(Number.parseInt(workStartTimeParts[0]), Number.parseInt(workStartTimeParts[1]), 0, 0)
-
-    const workEndDateTime = new Date(dateTime)
-    workEndDateTime.setHours(Number.parseInt(workEndTimeParts[0]), Number.parseInt(workEndTimeParts[1]), 0, 0)
-
-    if (newAppStartTime < workStartDateTime.getTime() || newAppEndTime > workEndDateTime.getTime()) {
-      toast.error(
-        `El horario seleccionado está fuera del horario laboral (${workHours.startTime} - ${workHours.endTime}).`,
+    if (current.getTime() >= end.getTime()) {
+      console.warn(
+        `[generateTimeSlots] Hora de inicio (${parsedStartTime}) es igual o mayor que hora de fin (${parsedEndTime}). No se generarán slots.`,
       )
-      return false
+      return []
     }
 
-    // Check against existing appointments
-    for (const app of appointments) {
-      // Only consider 'pendiente' or 'confirmada' appointments for overlap
-      if (app.estado === "cancelada" || app.estado === "completada") continue
+    while (current.getTime() < end.getTime()) {
+      const hours = String(current.getHours()).padStart(2, "0")
+      const minutes = String(current.getMinutes()).padStart(2, "0")
+      slots.push(`${hours}:${minutes}`)
+      current.setMinutes(current.getMinutes() + intervalMinutes)
+    }
+    return slots
+  }
 
-      const existingAppStartTime = new Date(app.fecha_cita).getTime()
-      const existingAppEndTime = existingAppStartTime + (app.duracion || 30) * 60 * 1000 // Assume 30 min if no duration
+  // Efecto para calcular las franjas horarias disponibles
+  useEffect(() => {
+    console.log(
+      "[AppointmentDetailsStep useEffect] Fecha seleccionada:",
+      formData.fecha_cita,
+      "Horarios de clínica recibidos (esperado inglés):",
+      clinicWorkHours,
+      "Citas existentes:",
+      existingAppointments,
+      "Duración de cita (dinámica):",
+      appointmentDuration,
+    )
 
-      // Check for overlap: (StartA < EndB) and (EndA > StartB)
-      if (newAppStartTime < existingAppEndTime && newAppEndTime > existingAppStartTime) {
-        toast.error("El horario seleccionado se superpone con otra cita existente.")
-        return false
+    if (formData.fecha_cita && clinicWorkHours.length > 0 && appointmentDuration !== null) {
+      const selectedDate = new Date(formData.fecha_cita)
+      const dayOfWeekIndex = selectedDate.getDay()
+      const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex]
+      console.log("[AppointmentDetailsStep useEffect] Día de la semana seleccionado (inglés):", selectedDayNameEnglish)
+
+      const daySchedules = clinicWorkHours.filter((schedule) => {
+        return schedule.dia === selectedDayNameEnglish // Comparación directa con el nombre en inglés
+      })
+      console.log("[AppointmentDetailsStep useEffect] Horarios de la clínica filtrados para el día:", daySchedules)
+
+      if (daySchedules.length === 0) {
+        console.log("[AppointmentDetailsStep useEffect] Día no laboral seleccionado. Limpiando slots y hora.")
+        setAvailableTimeSlots([])
+        if (formData.hora_cita) {
+          onFormChange("hora_cita", "")
+        }
+        return
+      }
+
+      let allPotentialSlots = []
+      daySchedules.forEach((schedule) => {
+        allPotentialSlots = allPotentialSlots.concat(
+          generateTimeSlots(schedule.hora_inicio, schedule.hora_fin, appointmentDuration),
+        )
+      })
+
+      const uniqueSortedPotentialSlots = [...new Set(allPotentialSlots)].sort()
+      console.log(
+        "[AppointmentDetailsStep useEffect] Slots potenciales únicos y ordenados:",
+        uniqueSortedPotentialSlots,
+      )
+
+      const filteredSlots = uniqueSortedPotentialSlots.filter((slot) => {
+        const potentialAppStart = new Date(`${formData.fecha_cita}T${slot}:00`).getTime()
+        const potentialAppEnd = potentialAppStart + appointmentDuration * 60 * 1000
+
+        const isOverlapping = existingAppointments.some((existingApp) => {
+          if (existingApp.estado === "cancelada" || existingApp.estado === "completada") {
+            return false
+          }
+
+          const existingAppStart = new Date(existingApp.fecha_cita).getTime()
+          const existingAppDuration = existingApp.duracion || appointmentDuration
+          const existingAppEndTime = existingAppStart + existingAppDuration * 60 * 1000
+
+          return potentialAppStart < existingAppEndTime && potentialAppEnd > existingAppStart
+        })
+
+        return !isOverlapping
+      })
+
+      console.log("[AppointmentDetailsStep useEffect] Slots filtrados (sin superposiciones):", filteredSlots)
+      setAvailableTimeSlots(filteredSlots)
+
+      if (formData.hora_cita && !filteredSlots.includes(formData.hora_cita)) {
+        console.log(
+          "[AppointmentDetailsStep useEffect] Hora seleccionada previamente no válida para la nueva fecha/horarios. Reseteando hora_cita.",
+        )
+        onFormChange("hora_cita", "")
+      }
+    } else {
+      console.log(
+        "[AppointmentDetailsStep useEffect] No hay fecha seleccionada, clinicWorkHours vacío o appointmentDuration no definido. Reseteando slots y hora_cita.",
+      )
+      setAvailableTimeSlots([])
+      if (formData.hora_cita) {
+        onFormChange("hora_cita", "")
       }
     }
-    return true
-  }
+  }, [formData.fecha_cita, clinicWorkHours, existingAppointments, appointmentDuration, onFormChange])
 
   const handleNext = () => {
     const { fecha_cita, hora_cita, motivo_consulta } = formData
-    const defaultDuration = "30" // Usar una duración por defecto para la validación
-
     if (!fecha_cita || !hora_cita || !motivo_consulta) {
       toast.error("Por favor, complete la fecha, hora y motivo de la cita.")
       return
     }
 
-    const combinedDateTime = `${fecha_cita}T${hora_cita}:00`
-    if (!isTimeSlotAvailable(combinedDateTime, defaultDuration, existingAppointments)) {
-      return // Error toast is shown by isTimeSlotAvailable
-    }
-
     onNext()
   }
 
-  // Time slots for the "Nueva Cita" modal, based on work hours
-  const getTimeSlots = () => {
-    const slots = []
-    if (!workHours.startTime || !workHours.endTime) return slots
-
-    const [startH, startM] = workHours.startTime.split(":").map(Number)
-    const [endH, endM] = workHours.endTime.split(":").map(Number)
-    const interval = 15 // 15 minute intervals
-
-    let currentHour = startH
-    let currentMinute = startM
-
-    while (currentHour < endH || (currentHour === endH && currentMinute < endM)) {
-      slots.push(`${String(currentHour).padStart(2, "0")}:${String(currentMinute).padStart(2, "0")}`)
-      currentMinute += interval
-      if (currentMinute >= 60) {
-        currentHour++
-        currentMinute %= 60
-      }
-    }
-    // Add the exact end time if it's a valid slot
-    if (currentHour === endH && currentMinute === endM) {
-      slots.push(`${String(endH).padStart(2, "0")}:${String(endM).padStart(2, "0")}`)
-    }
-    return slots
+  const getMinDate = () => {
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, "0")
+    const day = String(today.getDate()).padStart(2, "0")
+    return `${year}-${month}-${day}`
   }
-  const timeSlots = getTimeSlots()
+
+  const isNonWorkingDay =
+    formData.fecha_cita && clinicWorkHours.length > 0 && !isDayAvailable(formData.fecha_cita, clinicWorkHours)
+
+  const isSelectDisabled = !formData.fecha_cita || isNonWorkingDay || availableTimeSlots.length === 0
 
   return (
     <Card className="publicAppointment-card-step">
       <CardHeader>
-        <CardTitle>Paso 3: Detalles de la Cita y Salud</CardTitle>
-        <CardDescription>Proporcione información sobre su salud y la cita.</CardDescription>
+        <CardTitle>Detalles de la Cita y Salud</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="publicAppointment-form-group">
-          <Label htmlFor="alergias">¿Tiene alguna alergia? (Opcional)</Label>
-          <Textarea
-            id="alergias"
-            name="alergias"
-            value={formData.alergias || ""}
-            onChange={handleChange}
-            placeholder="Ej: Alergia a la penicilina, al látex, etc."
-          />
-        </div>
-
-        <div className="publicAppointment-form-group">
-          <Label htmlFor="fecha_cita">Fecha de la Cita</Label>
-          <Input
-            type="text" // Use text to prevent native date picker
-            id="fecha_cita"
-            name="fecha_cita"
-            value={formData.fecha_cita || ""}
-            readOnly
-            onClick={() => setShowCalendar(true)}
-            placeholder="Seleccione una fecha"
-            required
-          />
-          {showCalendar && (
-            <div className="publicAppointment-calendar-popover">
-              <Calendar
-                selectedDate={formData.fecha_cita ? new Date(formData.fecha_cita) : null}
-                onSelect={handleDateSelect}
-                workHours={workHours}
-                minDate={new Date()} // Citas no pueden ser en el pasado
-              />
-              <Button variant="outline" onClick={() => setShowCalendar(false)} className="mt-2">
-                Cerrar Calendario
-              </Button>
-            </div>
-          )}
-        </div>
-
-        <div className="publicAppointment-form-group">
-          <Label htmlFor="hora_cita">Hora de la Cita</Label>
-          <Select
-            id="hora_cita"
-            name="hora_cita"
-            value={formData.hora_cita || "00:00"}
-            onChange={handleChange}
-            required
-          >
-            <SelectItem value="00:00">Seleccione una hora</SelectItem>
-            {timeSlots.map((slot) => (
-              <SelectItem key={slot} value={slot}>
-                {slot}
-              </SelectItem>
-            ))}
-          </Select>
-        </div>
-
-        {/* Duración Estimada y Tiempo de Duración del Servicio eliminados según la solicitud */}
-        {/* Campo de Tipo de Servicio eliminado según la solicitud */}
-
         <div className="publicAppointment-form-group">
           <Label htmlFor="motivo_consulta">Motivo de la Consulta</Label>
           <Textarea
             id="motivo_consulta"
             name="motivo_consulta"
-            value={formData.motivo_consulta || ""}
+            value={formData.motivo_consulta}
             onChange={handleChange}
-            placeholder="Describa brevemente el motivo de su consulta."
+            className="input"
+            rows="3"
+            required
+          ></Textarea>
+        </div>
+        <div className="publicAppointment-form-group">
+          <Label htmlFor="alergias">Alergias (opcional)</Label>
+          <Textarea
+            id="alergias"
+            name="alergias"
+            value={formData.alergias}
+            onChange={handleChange}
+            className="input"
+            rows="2"
+          ></Textarea>
+        </div>
+        <div className="publicAppointment-form-group">
+          <Label htmlFor="fecha_cita">Fecha de la Cita</Label>
+          <Input
+            id="fecha_cita"
+            name="fecha_cita"
+            type="date"
+            value={formData.fecha_cita}
+            onChange={handleChange}
+            min={getMinDate()}
             required
           />
         </div>
-
-        {/* Nuevo campo opcional para subir radiografías/imágenes */}
         <div className="publicAppointment-form-group">
-          <Label htmlFor="radiografias">Radiografías/Imágenes (Opcional)</Label>
-          <Input
-            id="radiografias"
-            name="radiografias"
-            type="file"
+          <Label htmlFor="hora_cita">Hora de la Cita</Label>
+          <Select
+            id="hora_cita"
+            name="hora_cita"
+            value={formData.hora_cita}
             onChange={handleChange}
-            multiple // Permite subir múltiples archivos
-            accept="image/*,application/pdf" // Acepta imágenes y PDFs
-          />
-          <p className="publicAppointment-text-sm publicAppointment-text-secondary mt-1">
-            Puede subir imágenes (JPG, PNG) o PDFs.
-          </p>
+            className="input"
+            required
+            disabled={isSelectDisabled}
+          >
+            <option value="">Seleccione una hora</option>
+            {availableTimeSlots.map((slot) => (
+              <option key={slot} value={slot}>
+                {slot}
+              </option>
+            ))}
+          </Select>
+          {!formData.fecha_cita && (
+            <p className="publicAppointment-text-xs publicAppointment-text-tertiary mt-1">
+              Por favor, seleccione una fecha primero para ver las horas disponibles.
+            </p>
+          )}
+          {formData.fecha_cita && isNonWorkingDay && (
+            <p className="publicAppointment-text-xs text-orange-600 mt-1">
+              ⚠️ La clínica no atiende en la fecha seleccionada. Por favor, elija un día laboral.
+            </p>
+          )}
+          {formData.fecha_cita && !isNonWorkingDay && availableTimeSlots.length === 0 && (
+            <p className="publicAppointment-text-xs publicAppointment-text-tertiary mt-1">
+              No hay horas disponibles para la fecha seleccionada (todas las horas están ocupadas).
+            </p>
+          )}
+        </div>
+        <div className="publicAppointment-form-group">
+          <Label htmlFor="radiografias">Subir Radiografías (opcional)</Label>
+          <Input id="radiografias" name="radiografias" type="file" onChange={handleFileChange} />
         </div>
       </CardContent>
-      <CardContent className="publicAppointment-card-footer-between">
+      <CardFooter className="publicAppointment-card-footer-between">
         <Button variant="outline" onClick={onPrev}>
           Anterior
         </Button>
         <Button onClick={handleNext}>Siguiente</Button>
-      </CardContent>
+      </CardFooter>
     </Card>
   )
 }
-
-export default AppointmentDetailsStep

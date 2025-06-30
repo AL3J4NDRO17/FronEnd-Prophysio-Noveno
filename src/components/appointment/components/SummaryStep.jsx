@@ -1,53 +1,38 @@
 "use client"
 
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../public_ui/card"
 import { Button } from "../../public_ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "../../public_ui/card"
-import { Calendar, DollarSign, User, File, Hash } from "lucide-react" // Importar el icono File y Hash
-import "../styles/SummaryStep.css"
-// Cambiado: onNext en lugar de onSubmit
-const SummaryStep = ({ onPrev, onNext, onSubmit, formData, loading }) => {
-  const formatDate = (dateString) => {
-    if (!dateString) return "No especificada"
+import { Calendar, DollarSign, FileText } from "lucide-react" // Importar iconos
+
+export default function SummaryStep({ onPrev, onNext, onSubmit, formData, loading }) {
+  const formatDate = (dateString, timeString) => {
+    if (!dateString || !timeString) return "No especificado"
     try {
-      const options = { year: "numeric", month: "long", day: "numeric" }
-      return new Date(dateString).toLocaleDateString("es-ES", options)
+      const combinedDateTime = `${dateString}T${timeString}:00`
+      const options = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+      return new Date(combinedDateTime).toLocaleDateString("es-ES", options)
     } catch (e) {
-      return dateString
-    }
-  }
-
-  const formatTime = (timeString) => {
-    if (!timeString) return "No especificada"
-    // Asume HH:MM
-    const [hours, minutes] = timeString.split(":")
-    const date = new Date()
-    date.setHours(Number.parseInt(hours), Number.parseInt(minutes), 0, 0)
-    return date.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit", hour12: true })
-  }
-
-  const getPaymentMethodLabel = (method) => {
-    switch (method) {
-      case "online":
-        return "Pagar en línea (Tarjeta de crédito/débito)"
-      case "al_finalizar":
-        return "Pagar al finalizar la cita (Efectivo/Transferencia)"
-      default:
-        return "No especificado"
+      return "Formato inválido"
     }
   }
 
   return (
     <Card className="publicAppointment-card-step">
       <CardHeader>
-        <CardTitle>Paso 4: Resumen de la Cita</CardTitle> {/* Actualizado a Paso 4 */}
-        <CardDescription>Por favor, revise los detalles de su cita antes de continuar.</CardDescription>
+        <CardTitle>Resumen de la Cita</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Sección de Datos del Cliente */}
+      <CardContent>
         <div className="publicAppointment-summary-section">
           <h3 className="publicAppointment-summary-heading">
-            <User className="h-5 w-5 mr-2 text-teal-500" />
-            Datos Personales
+            <FileText className="mr-2 h-5 w-5" />
+            Datos del Cliente
           </h3>
           <div className="publicAppointment-summary-item">
             <span className="publicAppointment-summary-label">Nombre:</span>
@@ -63,19 +48,16 @@ const SummaryStep = ({ onPrev, onNext, onSubmit, formData, loading }) => {
           </div>
         </div>
 
-        {/* Sección de Detalles de la Cita */}
         <div className="publicAppointment-summary-section">
           <h3 className="publicAppointment-summary-heading">
-            <Calendar className="h-5 w-5 mr-2 text-teal-500" />
+            <Calendar className="mr-2 h-5 w-5" />
             Detalles de la Cita
           </h3>
           <div className="publicAppointment-summary-item">
-            <span className="publicAppointment-summary-label">Fecha:</span>
-            <span className="publicAppointment-summary-value">{formatDate(formData.fecha_cita)}</span>
-          </div>
-          <div className="publicAppointment-summary-item">
-            <span className="publicAppointment-summary-label">Hora:</span>
-            <span className="publicAppointment-summary-value">{formatTime(formData.hora_cita)}</span>
+            <span className="publicAppointment-summary-label">Fecha y Hora:</span>
+            <span className="publicAppointment-summary-value">
+              {formatDate(formData.fecha_cita, formData.hora_cita)}
+            </span>
           </div>
           <div className="publicAppointment-summary-item">
             <span className="publicAppointment-summary-label">Motivo de Consulta:</span>
@@ -85,26 +67,26 @@ const SummaryStep = ({ onPrev, onNext, onSubmit, formData, loading }) => {
             <span className="publicAppointment-summary-label">Alergias:</span>
             <span className="publicAppointment-summary-value">{formData.alergias || "Ninguna"}</span>
           </div>
-          {formData.radiografias && (
-            <div className="publicAppointment-summary-item">
-              <span className="publicAppointment-summary-label flex items-center">
-                <File className="h-4 w-4 mr-1 text-teal-500" />
-                Radiografía/Imagen:
-              </span>
-              <span className="publicAppointment-summary-value">{formData.radiografias.name}</span>
-            </div>
-          )}
+          <div className="publicAppointment-summary-item">
+            <span className="publicAppointment-summary-label">Radiografías:</span>
+            <span className="publicAppointment-summary-value">
+              {formData.radiografias ? formData.radiografias.name : "No adjuntas"}
+            </span>
+          </div>
         </div>
 
-        {/* Sección de Pago */}
         <div className="publicAppointment-summary-section">
           <h3 className="publicAppointment-summary-heading">
-            <DollarSign className="h-5 w-5 mr-2 text-teal-500" />
-            Método de Pago
+            <DollarSign className="mr-2 h-5 w-5" />
+            Pago
           </h3>
           <div className="publicAppointment-summary-item">
-            <span className="publicAppointment-summary-label">Método Seleccionado:</span>
-            <span className="publicAppointment-summary-value">{getPaymentMethodLabel(formData.metodo_pago)}</span>
+            <span className="publicAppointment-summary-label">Método de Pago:</span>
+            <span className="publicAppointment-summary-value">{formData.metodo_pago || "No seleccionado"}</span>
+          </div>
+          <div className="publicAppointment-summary-item">
+            <span className="publicAppointment-summary-label">Estado:</span>
+            <span className="publicAppointment-summary-value">{formData.estado || "Pendiente"}</span>
           </div>
         </div>
       </CardContent>
@@ -112,21 +94,10 @@ const SummaryStep = ({ onPrev, onNext, onSubmit, formData, loading }) => {
         <Button variant="outline" onClick={onPrev}>
           Anterior
         </Button>
-        <Button
-          onClick={async () => {
-            await onSubmit()
-            onNext()
-          }}
-          disabled={loading}
-        >
-          {loading ? "Confirmando..." : "Confirmar Cita"}
+        <Button onClick={onSubmit} disabled={loading}>
+          {loading ? "Agendando..." : "Confirmar Cita"}
         </Button>
-
       </CardFooter>
     </Card>
   )
 }
-
-export default SummaryStep
-
-

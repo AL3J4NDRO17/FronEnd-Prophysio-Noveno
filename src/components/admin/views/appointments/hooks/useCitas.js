@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { citaService } from "../services/appointment-service" // Renombrado para claridad
+import { citaService } from "../services/appointment-service" // Ruta actualizada
 import Swal from "sweetalert2"
 import { toast } from "react-toastify"
 
@@ -16,7 +16,6 @@ export const useCitas = () => {
       setError(null)
       const data = await citaService.obtenerCitas()
       setCitas(data)
-      
     } catch (err) {
       console.error("Error al cargar citas:", err)
       toast.error("No se pudieron cargar las citas.")
@@ -129,6 +128,65 @@ export const useCitas = () => {
     }
   }
 
+  // Nuevas funciones para marcar asistencia/inasistencia
+  const marcarAsistida = async (id_cita) => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Marcar cita como asistida?",
+        text: "Esta acción marcará la cita como completada.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#28a745",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Sí, marcar como asistida",
+        cancelButtonText: "Cancelar",
+      })
+
+      if (result.isConfirmed) {
+        setLoading(true)
+        const citaActualizada = await citaService.actualizarCita(id_cita, { estado: "completada" })
+        setCitas((prev) => prev.map((cita) => (cita.id_cita === id_cita ? citaActualizada : cita)))
+        toast.success("Cita marcada como asistida.")
+        return citaActualizada
+      }
+    } catch (err) {
+      console.error("Error al marcar cita como asistida:", err)
+      toast.error(err.response?.data?.message || "No se pudo marcar la cita como asistida.")
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const marcarInasistencia = async (id_cita) => {
+    try {
+      const result = await Swal.fire({
+        title: "¿Marcar cita como inasistencia?",
+        text: "Esta acción marcará la cita como inasistencia.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Sí, marcar como inasistencia",
+        cancelButtonText: "Cancelar",
+      })
+
+      if (result.isConfirmed) {
+        setLoading(true)
+        const citaActualizada = await citaService.actualizarCita(id_cita, { estado: "inasistencia" })
+        setCitas((prev) => prev.map((cita) => (cita.id_cita === id_cita ? citaActualizada : cita)))
+        toast.success("Cita marcada como inasistencia.")
+        return citaActualizada
+      }
+    } catch (err) {
+      console.error("Error al marcar cita como inasistencia:", err)
+      toast.error(err.response?.data?.message || "No se pudo marcar la cita como inasistencia.")
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
     cargarCitas()
   }, [cargarCitas])
@@ -143,5 +201,7 @@ export const useCitas = () => {
     eliminarCita,
     postergarCita,
     cancelarCita,
+    marcarAsistida, // Exportar nueva función
+    marcarInasistencia, // Exportar nueva función
   }
 }

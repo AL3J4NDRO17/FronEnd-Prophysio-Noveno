@@ -1,0 +1,120 @@
+/* src/styles/AppointmentPopover.css */
+
+/* Popover styles */
+.appointment-popover {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 320px; /* Fixed width for popover */
+  z-index: 50; /* Ensure it's above other elements */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.popover-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.popover-close-btn {
+  /* Styles for shadcn button variant="ghost" size="icon" */
+  width: 30px;
+  height: 30px;
+  padding: 0;
+}
+
+.popover-content {
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.popover-section {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.popover-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.popover-section .section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.patient-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.popover-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #e0f2f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #007bff;
+}
+
+.popover-patient-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.popover-patient-email {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.appointment-info .info-item,
+.patient-details .info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.appointment-info .info-item:last-child,
+.patient-details .info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-icon {
+  width: 18px;
+  height: 18px;
+  color: #888;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .appointment-popover {
+    width: 90%; /* Make popover wider on small screens */
+    max-width: 300px;
+    left: 5% !important; /* Center it */
+    transform: translateX(0) !important; /* Override potential left adjustments */
+  }
+}

@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "../../public_ui/card"
 import { Button } from "../../public_ui/button"
 import { Badge } from "../../public_ui/badge"
-import { Calendar, Clock, Info } from "lucide-react"
+import { Calendar, Clock } from "lucide-react"
 import "../styles/userAppointmentsDetails.css"
 
 const UserAppointmentDetails = ({ appointment, onCancel, onPostpone }) => {
@@ -124,7 +124,5 @@ const UserAppointmentDetails = ({ appointment, onCancel, onPostpone }) => {
     </Card>
   )
 }
-
-
 
 export default UserAppointmentDetails

@@ -1,0 +1,98 @@
+/* General calendar background */
+.rbc-calendar {
+  background-color: var(--bg-white);
+  color: var(--txt-default);
+  font-family: inherit;
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shd-sm-alt);
+}
+
+/* Toolbar (mes, semana, día, hoy, flechas) */
+.rbc-toolbar {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--brd-default);
+  padding: 0.5rem;
+  color: var(--txt-heading);
+}
+.rbc-toolbar-label {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+.rbc-btn-group button {
+  background-color: var(--clr-brand-primary-light);
+  border: 1px solid var(--clr-brand-primary);
+  color: var(--clr-brand-primary);
+  border-radius: var(--radius-sm);
+  margin-right: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+.rbc-btn-group button:hover {
+  background-color: var(--clr-brand-primary-hover);
+  color: white;
+}
+
+/* Cabeceras de días */
+.rbc-header {
+  background-color: var(--bg-off-white);
+  border-bottom: 1px solid var(--brd-default);
+  padding: 8px 4px;
+  color: var(--txt-secondary);
+  font-weight: 500;
+}
+
+/* Fila horaria lateral */
+.rbc-time-content > .rbc-timeslot-group {
+  border-left: 1px solid var(--brd-default);
+}
+.rbc-time-gutter {
+  background-color: var(--bg-secondary);
+  color: var(--txt-tertiary);
+  font-size: 0.8rem;
+}
+
+/* Celdas */
+.rbc-day-bg {
+  background-color: var(--bg-default);
+  border-right: 1px solid var(--brd-default);
+}
+.rbc-time-slot {
+  border-top: 1px solid var(--brd-default);
+}
+
+/* Eventos (citas) */
+.rbc-event {
+  background-color: var(--appointmentsAdmin-color-confirmed);
+  color: white;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  box-shadow: var(--shd-sm);
+  overflow: hidden;
+}
+
+/* Evento pendiente personalizado */
+.rbc-event.status-pending {
+  background-color: var(--appointmentsAdmin-color-pending);
+}
+.rbc-event.status-cancelled {
+  background-color: var(--appointmentsAdmin-color-cancelled);
+}
+
+/* Evento al hacer hover */
+.rbc-event:hover {
+  filter: brightness(1.05);
+  cursor: pointer;
+}
+
+/* Día actual */
+.rbc-today {
+  background-color: var(--clr-light-blue) !important;
+}
+
+/* Evento seleccionado (opcional) */
+.rbc-selected {
+  outline: 2px solid var(--clr-brand-secondary);
+}

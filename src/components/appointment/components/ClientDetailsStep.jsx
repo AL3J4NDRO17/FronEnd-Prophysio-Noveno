@@ -1,32 +1,20 @@
 "use client"
 
-import { useEffect } from "react"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../public_ui/card"
 import { Button } from "../../public_ui/button"
 import { Input } from "../../public_ui/input"
 import { Label } from "../../public_ui/label"
-import { Select, SelectItem } from "../../public_ui/select"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../public_ui/card"
-import { toast } from "react-toastify"
+import {Select} from "../../public_ui/select"
 
-const ClientDetailsStep = ({ onNext, onPrev, formData, onFormChange }) => {
+export default function ClientDetailsStep({ onNext, onPrev, formData, onFormChange }) {
   const handleChange = (e) => {
-    const { name, value } = e.target
-    onFormChange(name, value)
-  }
-
-  const handleNext = () => {
-    if (!formData.nombre_paciente || !formData.sexo || !formData.telefono) {
-      toast.error("Por favor, complete todos los campos obligatorios: Nombre, Sexo y Teléfono.")
-      return
-    }
-    onNext()
+    onFormChange(e.target.name, e.target.value)
   }
 
   return (
     <Card className="publicAppointment-card-step">
       <CardHeader>
-        <CardTitle>Paso 2: Datos del Cliente</CardTitle>
-        <CardDescription>Por favor, complete sus datos personales.</CardDescription>
+        <CardTitle>Datos del Cliente</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="publicAppointment-form-group">
@@ -34,44 +22,32 @@ const ClientDetailsStep = ({ onNext, onPrev, formData, onFormChange }) => {
           <Input
             id="nombre_paciente"
             name="nombre_paciente"
-            value={formData.nombre_paciente || ""} // Usa formData para el valor inicial
+            value={formData.nombre_paciente}
             onChange={handleChange}
-            placeholder="Su nombre completo"
             required
           />
         </div>
         <div className="publicAppointment-form-group">
           <Label htmlFor="sexo">Sexo</Label>
-          <Select id="sexo" name="sexo" value={formData.sexo || "Seleccione..."} onChange={handleChange} required>
-            <SelectItem value="Seleccione...">Seleccione...</SelectItem>
-            <SelectItem value="masculino">Masculino</SelectItem>
-            <SelectItem value="femenino">Femenino</SelectItem>
-            <SelectItem value="otro">Otro</SelectItem>
+          <Select id="sexo" name="sexo" value={formData.sexo} onChange={handleChange} className="input" required>
+            <option value="">Seleccione</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Otro">Otro</option>
           </Select>
         </div>
         <div className="publicAppointment-form-group">
           <Label htmlFor="telefono">Teléfono</Label>
-          <Input
-            id="telefono"
-            name="telefono"
-            type="tel"
-            value={formData.telefono || ""} // Usa formData para el valor inicial
-            onChange={handleChange}
-            placeholder="Ej: +52 55 1234 5678"
-            required
-          />
+          <Input id="telefono" name="telefono" type="tel" value={formData.telefono} onChange={handleChange} required />
         </div>
-        {/* Campo de Email eliminado según la solicitud */}
+        {/* El campo de email se ha eliminado del formulario según el NewAppointmentStepper */}
       </CardContent>
-      <CardContent className="publicAppointment-card-footer-between">
+      <CardFooter className="publicAppointment-card-footer-between">
         <Button variant="outline" onClick={onPrev}>
           Anterior
         </Button>
-        <Button onClick={handleNext}>Siguiente</Button>
-      </CardContent>
+        <Button onClick={onNext}>Siguiente</Button>
+      </CardFooter>
     </Card>
   )
 }
-
-
-export default ClientDetailsStep
