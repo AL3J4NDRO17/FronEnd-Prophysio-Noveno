@@ -37,8 +37,14 @@ const routeIcons = {
 const BlogBreadcrumb = ({ match }) => {
   const { getBlogById } = useBlogs()
   const blog = getBlogById(match.params.id)
-  return blog ? blog.bannerTitle : "Cargando..."
+
+  if (!blog) return "Cargando..."
+
+  return (
+    <span dangerouslySetInnerHTML={{ __html: blog.title }} />
+  )
 }
+
 
 // 🔥 Definir las rutas para breadcrumbs
 const routes = [

@@ -34,6 +34,7 @@
 
 .publicBlogDetail-title {
   color: white;
+  width: max-content;
   font-size: 3rem;
   font-weight: 700;
   margin: 0 0 1rem 0;

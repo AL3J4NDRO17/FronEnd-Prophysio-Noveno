@@ -26,7 +26,7 @@ export default function BlogGrid({ blogs = [] }) {
   }
 
   if (!publishedBlogs.length) {
-    return <EmptyBlogState/>
+    return <EmptyBlogState />
   }
   function stripHtmlTags(str) {
     return str.replace(/<[^>]*>/g, '',); // Esto elimina todas las etiquetas HTML
@@ -45,9 +45,9 @@ export default function BlogGrid({ blogs = [] }) {
                 <span className="tech_blog_post_date">{new Date(post.createdAt).toLocaleDateString()}</span>
                 <span className="tech_blog_post_category">{getCategoryName(post.categoryId)}</span>
               </div>
-              <h3>{post.title.substring(0, 120)}...</h3>
+              <h3 dangerouslySetInnerHTML={{ __html: post.title || "" }}></h3>
               <p className="tech_blog_post_excerpt">
-                {stripHtmlTags(post.mainContent).substring(0, 150)}...
+                {`${stripHtmlTags(post.mainContent).substring(0, 150)} ${stripHtmlTags(post.effectsContent).substring(0, 150)}`}
               </p>
               <div className="tech_blog_post_footer">
                 <p className="tech_blog_post_author">Por: {post.author}</p>

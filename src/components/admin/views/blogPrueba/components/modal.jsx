@@ -1,16 +1,23 @@
 "use client"
 
 import { useState, useEffect } from "react"
+
 import { X, Eye, Save, Edit } from "lucide-react"
+
 import { Resizable } from "re-resizable"
+
 import { FilePond, registerPlugin } from "react-filepond"
+
 import FilePondPluginImagePreview from "filepond-plugin-image-preview"
+
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
+
 import { useBlogEditor } from "../hooks/blogEditorHook"
+
 import RichTextEditor from "./textEditor"
 
-
 import "filepond/dist/filepond.min.css"
+
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
 
 registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType)
@@ -61,7 +68,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
       width: contentImageSize.width + d.width,
       height: contentImageSize.height + d.height,
     }
-
     setContentImageSize(newSize)
     setBlogData((prev) => ({
       ...prev,
@@ -69,7 +75,7 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
     }))
   }
 
-  // Manejar cambios en el contenido del editor de texto enriquecido
+  // Manejar cambios en el contenido del editor de texto enriquecido para el contenido principal
   const handleMainContentChange = (content) => {
     setBlogData((prev) => ({
       ...prev,
@@ -82,6 +88,28 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
     setBlogData((prev) => ({
       ...prev,
       effectsContent: content,
+    }))
+  }
+
+  // Nuevas funciones para manejar los cambios de los títulos con RichTextEditor
+  const handleBannerTitleChange = (content) => {
+    setBlogData((prev) => ({
+      ...prev,
+      bannerTitle: content,
+    }))
+  }
+
+  const handleTitleChange = (content) => {
+    setBlogData((prev) => ({
+      ...prev,
+      title: content,
+    }))
+  }
+
+  const handleEffectsTitleChange = (content) => {
+    setBlogData((prev) => ({
+      ...prev,
+      effectsTitle: content,
     }))
   }
 
@@ -141,42 +169,8 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
             </button>
           </div>
         </div>
-
         <div className="blogAdmin-editor-container">
           <div className="blogAdmin-editor-sidebar">
-            <div className="blogAdmin-editor-sidebar-section">
-              <h3>Formato de texto</h3>
-              <div className="blogAdmin-form-group">
-                <label>Fuente</label>
-                <select
-                  value={blogData.textStyle?.fontFamily || "Arial"}
-                  onChange={(e) => handleStyleChange("fontFamily", e.target.value)}
-                  className="blogAdmin-select"
-                >
-                  {["Arial", "Helvetica", "Times New Roman", "Courier", "Verdana", "Georgia"].map((font) => (
-                    <option key={font} value={font}>
-                      {font}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="blogAdmin-form-group">
-                <label>Tamaño</label>
-                <select
-                  value={blogData.textStyle?.fontSize || "16px"}
-                  onChange={(e) => handleStyleChange("fontSize", e.target.value)}
-                  className="blogAdmin-select"
-                >
-                  {["12px", "14px", "16px", "18px", "20px", "24px"].map((size) => (
-                    <option key={size} value={size}>
-                      {size}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
             <div className="blogAdmin-editor-sidebar-section">
               <h3>Categoría</h3>
               <div className="blogAdmin-form-group">
@@ -197,7 +191,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                 </select>
               </div>
             </div>
-
             <div className="blogAdmin-editor-sidebar-section">
               <h3>Autor</h3>
               <div className="blogAdmin-form-group">
@@ -213,7 +206,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
               </div>
             </div>
           </div>
-
           <div className="blogAdmin-editor-main">
             {activeTab === "editor" ? (
               <div className="blogAdmin-editor-content">
@@ -230,31 +222,20 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                     stylePanelLayout="compact"
                     imagePreviewHeight={100}
                   />
-                  <input
-                    type="text"
-                    name="bannerTitle"
-                    placeholder="Título del Banner"
+                  <RichTextEditor
                     value={blogData.bannerTitle || ""}
-                    onChange={handleInputChange}
-                    className="blogAdmin-input"
-                    style={{ marginTop: "10px" }}
+                    onChange={handleBannerTitleChange}
+                    placeholder="Título del Banner"
                   />
                 </div>
-
                 {/* Title */}
                 <div className="blogAdmin-editor-title">
-                  <input
-                    type="text"
-                    className="blogAdmin-editor-title-input"
-                    placeholder="Título del artículo"
-                    name="title"
+                  <RichTextEditor
                     value={blogData.title || ""}
-                    onChange={handleInputChange}
-                    required
-                    style={blogData.textStyle}
+                    onChange={handleTitleChange}
+                    placeholder="Título del artículo"
                   />
                 </div>
-
                 {/* Main Content - Rich Text Editor */}
                 <div className="blogAdmin-editor-body">
                   <RichTextEditor
@@ -263,20 +244,14 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                     placeholder="Contenido principal del artículo..."
                   />
                 </div>
-
                 {/* Effects Title and Content */}
                 <div className="blogAdmin-editor-title" style={{ marginTop: "20px" }}>
-                  <input
-                    type="text"
-                    className="blogAdmin-editor-subtitle-input"
-                    placeholder="Subtitulo del articulo"
-                    name="effectsTitle"
+                  <RichTextEditor
                     value={blogData.effectsTitle || ""}
-                    onChange={handleInputChange}
-                    style={blogData.textStyle}
+                    onChange={handleEffectsTitleChange}
+                    placeholder="Subtitulo del articulo"
                   />
                 </div>
-
                 <div className="blogAdmin-editor-effects">
                   <div className="blogAdmin-editor-effects-content">
                     {/* Effects Content - Rich Text Editor */}
@@ -286,7 +261,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                       placeholder="Subcontenido del articulo"
                     />
                   </div>
-
                   <div className="blogAdmin-editor-effects-image">
                     <FilePond
                       files={blogData.contentImage ? [{ source: blogData.contentImage }] : []}
@@ -304,14 +278,11 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                         <p>
                           Tamaño: {contentImageSize.width}px × {contentImageSize.height}px
                         </p>
-                        <p className="blogAdmin-image-resize-hint">
-                          Puedes redimensionar la imagen en la vista previa
-                        </p>
+                        <p className="blogAdmin-image-resize-hint">Puedes redimensionar la imagen en la vista previa</p>
                       </div>
                     )}
                   </div>
                 </div>
-
                 {isError && (
                   <div className="blogAdmin-error-message">
                     Error: {error?.message || "Ocurrió un error al guardar el blog"}
@@ -329,15 +300,15 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                       className="blogAdmin-preview-banner-image"
                     />
                   )}
-                  <h1 className="blogAdmin-preview-banner-title">{blogData.bannerTitle || "Titulo del banner"}</h1>
+                  <h1 className="blogAdmin-preview-banner-title">
+                    {blogData.bannerTitle && <div dangerouslySetInnerHTML={{ __html: blogData.bannerTitle }} />}
+                  </h1>
                 </div>
-
                 <div className="blogAdmin-preview-content">
                   <div className="blogAdmin-preview-date">{new Date().toLocaleDateString()}</div>
                   <h1 className="blogAdmin-preview-title" style={blogData.textStyle}>
-                    {blogData.title || "Titulo del blog"}
+                    {blogData.title && <div dangerouslySetInnerHTML={{ __html: blogData.title }} />}
                   </h1>
-
                   <div className="blogAdmin-preview-body">
                     {blogData.mainContent ? (
                       <div dangerouslySetInnerHTML={{ __html: blogData.mainContent }} />
@@ -345,22 +316,17 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                       <p className="blogAdmin-preview-placeholder">El contenido principal aparecerá aquí...</p>
                     )}
                   </div>
-
                   <h2 className="blogAdmin-preview-subtitle" style={blogData.textStyle}>
-                    {blogData.effectsTitle || "Subtitulo del blog"}
+                    {blogData.effectsTitle && <div dangerouslySetInnerHTML={{ __html: blogData.effectsTitle }} />}
                   </h2>
-
                   <div className="blogAdmin-preview-effects">
                     <div className="blogAdmin-preview-effects-content">
                       {blogData.effectsContent ? (
                         <div dangerouslySetInnerHTML={{ __html: blogData.effectsContent }} />
                       ) : (
-                        <p className="blogAdmin-preview-placeholder">
-                          El subcontenido del articulo aparecerá aquí...
-                        </p>
+                        <p className="blogAdmin-preview-placeholder">El subcontenido del articulo aparecerá aquí...</p>
                       )}
                     </div>
-
                     {blogData.contentImage && (
                       <div
                         className="blogAdmin-preview-effects-image"
@@ -396,7 +362,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                       </div>
                     )}
                   </div>
-
                   <div className="blogAdmin-preview-meta">
                     {blogData.author && <span className="blogAdmin-preview-author">Por {blogData.author}</span>}
                     {blogData.categoryId && categories && (
@@ -414,4 +379,3 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
     </div>
   )
 }
-

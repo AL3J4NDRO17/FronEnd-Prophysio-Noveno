@@ -37,13 +37,13 @@ const BlogPreview = ({ blogData, categoriesList, updateContentImageSize }) => {
             className="preview-banner-image"
           />
         )}
-        <h1 className="banner-title">{blogData.bannerTitle || "SEDENTARISMO"}</h1>
+        <h1 className="banner-title">{blogData.bannerTitle }</h1>
       </div>
 
       <div className="preview-content">
         <div className="preview-date">{new Date().toLocaleDateString()}</div>
         <h2 className="preview-title" style={blogData.textStyle}>
-          {blogData.title || "¿QUE ES EL SEDENTARISMO?"}
+          {blogData.title }
         </h2>
         <p className="preview-main-content" style={blogData.textStyle}>
           {blogData.mainContent}

@@ -103,11 +103,6 @@ export function useBlogEditor(existingBlog, onClose, contentImageSize) {
       return
     }
 
-    if (!blogData.mainContent.trim()) {
-      toast.error("El contenido principal no puede estar vacío")
-      return
-    }
-
     let bannerImageUrl = blogData.bannerImage
     let contentImageUrl = blogData.contentImage
 

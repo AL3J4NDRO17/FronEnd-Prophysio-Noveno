@@ -144,36 +144,8 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
         <div className="adminDashboard-editor-container">
           <div className="adminDashboard-editor-sidebar">
             <div className="adminDashboard-editor-sidebar-section">
-              <h3>Formato de texto</h3>
-              <div className="adminDashboard-form-group">
-                <label>Fuente</label>
-                <select
-                  value={blogData.textStyle?.fontFamily || "Arial"}
-                  onChange={(e) => handleStyleChange("fontFamily", e.target.value)}
-                  className="adminDashboard-select"
-                >
-                  {["Arial", "Helvetica", "Times New Roman", "Courier", "Verdana", "Georgia"].map((font) => (
-                    <option key={font} value={font}>
-                      {font}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="adminDashboard-form-group">
-                <label>Tamaño</label>
-                <select
-                  value={blogData.textStyle?.fontSize || "16px"}
-                  onChange={(e) => handleStyleChange("fontSize", e.target.value)}
-                  className="adminDashboard-select"
-                >
-                  {["12px", "14px", "16px", "18px", "20px", "24px"].map((size) => (
-                    <option key={size} value={size}>
-                      {size}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              
+              
             </div>
 
             <div className="adminDashboard-editor-sidebar-section">
@@ -328,7 +300,7 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                       className="adminDashboard-preview-banner-image"
                     />
                   )}
-                  <h1 className="adminDashboard-preview-banner-title">{blogData.bannerTitle || "Titulo del banner"}</h1>
+                  <h1 className="adminDashboard-preview-banner-title">{blogData.bannerTitle }</h1>
                 </div>
 
                 <div className="adminDashboard-preview-content">
@@ -346,7 +318,7 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                   </div>
 
                   <h2 className="adminDashboard-preview-subtitle" style={blogData.textStyle}>
-                    {blogData.effectsTitle || "Subtitulo del blog"}
+                    {blogData.effectsTitle }
                   </h2>
 
                   <div className="adminDashboard-preview-effects">

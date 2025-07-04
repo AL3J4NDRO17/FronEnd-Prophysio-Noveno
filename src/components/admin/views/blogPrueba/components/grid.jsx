@@ -4,6 +4,9 @@ import Swal from "sweetalert2"
 import { EditButton, PublishButton, UnpublishButton, DeleteButton, SeePreviewButton } from '@uiButtons'
 
 const BlogGrid = ({ blogs, categories, handleEdit, handleDelete, handleStatusChange, setIsModalOpen }) => {
+function stripHtmlTags(str) {
+    return str.replace(/<[^>]*>/g, ''); // Esto elimina todas las etiquetas HTML
+  }
 
   if (blogs.length === 0) {
     return (
@@ -37,7 +40,7 @@ const BlogGrid = ({ blogs, categories, handleEdit, handleDelete, handleStatusCha
             <div className="blogAdmin-blog-card-category">
               {categories.find((cat) => cat.id === Number(blog.categoryId))?.nombre || "Sin categoría"}
             </div>
-            <h3 className="blogAdmin-blog-card-title">{blog.title}</h3>
+            <h3 dangerouslySetInnerHTML={{ __html: blog.title }} className="blogAdmin-blog-card-title"></h3>
             <p className="blogAdmin-blog-card-subtitle">{blog.effectsTitle}</p>
             <div className="blogAdmin-blog-card-meta">
               <span>{blog.author}</span>

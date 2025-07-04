@@ -47,6 +47,7 @@
     user-select: auto;
     box-sizing: border-box;
     overflow: hidden;
+    flex: 1 1;
   }
   
   .publicBlogDetail-effects-image img {
