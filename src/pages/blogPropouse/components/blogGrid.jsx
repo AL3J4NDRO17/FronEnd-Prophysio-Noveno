@@ -2,14 +2,14 @@
 
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useCategories } from "../hooks/useClientCategories"
+import { useCategoryContext} from "../hooks/categoryProvider"
 import "../styles/blogGrid.css"
 import EmptyBlogState from "./empty/emptyBlogGrid"
 export default function BlogGrid({ blogs = [] }) {
   const [currentPage, setCurrentPage] = useState(1)
   const navigate = useNavigate()
   const postsPerPage = 6
-  const { categories } = useCategories()
+  const { categories } = useCategoryContext()
 
   // Filtrar solo los blogs que están publicados
   const publishedBlogs = blogs.filter((blog) => blog.status === "published")

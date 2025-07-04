@@ -1,26 +1,22 @@
-import React from 'react'
-
+import { ImageIcon } from "lucide-react"
 
 export default function BlogBanner({ blog }) {
-  function stripHtmlTags(str) {
-    return str.replace(/<[^>]*>/g, ''); // Esto elimina todas las etiquetas HTML
-  }
-
   return (
     <div className="publicBlogDetail-banner">
-      {blog.bannerImage && (
+      {blog.bannerImage ? (
         <img
           src={blog.bannerImage || "/placeholder.svg"}
-          alt={blog.title}
+          alt={blog.bannerTitle}
           className="publicBlogDetail-banner-image"
         />
-      )}
-      <div className="publicBlogDetail-banner-overlay">
-        <div className="publicBlogDetail-banner-content">
-          <h1 dangerouslySetInnerHTML={{ __html: blog.bannerTitle || "" }} className="publicBlogDetail-title"></h1>
-
+      ) : (
+        <div className="publicBlogDetail-banner-placeholder">
+          <ImageIcon className="publicBlogDetail-icon-large" />
         </div>
-      </div>
+      )}
+      <h1 className="publicBlogDetail-banner-title ql-editor">
+        {blog.bannerTitle && <div dangerouslySetInnerHTML={{ __html: blog.bannerTitle }} />}
+      </h1>
     </div>
   )
 }

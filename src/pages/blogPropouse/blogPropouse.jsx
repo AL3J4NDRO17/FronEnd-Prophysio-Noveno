@@ -6,12 +6,12 @@ import BlogSearch from "./components/blogSearch"
 import BlogSlider from "./components/blogSlider"
 import BlogCategories from "./components/blogCategories"
 import BlogRecentPosts from "./components/blogRecentPosts"
-import { useBlogs } from "./hooks/useClientBlog"
 
+import { useBlogContext } from "./hooks/blogProvider"
 import "./styles/blogPropouse.css"
 
 export default function BlogPropouse() {
-  const { blogs, isLoading, error } = useBlogs()
+  const { blogs, isLoading, error } = useBlogContext()
   const [filteredBlogs, setFilteredBlogs] = useState([])
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function BlogPropouse() {
         <div className="p-blog-right-side">
           {isLoading && <div>Cargando blogs...</div>}
           {error && <div>{error}</div>}
-          {!isLoading && !error && <BlogGrid blogs={filteredBlogs}  />}
+          {!isLoading && !error && <BlogGrid blogs={filteredBlogs} />}
         </div>
       </main>
     </section>

@@ -1,0 +1,221 @@
+/* Contenedor principal de la página de detalle del blog */
+.publicBlogDetail-container {
+
+    background-color: var(--color-off-white);
+    min-height: 100vh;
+}
+
+.publicContainer {
+  margin: 0 auto;
+  border-radius: var(--radius-md); /* Bordes redondeados para el contenedor */
+  box-shadow: var(--shd-md); /* Sombra para el contenedor */
+  padding: 20px; /* Añade padding para separar el contenido de los bordes del contenedor */
+}
+
+/* Layout de dos columnas */
+.publicBlogDetail-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    /* Sidebar y contenido principal */
+    gap: 30px;
+}
+
+.publicBlogDetail-sidebar {
+    background-color: var(--bg-white);
+    padding: 20px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shd-sm);
+    border-right: 1px solid var(--brd-default);
+    /* Borde para separación visual */
+}
+
+.publicBlogDetail-main {
+    border-radius: var(--radius-md);
+    box-shadow: var(--shd-sm);
+    justify-self: center;
+    background-color: var(--bg-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shd-sm);
+    padding-bottom: 30px;
+    width: 1000px;
+    border: 1px solid var(--brd-default);
+}
+
+/* Estilos para la meta información del encabezado del blog (vistas, likes, editar imagen) */
+.publicBlogDetail-header-meta {
+    display: flex;
+    justify-content: flex-end;
+    /* Alinea a la derecha */
+    align-items: center;
+    gap: 20px;
+    padding: 20px 30px 15px 30px;
+    /* Padding para alinear con el contenido */
+    border-bottom: 1px solid var(--brd-default);
+    margin-bottom: 20px;
+}
+
+.publicBlogDetail-stats {
+    display: flex;
+    gap: 15px;
+    color: var(--txt-secondary);
+    font-size: 0.9rem;
+}
+
+.publicBlogDetail-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.publicBlogDetail-edit-button {
+    background: none;
+    border: none;
+    color: var(--txt-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.publicBlogDetail-edit-button:hover {
+    color: var(--clr-brand-primary);
+}
+
+/* Estilos para el caso de blog no encontrado */
+.publicBlogDetail-error {
+    text-align: center;
+    padding: 50px;
+    background-color: var(--bg-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shd-sm);
+    max-width: 600px;
+    margin: 50px auto;
+}
+
+.publicBlogDetail-error h2 {
+    font-size: 2rem;
+    color: var(--clr-status-danger);
+    margin-bottom: 15px;
+}
+
+.publicBlogDetail-error p {
+    font-size: 1.1rem;
+    color: var(--txt-secondary);
+}
+
+.publicBlogDetail-primary-button {
+    background-color: var(--clr-brand-primary);
+    color: var(--clr-white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    /* Para el Link */
+    margin-top: 20px;
+}
+
+.publicBlogDetail-primary-button:hover {
+    background-color: var(--clr-brand-primary-hover);
+}
+
+.publicBlogDetail-button-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Estilos de carga */
+.publicBlogDetail-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    gap: 15px;
+    color: var(--txt-secondary);
+    font-size: 1.1rem;
+}
+
+.publicBlogDetail-loading-spinner {
+    border: 4px solid var(--brd-default);
+    border-top: 4px solid var(--clr-brand-primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+
+}
+
+.blog-decoration-1,
+.blog-decoration-2 {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background-color: rgba(235, 0, 78, 0.1); /* Color sutil */
+  z-index: 0; /* Asegura que estén detrás del contenido */
+ 
+}
+.blog-decoration-1 {
+  top: -100px;
+  left: -300px;
+}
+
+.blog-decoration-2 {
+  bottom: -300px;
+  right: -300px;
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .publicBlogDetail-layout {
+        grid-template-columns: 1fr;
+        /* Stack columns on smaller screens */
+        padding: 0;
+        margin: 15px auto;
+    }
+
+    .publicBlogDetail-sidebar {
+        order: 2;
+        /* Move sidebar below main content */
+    }
+
+    .publicBlogDetail-main {
+        order: 1;
+        padding-top: 15px;
+    }
+
+    .publicBlogDetail-header-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 0 15px 15px 15px;
+    }
+
+    .publicBlogDetail-edit-button {
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+        border: 1px solid var(--brd-default);
+        border-radius: var(--radius-md);
+        background-color: var(--bg-secondary);
+    }
+}
+

@@ -9,11 +9,15 @@ import BlogBanner from "./components/banner"
 import BlogMeta from "./components/meta"
 import BlogContent from "./components/content"
 import BlogRelated from "./components/related"
+import RecentPostsSidebar from "./components/recentPostsSidebar"
+
+import { Eye, Heart, Edit } from "lucide-react"
 
 import { useBlog } from "./hooks/useBlogs"
 import { useRelatedBlogs } from "./hooks/useRelatedBlogs"
 import { useCategories } from "./hooks/useClientCategories"
 
+import "./styles/publicBlogDetail.css"
 import "./styles/banner.css"
 import "./styles/blogDetail.css"
 import "./styles/content.css"
@@ -33,7 +37,7 @@ export default function BlogDetail() {
     const { categories } = useCategories()
 
     // Obtener blogs relacionados
-  
+
     const { relatedBlogs } = useRelatedBlogs(id, blog?.categoryId)
 
     // Función para compartir en redes sociales
@@ -92,7 +96,7 @@ export default function BlogDetail() {
             <div className="publicBlogDetail-error">
                 <h2>No se pudo cargar el artículo</h2>
                 <p>{error?.message || "El artículo solicitado no existe o no está disponible."}</p>
-                <Link href="/blog" className="publicBlogDetail-primary-button">
+                <Link to="/blog" className="publicBlogDetail-primary-button">
                     <ChevronLeft className="publicBlogDetail-button-icon" />
                     Volver al blog
                 </Link>
@@ -105,34 +109,39 @@ export default function BlogDetail() {
     return (
         <div className="publicBlogDetail-container">
             <div className="publicContainer">
-                <div className="publicBlogDetail-data">
-                    <BlogBanner blog={blog} />
-
-                    <BlogMeta
-                        blog={blog}
-                        categoryName={categoryName}
-                        liked={liked}
-                        handleLike={handleLike}
-                        showShareOptions={showShareOptions}
-                        setShowShareOptions={setShowShareOptions}
-                        handleShare={handleShare}
-                    />
-
-                    <div className="publicBlogDetail-layout">
-                        <div className="publicBlogDetail-main">
-                            <BlogContent blog={blog} />
+                <div className="publicBlogDetail-layout">
+                    <aside className="publicBlogDetail-sidebar">
+                        <RecentPostsSidebar recentPosts={relatedBlogs} />
+                    </aside>
+                    <main className="publicBlogDetail-main">
+                        <div className="publicBlogDetail-header-meta">
+                            <div className="publicBlogDetail-stats">
+                                <span className="publicBlogDetail-stat-item">
+                                    <Eye size={16} /> {blog.views}
+                                </span>
+                                <span className="publicBlogDetail-stat-item">
+                                    <Heart size={16} /> {blog.likes}
+                                </span>
+                            </div>
+                            <button className="publicBlogDetail-edit-button">
+                                <Edit size={16} /> Editar Imagen
+                            </button>
                         </div>
-
-                    </div>
+                        <BlogBanner blog={blog} />
+                        <BlogMeta
+                            blog={blog}
+                            categoryName={categoryName}
+                            liked={liked}
+                            handleLike={handleLike}
+                            showShareOptions={showShareOptions}
+                            setShowShareOptions={setShowShareOptions}
+                            handleShare={handleShare}
+                        />
+                        <BlogContent blog={blog} />
+                    </main>
                 </div>
-                {/* <div className="publicBlogDetail-relatedData">
-                    {relatedBlogs && relatedBlogs.length > 0 && (
-                        <div className="publicBlogDetail-sidebar">
-                            <BlogRelated relatedBlogs={relatedBlogs} />
-                        </div>
-                    )}
-                </div> */}
             </div>
+           
         </div>
     )
 }

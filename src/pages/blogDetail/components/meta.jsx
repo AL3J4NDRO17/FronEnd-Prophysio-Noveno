@@ -1,81 +1,56 @@
-import React from 'react'
-import { Calendar, User, Tag, Share2, Heart, Facebook, Twitter, Linkedin, Mail } from 'lucide-react'
+"use client"
 
+import { Eye, Heart, Share2, Facebook, Twitter, Linkedin, Mail } from "lucide-react"
 
-export default function BlogMeta({ 
-  blog, 
-  categoryName, 
-  liked, 
-  handleLike, 
-  showShareOptions, 
-  setShowShareOptions, 
-  handleShare 
+export default function BlogMeta({
+  blog,
+  categoryName,
+  liked,
+  handleLike,
+  showShareOptions,
+  setShowShareOptions,
+  handleShare,
 }) {
+  const formatPublishDate = (dateString) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" })
+  }
+
   return (
     <div className="publicBlogDetail-meta">
-      <div className="publicBlogDetail-meta-left">
-        <div className="publicBlogDetail-meta-item">
-          <Calendar className="publicBlogDetail-meta-icon" />
-          <span>{new Date(blog.publishDate || Date.now()).toLocaleDateString()}</span>
-        </div>
-        <div className="publicBlogDetail-meta-item">
-          <User className="publicBlogDetail-meta-icon" />
-          <span>{blog.author}</span>
-        </div>
-        {categoryName && (
-          <div className="publicBlogDetail-meta-item">
-            <Tag className="publicBlogDetail-meta-icon" />
-            <span>{categoryName}</span>
-          </div>
-        )}
+      <div className="publicBlogDetail-meta-info">
+        <span className="publicBlogDetail-author">Por {blog.author}</span>
+        <span className="publicBlogDetail-separator">•</span>
+        <span className="publicBlogDetail-date">{formatPublishDate(blog.createdAt)}</span>
+        <span className="publicBlogDetail-separator">•</span>
+        <span className="publicBlogDetail-category">{categoryName}</span>
       </div>
-      <div className="publicBlogDetail-meta-right">
-        <button
-          className={`publicBlogDetail-like-button ${liked ? "liked" : ""}`}
-          onClick={handleLike}
-          aria-label="Me gusta"
-        >
-          <Heart className="publicBlogDetail-meta-icon" />
-          <span>{liked ? "Te gusta" : "Me gusta"}</span>
-        </button>
-        <div className="publicBlogDetail-share">
-          <button
-            className="publicBlogDetail-share-button"
-            onClick={() => setShowShareOptions(!showShareOptions)}
-            aria-label="Compartir"
-          >
-            <Share2 className="publicBlogDetail-meta-icon" />
-            <span>Compartir</span>
+      <div className="publicBlogDetail-actions">
+        <div className="publicBlogDetail-stats">
+          <span className="publicBlogDetail-stat-item">
+            <Eye size={16} /> {blog.views || 0}
+          </span>
+          <button onClick={handleLike} className={`publicBlogDetail-like-button ${liked ? "liked" : ""}`}>
+            <Heart size={16} fill={liked ? "currentColor" : "none"} /> {blog.likes || 0}
+          </button>
+        </div>
+        <div className="publicBlogDetail-share-container">
+          <button onClick={() => setShowShareOptions(!showShareOptions)} className="publicBlogDetail-share-button">
+            <Share2 size={16} /> Compartir
           </button>
           {showShareOptions && (
-            <div className="publicBlogDetail-share-options">
-              <button
-                className="publicBlogDetail-share-option facebook"
-                onClick={() => handleShare("facebook")}
-                aria-label="Compartir en Facebook"
-              >
-                <Facebook size={16} />
+            <div className="publicBlogDetail-share-dropdown">
+              <button onClick={() => handleShare("facebook")}>
+                <Facebook size={16} /> Facebook
               </button>
-              <button
-                className="publicBlogDetail-share-option twitter"
-                onClick={() => handleShare("twitter")}
-                aria-label="Compartir en Twitter"
-              >
-                <Twitter size={16} />
+              <button onClick={() => handleShare("twitter")}>
+                <Twitter size={16} /> Twitter
               </button>
-              <button
-                className="publicBlogDetail-share-option linkedin"
-                onClick={() => handleShare("linkedin")}
-                aria-label="Compartir en LinkedIn"
-              >
-                <Linkedin size={16} />
+              <button onClick={() => handleShare("linkedin")}>
+                <Linkedin size={16} /> LinkedIn
               </button>
-              <button
-                className="publicBlogDetail-share-option email"
-                onClick={() => handleShare("email")}
-                aria-label="Compartir por email"
-              >
-                <Mail size={16} />
+              <button onClick={() => handleShare("email")}>
+                <Mail size={16} /> Email
               </button>
             </div>
           )}

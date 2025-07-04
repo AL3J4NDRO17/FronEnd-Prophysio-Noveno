@@ -41,11 +41,11 @@ function stripHtmlTags(str) {
               {categories.find((cat) => cat.id === Number(blog.categoryId))?.nombre || "Sin categoría"}
             </div>
             <h3 dangerouslySetInnerHTML={{ __html: blog.title }} className="blogAdmin-blog-card-title"></h3>
-            <p className="blogAdmin-blog-card-subtitle">{blog.effectsTitle}</p>
+            <p className="blogAdmin-blog-card-subtitle" dangerouslySetInnerHTML={{ __html: blog.mainContent.substring(0, 200) }}></p>
             <div className="blogAdmin-blog-card-meta">
               <span>{blog.author}</span>
               <span>•</span>
-              <span>{new Date(blog.publishDate || Date.now()).toLocaleDateString()}</span>
+              <span>{new Date(blog.createdAt || Date.now()).toLocaleDateString()}</span>
             </div>
           </div>
           <div className="blogAdmin-blog-card-actions">

@@ -14,7 +14,7 @@ import React from "react";
 import "./App.css"
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-
+import 'react-quill/dist/quill.snow.css';
 // 🚀 MEMORIZAMOS HEADER Y FOOTER PARA EVITAR RENDERIZADOS INNECESARIOS
 const MemoizedHeader = React.memo(Header);
 const MemoizedFooter = React.memo(Footer);

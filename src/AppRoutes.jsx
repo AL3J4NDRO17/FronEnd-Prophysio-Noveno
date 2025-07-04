@@ -17,7 +17,8 @@ import ServerOfflinePage from "./pages/errorPages/Maintenance.jsx";
 import LoaderPublic from "./utils/skeletons/skeleton.js";
 
 
-
+import {BlogProvider} from "./pages/blogPropouse/hooks/blogProvider.js";
+import {CategoryProvider} from "./pages/blogPropouse/hooks/categoryProvider.js";
 import { ErrorProvider, useGlobalError } from "./context/errorContext.js";
 import { setupInterceptors } from "./components/api/axiosConfig.js";
 
@@ -39,6 +40,7 @@ const AppointmentScheduler = lazy(() => import("./components/appointment/appoint
 const AdminAppointments = lazy(() => import("./components/admin/views/appointments/appointments.jsx"));
 
 
+
 const BlogDetail = lazy(() => import("./pages/blogDetail/blogDetailPage.jsx"));
 
 
@@ -51,7 +53,7 @@ const CompanySettings = lazy(() => import("./components/admin/views/companySetti
 const AdminDashboard = lazy(() => import("./components/admin/views/dashboard/adminDashboard.jsx"));
 const PatientDatabase = lazy(() => import("./components/admin/views/appointments/patients.jsx"));
 const BlogEditor = lazy(() => import("./components/admin/views/blogPrueba/blogPage.jsx"));
-const AdminStadics= lazy(() => import("./components/admin/views/stadistics/ModeloMatematico.jsx"));
+const AdminStadics = lazy(() => import("./components/admin/views/stadistics/ModeloMatematico.jsx"));
 
 //Dashboard de usuarios
 const UserDashboardLayout = lazy(() => import("./components/user/userLayout.jsx"));
@@ -78,14 +80,19 @@ const AppRoutes = () => {
     <AnimatePresence mode="wait">
       <AuthProvider>
         <NavigationProvider>
-          <ErrorProvider>
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <AppContent showSplash={showSplash} location={location} />
-            </ErrorBoundary>
-          </ErrorProvider>
+          <BlogProvider>
+            <CategoryProvider>
+              <ErrorProvider>
+                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                  <AppContent showSplash={showSplash} location={location} />
+                </ErrorBoundary>
+              </ErrorProvider>
+            </CategoryProvider>
+          </BlogProvider>
+
         </NavigationProvider>
       </AuthProvider>
-    </AnimatePresence>
+    </AnimatePresence >
   );
 };
 
@@ -143,7 +150,7 @@ const AppContent = ({ showSplash, location }) => {
                 <Route path="sheduler" element={<AppointmentScheduler />} />
                 <Route path="profile" element={<UserProfileEdit />} />
                 <Route path="confirmAppointment" element={<UserConfirmationAppointment />} />
-             
+
               </Route>
             </Route>
             {/* 🔥 RUTAS PROTEGIDAS DE ADMIN */}

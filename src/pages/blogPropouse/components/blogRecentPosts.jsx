@@ -1,12 +1,13 @@
 "use client"
 
 import "../styles/blogRecentPosts.css"
-import { useBlogs } from "../hooks/useClientBlog"
+import { useBlogContext } from "../hooks/blogProvider" // Asegúrate de que este hook esté correctamente implementado
 import { useNavigate } from "react-router-dom"
 import { FileText } from "lucide-react" // Importa un icono de Lucide React
+import { use } from "react"
 
 export default function BlogRecentPosts() {
-  const { blogs, isLoading, error } = useBlogs()
+  const { blogs, isLoading, error } = useBlogContext() // Asegúrate de que este hook esté correctamente implementado
   const navigate = useNavigate()
 
   if (isLoading) {

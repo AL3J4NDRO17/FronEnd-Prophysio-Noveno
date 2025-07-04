@@ -1,105 +1,97 @@
-.rich-text-editor {
-    margin-bottom: 1.5rem;
-  }
-  
-  .rich-text-editor .ql-container {
-    border-bottom-left-radius: 0.375rem;
-    border-bottom-right-radius: 0.375rem;
-    background: #fff;
-    min-height: 150px;
-    font-family: inherit;
-  }
-  
-  .rich-text-editor .ql-toolbar {
-    border-top-left-radius: 0.375rem;
-    border-top-right-radius: 0.375rem;
-    background: #f9fafb;
-    border-color: var(--blogAdmin-color-border, #e5e7eb);
-  }
-  
-  .rich-text-editor .ql-editor {
-    min-height: 150px;
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-  
-  .rich-text-editor .ql-editor p {
-    margin-bottom: 1rem;
-  }
-  
-  .rich-text-editor .ql-editor h1,
-  .rich-text-editor .ql-editor h2,
-  .rich-text-editor .ql-editor h3,
-  .rich-text-editor .ql-editor h4,
-  .rich-text-editor .ql-editor h5,
-  .rich-text-editor .ql-editor h6 {
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-  }
-  
-  .rich-text-editor .ql-editor h1 {
-    font-size: 2rem;
-  }
-  
-  .rich-text-editor .ql-editor h2 {
-    font-size: 1.5rem;
-  }
-  
-  .rich-text-editor .ql-editor h3 {
-    font-size: 1.25rem;
-  }
-  
-  .rich-text-editor .ql-editor blockquote {
-    border-left: 4px solid #e5e7eb;
-    padding-left: 1rem;
-    margin-left: 0;
-    margin-right: 0;
-    font-style: italic;
-  }
-  
-  .rich-text-editor .ql-editor pre {
-    background: #f3f4f6;
-    border-radius: 0.375rem;
-    padding: 1rem;
-    overflow-x: auto;
-  }
-  
-  .rich-text-editor .ql-editor img {
-    max-width: 100%;
-    height: auto;
-  }
-  
-  /* Estilos para el modo oscuro */
-  .dark .rich-text-editor .ql-toolbar {
-    background: #1f2937;
-    border-color: #374151;
-  }
-  
-  .dark .rich-text-editor .ql-container {
-    background: #111827;
-    border-color: #374151;
-  }
-  
-  .dark .rich-text-editor .ql-editor {
-    color: #f9fafb;
-  }
-  
-  .dark .rich-text-editor .ql-stroke {
-    stroke: #d1d5db;
-  }
-  
-  .dark .rich-text-editor .ql-fill {
-    fill: #d1d5db;
-  }
-  
-  .dark .rich-text-editor .ql-picker {
-    color: #d1d5db;
-  }
-  
-  .dark .rich-text-editor .ql-picker-options {
-    background: #1f2937;
-    border-color: #374151;
-  }
-  
-  
+.rich-text-editor .ql-toolbar {
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+  border: 1px solid var(--brd-default);
+  background-color: var(--bg-secondary);
+}
+
+.rich-text-editor .ql-container {
+  border-bottom-left-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
+  border: 1px solid var(--brd-default);
+  border-top: none;
+  min-height: 200px; /* Altura mínima para el editor */
+}
+
+.rich-text-editor .ql-editor {
+  min-height: 200px; /* Asegura que el área de edición tenga altura */
+  line-height: 1.6;
+  font-size: 1rem;
+  color: var(--txt-default);
+}
+
+/* Estilos para el contenido dentro del editor (opcional, para que se vea similar a la vista previa) */
+.rich-text-editor .ql-editor p {
+  margin-bottom: 1em;
+}
+
+.rich-text-editor .ql-editor h1,
+.rich-text-editor .ql-editor h2,
+.rich-text-editor .ql-editor h3,
+.rich-text-editor .ql-editor h4,
+.rich-text-editor .ql-editor h5,
+.rich-text-editor .ql-editor h6 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: bold;
+  color: var(--txt-heading);
+}
+
+.rich-text-editor .ql-editor h1 {
+  font-size: 2em;
+}
+.rich-text-editor .ql-editor h2 {
+  font-size: 1.5em;
+}
+.rich-text-editor .ql-editor h3 {
+  font-size: 1.17em;
+}
+.rich-text-editor .ql-editor h4 {
+  font-size: 1em;
+}
+.rich-text-editor .ql-editor h5 {
+  font-size: 0.83em;
+}
+.rich-text-editor .ql-editor h6 {
+  font-size: 0.67em;
+}
+
+.rich-text-editor .ql-editor strong {
+  font-weight: bold;
+}
+
+.rich-text-editor .ql-editor em {
+  font-style: italic;
+}
+
+.rich-text-editor .ql-editor a {
+  color: var(--clr-brand-primary);
+  text-decoration: underline;
+}
+
+.rich-text-editor .ql-editor blockquote {
+  border-left: 4px solid var(--brd-default);
+  margin-bottom: 1em;
+  padding-left: 1em;
+  color: var(--txt-secondary);
+  font-style: italic;
+}
+
+.rich-text-editor .ql-editor pre.ql-syntax {
+  background-color: var(--clr-gray-dark);
+  color: var(--clr-white);
+  padding: 1em;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1em;
+  overflow-x: auto;
+}
+
+.rich-text-editor .ql-editor ul,
+.rich-text-editor .ql-editor ol {
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+
+.rich-text-editor .ql-editor li {
+  margin-bottom: 0.5em;
+}

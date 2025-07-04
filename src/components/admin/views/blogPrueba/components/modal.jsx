@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from "react"
 
-import { X, Eye, Save, Edit } from "lucide-react"
-
-import { Resizable } from "re-resizable"
+import { X, Eye, Save, Edit, Upload } from 'lucide-react'
 
 import { FilePond, registerPlugin } from "react-filepond"
 
@@ -15,6 +13,7 @@ import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type"
 import { useBlogEditor } from "../hooks/blogEditorHook"
 
 import RichTextEditor from "./textEditor"
+import BlogDisplay from "./blogDisplay" // Importa el nuevo componente
 
 import "filepond/dist/filepond.min.css"
 
@@ -24,21 +23,20 @@ registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType)
 
 export default function BlogModal({ isOpen, onClose, existingBlog, categories }) {
   const [activeTab, setActiveTab] = useState("editor")
-  const [contentImageSize, setContentImageSize] = useState({ width: 300, height: 200 })
-  const [isHovered, setIsHovered] = useState(false)
+  const [attachedFiles, setAttachedFiles] = useState([]) // Estado para FilePond de imágenes adjuntas
 
-  // Usamos el hook de blog editor
-  const { blogData, setBlogData, handleInputChange, handleStyleChange, handlePublish, isLoading, isError, error } =
-    useBlogEditor(existingBlog, onClose, contentImageSize)
+  const { blogData, setBlogData, handleInputChange, handlePublish, isLoading, isError, error } = useBlogEditor(
+    existingBlog,
+    onClose,
+  )
 
-  // Inicializamos el tamaño de la imagen de contenido
+  // Inicializar attachedFiles si hay un blog existente
   useEffect(() => {
-    if (existingBlog?.contentimagedimensions) {
-      setContentImageSize(existingBlog.contentimagedimensions)
+    if (existingBlog?.attachedImages) {
+      setAttachedFiles(existingBlog.attachedImages.map(url => ({ source: url })))
     }
   }, [existingBlog])
 
-  // Función para manejar la subida de la imagen del banner
   const handleBannerUpload = async (fileItems) => {
     if (fileItems.length > 0 && fileItems[0].file instanceof File) {
       const file = fileItems[0].file
@@ -50,66 +48,31 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
     }
   }
 
-  // Función para manejar la subida de la imagen de contenido
-  const handleContentImageUpload = async (fileItems) => {
-    if (fileItems.length > 0 && fileItems[0].file instanceof File) {
-      const file = fileItems[0].file
-      localStorage.setItem("tempContentImg", URL.createObjectURL(file))
-      setBlogData((prev) => ({
-        ...prev,
-        contentImage: file,
-      }))
-    }
-  }
-
-  // Función para manejar el redimensionamiento de la imagen
-  const handleResize = (e, direction, ref, d) => {
-    const newSize = {
-      width: contentImageSize.width + d.width,
-      height: contentImageSize.height + d.height,
-    }
-    setContentImageSize(newSize)
+  const handleAttachedImagesUpload = (fileItems) => {
+    const newImages = fileItems.map(item => {
+      if (item.file instanceof File) {
+        return URL.createObjectURL(item.file);
+      }
+      return item.source; // Para imágenes existentes
+    });
+    setAttachedFiles(fileItems); // Mantener el estado interno de FilePond
     setBlogData((prev) => ({
       ...prev,
-      contentimagedimensions: newSize,
+      attachedImages: newImages,
+    }));
+  };
+
+  const handleBannerTitleChange = (value) => {
+    setBlogData((prev) => ({
+      ...prev,
+      bannerTitle: value,
     }))
   }
 
-  // Manejar cambios en el contenido del editor de texto enriquecido para el contenido principal
-  const handleMainContentChange = (content) => {
+  const handleMainContentChange = (value) => {
     setBlogData((prev) => ({
       ...prev,
-      mainContent: content,
-    }))
-  }
-
-  // Manejar cambios en el contenido de efectos del editor de texto enriquecido
-  const handleEffectsContentChange = (content) => {
-    setBlogData((prev) => ({
-      ...prev,
-      effectsContent: content,
-    }))
-  }
-
-  // Nuevas funciones para manejar los cambios de los títulos con RichTextEditor
-  const handleBannerTitleChange = (content) => {
-    setBlogData((prev) => ({
-      ...prev,
-      bannerTitle: content,
-    }))
-  }
-
-  const handleTitleChange = (content) => {
-    setBlogData((prev) => ({
-      ...prev,
-      title: content,
-    }))
-  }
-
-  const handleEffectsTitleChange = (content) => {
-    setBlogData((prev) => ({
-      ...prev,
-      effectsTitle: content,
+      mainContent: value,
     }))
   }
 
@@ -154,9 +117,27 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                 </>
               )}
             </button>
-            <button className="blogAdmin-primary-button" onClick={handlePublish} disabled={isLoading}>
+            <button
+              className="blogAdmin-secondary-button"
+              onClick={() => {
+                setBlogData((prev) => ({ ...prev, status: "draft" }))
+                handlePublish()
+              }}
+              disabled={isLoading}
+            >
               <Save className="blogAdmin-button-icon" />
-              {isLoading ? "Guardando..." : "Guardar"}
+              Guardar borrador
+            </button>
+            <button
+              className="blogAdmin-primary-button"
+              onClick={() => {
+                setBlogData((prev) => ({ ...prev, status: "published" }))
+                handlePublish()
+              }}
+              disabled={isLoading}
+            >
+              <Upload className="blogAdmin-button-icon" />
+              {isLoading ? "Publicando..." : "Publicar"}
             </button>
             <button
               className="blogAdmin-icon-button-small"
@@ -209,7 +190,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
           <div className="blogAdmin-editor-main">
             {activeTab === "editor" ? (
               <div className="blogAdmin-editor-content">
-                {/* Banner/Image Upload */}
                 <div className="blogAdmin-editor-banner">
                   <FilePond
                     files={blogData.bannerImage ? [{ source: blogData.bannerImage }] : []}
@@ -228,15 +208,6 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                     placeholder="Título del Banner"
                   />
                 </div>
-                {/* Title */}
-                <div className="blogAdmin-editor-title">
-                  <RichTextEditor
-                    value={blogData.title || ""}
-                    onChange={handleTitleChange}
-                    placeholder="Título del artículo"
-                  />
-                </div>
-                {/* Main Content - Rich Text Editor */}
                 <div className="blogAdmin-editor-body">
                   <RichTextEditor
                     value={blogData.mainContent || ""}
@@ -244,44 +215,19 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                     placeholder="Contenido principal del artículo..."
                   />
                 </div>
-                {/* Effects Title and Content */}
-                <div className="blogAdmin-editor-title" style={{ marginTop: "20px" }}>
-                  <RichTextEditor
-                    value={blogData.effectsTitle || ""}
-                    onChange={handleEffectsTitleChange}
-                    placeholder="Subtitulo del articulo"
+                <div className="blogAdmin-editor-attached-images">
+                  <h3>Imágenes Adjuntas</h3>
+                  <FilePond
+                    files={attachedFiles}
+                    onupdatefiles={handleAttachedImagesUpload}
+                    allowMultiple={true}
+                    maxFiles={5} // Puedes ajustar el límite de imágenes adjuntas
+                    name="attachedImages"
+                    labelIdle="Arrastra imágenes o haz clic para seleccionar"
+                    acceptedFileTypes={["image/*"]}
+                    stylePanelLayout="compact"
+                    imagePreviewHeight={100}
                   />
-                </div>
-                <div className="blogAdmin-editor-effects">
-                  <div className="blogAdmin-editor-effects-content">
-                    {/* Effects Content - Rich Text Editor */}
-                    <RichTextEditor
-                      value={blogData.effectsContent || ""}
-                      onChange={handleEffectsContentChange}
-                      placeholder="Subcontenido del articulo"
-                    />
-                  </div>
-                  <div className="blogAdmin-editor-effects-image">
-                    <FilePond
-                      files={blogData.contentImage ? [{ source: blogData.contentImage }] : []}
-                      onupdatefiles={(fileItems) => handleContentImageUpload(fileItems)}
-                      allowMultiple={false}
-                      maxFiles={1}
-                      name="contentImage"
-                      labelIdle="Imagen de contenido"
-                      acceptedFileTypes={["image/*"]}
-                      stylePanelLayout="compact"
-                      imagePreviewHeight={100}
-                    />
-                    {blogData.contentImage && (
-                      <div className="blogAdmin-image-dimensions">
-                        <p>
-                          Tamaño: {contentImageSize.width}px × {contentImageSize.height}px
-                        </p>
-                        <p className="blogAdmin-image-resize-hint">Puedes redimensionar la imagen en la vista previa</p>
-                      </div>
-                    )}
-                  </div>
                 </div>
                 {isError && (
                   <div className="blogAdmin-error-message">
@@ -290,88 +236,7 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                 )}
               </div>
             ) : (
-              <div className="blogAdmin-editor-preview">
-                {/* Banner Preview */}
-                <div className="blogAdmin-preview-banner" style={{ backgroundColor: "#666" }}>
-                  {blogData.bannerImage && (
-                    <img
-                      src={localStorage.getItem("tempBannerImg") || blogData.bannerImage}
-                      alt="Banner"
-                      className="blogAdmin-preview-banner-image"
-                    />
-                  )}
-                  <h1 className="blogAdmin-preview-banner-title">
-                    {blogData.bannerTitle && <div dangerouslySetInnerHTML={{ __html: blogData.bannerTitle }} />}
-                  </h1>
-                </div>
-                <div className="blogAdmin-preview-content">
-                  <div className="blogAdmin-preview-date">{new Date().toLocaleDateString()}</div>
-                  <h1 className="blogAdmin-preview-title" style={blogData.textStyle}>
-                    {blogData.title && <div dangerouslySetInnerHTML={{ __html: blogData.title }} />}
-                  </h1>
-                  <div className="blogAdmin-preview-body">
-                    {blogData.mainContent ? (
-                      <div dangerouslySetInnerHTML={{ __html: blogData.mainContent }} />
-                    ) : (
-                      <p className="blogAdmin-preview-placeholder">El contenido principal aparecerá aquí...</p>
-                    )}
-                  </div>
-                  <h2 className="blogAdmin-preview-subtitle" style={blogData.textStyle}>
-                    {blogData.effectsTitle && <div dangerouslySetInnerHTML={{ __html: blogData.effectsTitle }} />}
-                  </h2>
-                  <div className="blogAdmin-preview-effects">
-                    <div className="blogAdmin-preview-effects-content">
-                      {blogData.effectsContent ? (
-                        <div dangerouslySetInnerHTML={{ __html: blogData.effectsContent }} />
-                      ) : (
-                        <p className="blogAdmin-preview-placeholder">El subcontenido del articulo aparecerá aquí...</p>
-                      )}
-                    </div>
-                    {blogData.contentImage && (
-                      <div
-                        className="blogAdmin-preview-effects-image"
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
-                      >
-                        <Resizable
-                          size={contentImageSize}
-                          onResizeStop={handleResize}
-                          className="blogAdmin-resizable"
-                          enable={{
-                            top: true,
-                            right: true,
-                            bottom: true,
-                            left: true,
-                            topRight: true,
-                            bottomRight: true,
-                            bottomLeft: true,
-                            topLeft: true,
-                          }}
-                        >
-                          <img
-                            src={localStorage.getItem("tempContentImg") || blogData.contentImage}
-                            alt="Content"
-                            className="blogAdmin-preview-content-image"
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
-                            }}
-                          />
-                        </Resizable>
-                      </div>
-                    )}
-                  </div>
-                  <div className="blogAdmin-preview-meta">
-                    {blogData.author && <span className="blogAdmin-preview-author">Por {blogData.author}</span>}
-                    {blogData.categoryId && categories && (
-                      <span className="blogAdmin-preview-category">
-                        {categories.find((cat) => cat.id === Number(blogData.categoryId))?.nombre || "Categoría"}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <BlogDisplay blogData={blogData} categories={categories} />
             )}
           </div>
         </div>

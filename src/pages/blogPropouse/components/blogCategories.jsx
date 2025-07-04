@@ -1,11 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { useCategories } from "../hooks/useClientCategories"
+
 import "../styles/blogCategories.css"
+import { useCategoryContext } from "../hooks/categoryProvider"
 
 export default function BlogFiltersUnificado({ posts = [], onFilterChange, onCategoryClick }) {
-  const { categories, loading, error } = useCategories()
+  const { categories, loading, error } = useCategoryContext()
 
   // Estado para los filtros seleccionados (pero no aplicados aún)
   const [filters, setFilters] = useState({

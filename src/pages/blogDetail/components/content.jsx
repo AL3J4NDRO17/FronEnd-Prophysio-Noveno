@@ -1,56 +1,30 @@
 export default function BlogContent({ blog }) {
-  function stripHtmlTags(str) {
-    return str.replace(/<[^>]*>/g, ''); // Esto elimina todas las etiquetas HTML
-  }
-
   return (
     <div className="publicBlogDetail-content">
-      <p dangerouslySetInnerHTML={{ __html: blog.title || "" }} className="publicBlogDetail-effects-title"></p>
-      <div
-        className="publicBlogDetail-main-content"
-        style={blog.textStyle || {}}
-        dangerouslySetInnerHTML={{ __html: blog.mainContent || "" }}
-      />
+      <div className="publicBlogDetail-body">
+        {blog.mainContent ? (
+          <div className="ql-editor" dangerouslySetInnerHTML={{ __html: blog.mainContent }} />
+        ) : (
+          <p className="publicBlogDetail-placeholder-text">El contenido principal aparecerá aquí...</p>
+        )}
+      </div>
 
-      {/* Sección de efectos */}
-      {(blog.effectsTitle || blog.effectsContent) && (
-        <div className="publicBlogDetail-effects">
-          {blog.effectsTitle && (
-            <h2
-              dangerouslySetInnerHTML={{ __html: blog.effectsTitle || "" }}
-              className="publicBlogDetail-effects-title" style={blog.textStyle || {}}>
-            </h2>
-          )}
-
-          <div className="publicBlogDetail-effects-container">
-            <div
-              className="publicBlogDetail-effects-content"
-              style={blog.textStyle || {}}
-              dangerouslySetInnerHTML={{ __html: blog.effectsContent || "" }}
-            />
-
-            {blog.contentImage && (
-              <div className="publicBlogDetail-effects-image" >
-
+      {blog.attachedImages && blog.attachedImages.length > 0 && (
+        <div className="publicBlogDetail-attached-images-section">
+          <h2 className="publicBlogDetail-attached-images-title">IMÁGENES ADJUNTAS</h2>
+          <div className="publicBlogDetail-attached-images-grid">
+            {blog.attachedImages.map((image, index) => (
+              <div key={index} className="publicBlogDetail-attached-image-item">
                 <img
-                  src={blog.contentImage || "/placeholder.svg"}
-                  alt={blog.effectsTitle || "Imagen ilustrativa"}
-                  style={
-                    blog.contentimagedimensions
-                      ? {
-                        width: `${blog.contentimagedimensions.width}px`,
-                        height: `${blog.contentimagedimensions.height}px`,
-                        objectFit: "cover",
-                      }
-                      : {}
-                  }
+                  src={image || "/placeholder.svg"}
+                  alt={`Imagen adjunta ${index + 1}`}
+                  className="publicBlogDetail-attached-image"
                 />
               </div>
-            )}
+            ))}
           </div>
         </div>
       )}
     </div>
   )
 }
-
