@@ -1,37 +1,5 @@
-.appointmentsAdmin-select {
-  appearance: none; /* Remove default browser styling */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: var(--bg-white);
-  border: 1px solid var(--brd-default);
-  border-radius: var(--radius-md);
-  padding: 0.5rem 2rem 0.5rem 0.75rem; /* Adjust padding for icon */
-  font-size: 0.875rem;
-  width: 100%; /* Full width by default */
-  color: var(--txt-default);
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.5rem center;
-  background-size: 1rem;
-  outline: none; /* Remove default outline */
-  box-shadow: var(--shd-sm);
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.appointmentsAdmin-select:focus {
-  border-color: transparent;
-  box-shadow: 0 0 0 2px var(--clr-brand-primary);
-}
-
-.appointmentsAdmin-select:disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-  background-color: var(--bg-secondary);
-}
-
-/* Styles for custom select trigger/content if you were to build a fully custom select */
-.appointmentsAdmin-select-trigger {
+/* Estilos para el SelectTrigger (el botón que abre el dropdown) */
+.select-trigger {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -40,42 +8,77 @@
   border: 1px solid var(--brd-default);
   border-radius: var(--radius-md);
   background-color: var(--bg-white);
+  color: var(--txt-default);
   font-size: 0.875rem;
-  text-align: left;
+  box-shadow: var(--shd-sm-alt);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   cursor: pointer;
-  box-shadow: var(--shd-sm);
 }
 
-.appointmentsAdmin-select-icon {
-  width: 1rem;
-  height: 1rem;
-  color: var(--txt-secondary);
-  margin-left: 0.5rem;
+.select-trigger:focus-visible {
+  outline: none;
+  border-color: var(--clr-brand-primary);
+  box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
 }
 
-.appointmentsAdmin-select-content {
-  /* This would be a popover for custom selects */
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 10;
-  margin-top: 0.25rem;
+.select-trigger-icon {
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+  color: var(--clr-gray-medium);
+  margin-left: 0.5rem; /* ml-2 */
+}
+
+/* Contenedor del contenido del select (el dropdown que aparece) */
+.select-content {
   background-color: var(--bg-white);
   border: 1px solid var(--brd-default);
   border-radius: var(--radius-md);
   box-shadow: var(--shd-md);
-  min-width: 100%;
+  z-index: 1100; /* Asegura que esté por encima del overlay del dialog */
+  max-height: 200px; /* Para scroll si hay muchas opciones */
   overflow-y: auto;
-  max-height: 15rem;
+  padding: 0.25rem; /* Espacio interno */
 }
 
-.appointmentsAdmin-select-item {
-  /* Styles for individual options in a custom select */
+/* Elementos individuales del select */
+.select-item {
   padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  color: var(--txt-default);
+  font-size: 0.875rem; /* text-sm */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  position: relative; /* Para el icono de check si se usa */
+  user-select: none; /* Evitar selección de texto */
 }
 
-.appointmentsAdmin-select-item:hover {
+.select-item:hover,
+.select-item[data-highlighted] {
+  /* Para navegación con teclado */
   background-color: var(--bg-secondary);
+  color: var(--clr-brand-primary);
+  outline: none; /* Eliminar el outline por defecto del navegador */
+}
+
+.select-item[data-state="checked"] {
+  background-color: var(--bg-secondary); /* O un color más distintivo para el seleccionado */
+  color: var(--clr-brand-primary);
+  font-weight: 500; /* font-medium */
+}
+
+/* Estilos para el label del select (si se usa SelectLabel) */
+.select-label {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem; /* text-xs */
+  color: var(--txt-secondary);
+  font-weight: 600; /* font-semibold */
+}
+
+/* Estilos para el separador del select (si se usa SelectSeparator) */
+.select-separator {
+  height: 1px;
+  background-color: var(--brd-default);
+  margin: 0.25rem 0;
 }

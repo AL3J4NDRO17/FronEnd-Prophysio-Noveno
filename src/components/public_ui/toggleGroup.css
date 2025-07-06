@@ -1,0 +1,74 @@
+/* Contenedor del grupo de toggles */
+.toggle-group {
+  display: inline-flex;
+  border-radius: var(--radius-md);
+  background-color: var(--bg-white);
+  border: 1px solid var(--brd-default);
+  overflow: hidden; /* Para que los bordes redondeados se apliquen bien a los items */
+}
+
+/* Item individual del toggle */
+.toggle-group-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem; /* py-2 px-4 */
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: var(--txt-default);
+  background-color: var(--bg-white);
+  border: none; /* Los bordes los maneja el contenedor */
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  user-select: none; /* Evitar selección de texto */
+  position: relative; /* Para el borde entre items */
+}
+
+/* Borde entre items (excepto el último) */
+.toggle-group-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 25%;
+  height: 50%;
+  width: 1px;
+  background-color: var(--brd-default);
+}
+
+/* Estado hover */
+.toggle-group-item:hover {
+  background-color: var(--bg-secondary);
+  color: var(--clr-brand-primary);
+}
+
+/* Estado focus (para accesibilidad) */
+.toggle-group-item:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2); /* ring-2 con color primario */
+  z-index: 1; /* Asegura que el shadow no sea cortado por items adyacentes */
+}
+
+/* Estado activo (cuando el toggle está "on") */
+.toggle-group-item[data-state="on"] {
+  background-color: var(--clr-brand-primary);
+  color: var(--clr-white);
+  border-color: var(--clr-brand-primary); /* Si el contenedor tuviera bordes individuales */
+  z-index: 0; /* Para que el borde entre items se vea bien */
+}
+
+/* Estado deshabilitado */
+.toggle-group-item[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Variantes de tamaño (ej. sm, lg) - opcional, si necesitas diferentes tamaños */
+.toggle-group-item.sm {
+  padding: 0.375rem 0.75rem; /* py-1.5 px-3 */
+  font-size: 0.75rem; /* text-xs */
+}
+
+.toggle-group-item.lg {
+  padding: 0.625rem 1.25rem; /* py-2.5 px-5 */
+  font-size: 1rem; /* text-base */
+}

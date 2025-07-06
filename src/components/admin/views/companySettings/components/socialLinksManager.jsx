@@ -1,117 +1,137 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import {
-  Globe,
-  Facebook,
-  Instagram,
-  Twitter,
-  Linkedin,
-  Youtube,
-  GitlabIcon as GitHub,
-  LinkIcon,
-  Trash2,
-} from "lucide-react"
+import { Globe, Facebook, Instagram, Twitter, Linkedin, Youtube, Github, LinkIcon, Save, Trash2 } from "lucide-react"
+import { toast } from "react-toastify"
+import Swal from "sweetalert2"
 
-// Plataformas de redes sociales disponibles
-const SOCIAL_PLATFORMS = [
+const SOCIAL_PLATFORMS_DEFINED = [
   { id: "facebook", name: "Facebook", icon: <Facebook className="company-adjustments-social-icon" /> },
   { id: "instagram", name: "Instagram", icon: <Instagram className="company-adjustments-social-icon" /> },
   { id: "twitter", name: "Twitter", icon: <Twitter className="company-adjustments-social-icon" /> },
   { id: "linkedin", name: "LinkedIn", icon: <Linkedin className="company-adjustments-social-icon" /> },
   { id: "youtube", name: "YouTube", icon: <Youtube className="company-adjustments-social-icon" /> },
-  { id: "github", name: "GitHub", icon: <GitHub className="company-adjustments-social-icon" /> },
-  { id: "other", name: "Otro", icon: <LinkIcon className="company-adjustments-social-icon" /> },
+  { id: "github", name: "GitHub", icon: <Github className="company-adjustments-social-icon" /> },
+  { id: "website", name: "Sitio Web", icon: <Globe className="company-adjustments-social-icon" /> },
+  // Puedes añadir más plataformas predefinidas aquí si es necesario
 ]
 
-const SocialLinksManager = ({ socialLinks = [], onSocialLinksUpdate }) => {
-  const [socialLinkInput, setSocialLinkInput] = useState({ platform: "", url: "" })
-  const [availablePlatforms, setAvailablePlatforms] = useState([])
-  const [errors, setErrors] = useState({})
+const SocialLinksManager = ({
+  companyId,
+  socialLinks: initialSocialLinks,
+  addSocialLink,
+  updateSocialLink,
+  removeSocialLink,
+  loading,
+}) => {
+  const [platformUrls, setPlatformUrls] = useState({})
+  const [isSaving, setIsSaving] = useState(false)
 
-  // Actualizar plataformas disponibles cuando cambian los enlaces sociales
   useEffect(() => {
-    updateAvailablePlatforms()
-  }, [socialLinks])
+    const urls = {}
+    initialSocialLinks.forEach((link) => {
+      urls[link.platform] = link.url
+    })
+    setPlatformUrls(urls)
+  }, [initialSocialLinks])
 
-  // Actualizar plataformas disponibles
-  const updateAvailablePlatforms = () => {
-    const usedPlatforms = socialLinks.map((link) => link.platform)
-    const available = SOCIAL_PLATFORMS.filter((platform) => !usedPlatforms.includes(platform.id))
-    setAvailablePlatforms(available)
-
-    // Si no hay plataforma seleccionada o la seleccionada ya está en uso, seleccionar la primera disponible
-    if (!socialLinkInput.platform || usedPlatforms.includes(socialLinkInput.platform)) {
-      setSocialLinkInput((prev) => ({
-        ...prev,
-        platform: available.length > 0 ? available[0].id : "",
-      }))
-    }
+  const handleUrlChange = (platformId, url) => {
+    setPlatformUrls((prev) => ({
+      ...prev,
+      [platformId]: url,
+    }))
   }
 
-  // Agregar un enlace social
-  const handleAddSocialLink = () => {
-    if (!socialLinkInput.platform || !socialLinkInput.url) {
-      setErrors((prev) => ({
-        ...prev,
-        socialLink: "Selecciona una plataforma e ingresa una URL",
-      }))
+  const handleSavePlatform = async (platformId) => {
+    const url = platformUrls[platformId] ? platformUrls[platformId].trim() : ""
+
+    if (!url) {
+      // Si la URL está vacía, se considera una eliminación
+      handleDeletePlatform(platformId)
       return
     }
 
-    // Validar URL
-    if (!socialLinkInput.url.startsWith("http")) {
-      setErrors((prev) => ({
-        ...prev,
-        socialLink: "La URL debe comenzar con http:// o https://",
-      }))
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      toast.error("La URL debe comenzar con http:// o https://")
       return
     }
 
-    // Verificar si ya existe un enlace para esta plataforma
-    const platformExists = socialLinks.some((link) => link.platform === socialLinkInput.platform)
+    setIsSaving(true)
+    try {
+      const existingLink = initialSocialLinks.find((link) => link.platform === platformId)
 
-    if (platformExists) {
-      setErrors((prev) => ({
-        ...prev,
-        socialLink: "Ya existe un enlace para esta plataforma",
-      }))
+      if (existingLink) {
+        // Actualizar enlace existente
+        await updateSocialLink(existingLink.social_id, {
+          platform: platformId,
+          url: url,
+        })
+        toast.success(`${getPlatformName(platformId)} actualizado correctamente.`)
+      } else {
+        // Crear nuevo enlace
+        await addSocialLink({
+          company_id: companyId,
+          platform: platformId,
+          url: url,
+        })
+        toast.success(`${getPlatformName(platformId)} agregado correctamente.`)
+      }
+    } catch (error) {
+      console.error(`Error al guardar ${platformId}:`, error)
+      toast.error(`Error al guardar ${getPlatformName(platformId)}.`)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleDeletePlatform = async (platformId) => {
+    const existingLink = initialSocialLinks.find((link) => link.platform === platformId)
+
+    if (!existingLink) {
+      // Si no hay un enlace existente, simplemente limpia el campo localmente
+      setPlatformUrls((prev) => ({ ...prev, [platformId]: "" }))
+      toast.info(`Campo de ${getPlatformName(platformId)} limpiado.`)
       return
     }
 
-    // Obtener el nombre de la plataforma
-    const platform = SOCIAL_PLATFORMS.find((p) => p.id === socialLinkInput.platform)
-    const platformName = platform ? platform.name : socialLinkInput.platform
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: `¡Esto eliminará el enlace de ${getPlatformName(platformId)}! No podrás revertirlo.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    })
 
-    // Crear nuevo array de enlaces sociales
-    const updatedSocialLinks = [
-      ...socialLinks,
-      {
-        platform: socialLinkInput.platform,
-        platformName,
-        url: socialLinkInput.url,
-        id: Date.now(), // ID temporal para la UI
-      },
-    ]
+    if (!result.isConfirmed) return
 
-    // Notificar al componente padre
-    onSocialLinksUpdate(updatedSocialLinks)
-
-    // Limpiar el input y errores
-    setSocialLinkInput({ platform: availablePlatforms.length > 1 ? availablePlatforms[0].id : "", url: "" })
-    setErrors((prev) => ({ ...prev, socialLink: null }))
+    setIsSaving(true)
+    try {
+      await removeSocialLink(existingLink.social_id)
+      setPlatformUrls((prev) => ({ ...prev, [platformId]: "" })) // Limpiar el campo después de eliminar
+      toast.success(`${getPlatformName(platformId)} eliminado correctamente.`)
+    } catch (err) {
+      toast.error(`Error al eliminar ${getPlatformName(platformId)}.`)
+      console.error(err)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
-  // Eliminar un enlace social
-  const handleRemoveSocialLink = (id) => {
-    const updatedSocialLinks = socialLinks.filter((link) => link.id !== id)
-    onSocialLinksUpdate(updatedSocialLinks)
+  const getPlatformName = (platformId) => {
+    const platform = SOCIAL_PLATFORMS_DEFINED.find((p) => p.id === platformId)
+    return platform ? platform.name : platformId
   }
 
-  // Obtener el icono correspondiente a la plataforma social
-  const getSocialIcon = (platform) => {
-    const socialPlatform = SOCIAL_PLATFORMS.find((p) => p.id === platform)
-    return socialPlatform ? socialPlatform.icon : <Globe className="company-adjustments-social-icon" />
+  const getSocialIcon = (platformId) => {
+    const socialPlatform = SOCIAL_PLATFORMS_DEFINED.find((p) => p.id === platformId)
+    return socialPlatform ? socialPlatform.icon : <LinkIcon className="company-adjustments-social-icon" />
+  }
+
+  if (loading) {
+    return <div className="companySettings-loading">Cargando enlaces de redes sociales...</div>
   }
 
   return (
@@ -121,70 +141,49 @@ const SocialLinksManager = ({ socialLinks = [], onSocialLinksUpdate }) => {
         Redes Sociales
       </h3>
 
-      <div className="company-adjustments-social-links">
-        {socialLinks.length === 0 ? (
-          <p className="company-adjustments-social-empty">No hay redes sociales configuradas</p>
-        ) : (
-          socialLinks.map((link, index) => (
-            <div key={index} className="company-adjustments-social-link-item">
-              {getSocialIcon(link.platform)}
-              <span className="company-adjustments-social-platform">{link.platformName || link.platform}</span>
-              <a href={link.url} target="_blank" rel="noopener noreferrer" className="company-adjustments-social-url">
-                {link.url}
-              </a>
+      <div className="company-adjustments-social-grid">
+        {SOCIAL_PLATFORMS_DEFINED.map((platform) => (
+          <div key={platform.id} className="company-adjustments-social-item">
+            <div className="company-adjustments-social-item-header">
+              {platform.icon}
+              <label htmlFor={`social-url-${platform.id}`} className="company-adjustments-social-platform">
+                {platform.name}
+              </label>
+            </div>
+            <input
+              id={`social-url-${platform.id}`}
+              type="url"
+              className="companySettings-input company-adjustments-social-input"
+              placeholder={`URL de ${platform.name}`}
+              value={platformUrls[platform.id] || ""}
+              onChange={(e) => handleUrlChange(platform.id, e.target.value)}
+              disabled={isSaving}
+            />
+            <div className="company-adjustments-social-item-actions">
               <button
                 type="button"
-                className="company-adjustments-social-remove"
-                onClick={() => handleRemoveSocialLink(link.id)}
-                aria-label="Eliminar"
+                className="companySettings-button-primary companySettings-button-small"
+                onClick={() => handleSavePlatform(platform.id)}
+                disabled={isSaving || !platformUrls[platform.id]?.trim()}
               >
-                <Trash2 size={16} />
+                <Save className="companySettings-button-icon-small" />
+                Guardar
+              </button>
+              <button
+                type="button"
+                className="companySettings-button-outline companySettings-button-small companySettings-button-destructive"
+                onClick={() => handleDeletePlatform(platform.id)}
+                disabled={isSaving || !platformUrls[platform.id]?.trim()}
+              >
+                <Trash2 className="companySettings-button-icon-small" />
+                Limpiar
               </button>
             </div>
-          ))
-        )}
-
-        <div className="company-adjustments-social-add">
-          {availablePlatforms.length > 0 ? (
-            <>
-              <select
-                value={socialLinkInput.platform}
-                onChange={(e) => setSocialLinkInput({ ...socialLinkInput, platform: e.target.value })}
-                className="company-adjustments-social-select"
-              >
-                {availablePlatforms.map((platform) => (
-                  <option key={platform.id} value={platform.id}>
-                    {platform.name}
-                  </option>
-                ))}
-              </select>
-
-              <input
-                type="url"
-                value={socialLinkInput.url}
-                onChange={(e) => setSocialLinkInput({ ...socialLinkInput, url: e.target.value })}
-                placeholder="https://..."
-                className={errors.socialLink ? "company-adjustments-input-error" : ""}
-              />
-
-              <button
-                type="button"
-                className="company-adjustments-button-primary company-adjustments-button-small"
-                onClick={handleAddSocialLink}
-              >
-                Agregar
-              </button>
-            </>
-          ) : (
-            <p className="company-adjustments-social-all-added">Todas las plataformas han sido agregadas</p>
-          )}
-        </div>
-
-        {errors.socialLink && <div className="company-adjustments-error-message">{errors.socialLink}</div>}
+          </div>
+        ))}
       </div>
     </div>
   )
 }
 
 export default SocialLinksManager
-

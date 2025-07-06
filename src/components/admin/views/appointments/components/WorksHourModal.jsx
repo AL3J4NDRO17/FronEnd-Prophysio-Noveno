@@ -1,235 +1,196 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "../../../../public_ui/button" // Ruta actualizada
-import { Checkbox } from "../../../../public_ui/checkbox" // Ruta actualizada
-import { Input } from "../../../../public_ui/input" // Ruta actualizada
-import { Label } from "../../../../public_ui/label" // Ruta actualizada
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../../public_ui/select"
-import { Plus, Trash, Edit, Save, X } from "lucide-react"
-import Swal from "sweetalert2"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@dialog" // Importación corregida
+import { Button } from "@button" // Importación corregida
+import { Input } from "@input" // Importación corregida
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@select" // Importación corregida
+import { Label } from "@label" // Importación corregida
+import "../styles/WorkHoursModal.css" // Importar el CSS
+import { format } from "date-fns"
+import { es, enUS } from "date-fns/locale"
 
-const ALL_DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
-const DEFAULT_SESSION_DURATION = 60 // Minutos
+const generateDaysOfWeekOptions = () => {
+  const options = []
+  // Crear una fecha de referencia para cada día de la semana, empezando por el lunes
+  // 4 de enero de 2021 fue un lunes. Usamos una fecha fija para asegurar el orden.
+  const mondayRef = new Date("2021-01-04T12:00:00Z")
 
-const WorkHoursModal = ({ isOpen, onClose, currentWorkHours, onSave }) => {
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(mondayRef)
+    date.setDate(mondayRef.getDate() + i) // Añadir días para obtener Martes, Miércoles, etc.
+
+    options.push({
+      value: format(date, "EEEE", { locale: enUS }), // Valor en inglés (ej. "Monday")
+      label: format(date, "EEEE", { locale: es }), // Etiqueta en español (ej. "Lunes")
+    })
+  }
+  console.log("opciones",options)
+  return options
+}
+
+const daysOfWeek = generateDaysOfWeekOptions()
+console.log(daysOfWeek)
+export default function WorkHoursModal({ isOpen, onClose, currentWorkHours, onSave }) {
   const [schedules, setSchedules] = useState([])
-  const [editingSchedule, setEditingSchedule] = useState(null) // null for new, object for editing
-  const [showForm, setShowForm] = useState(false)
 
   useEffect(() => {
-    if (isOpen) {
-      // Deep copy currentWorkHours to avoid direct mutation
-      setSchedules(JSON.parse(JSON.stringify(currentWorkHours)))
-      setEditingSchedule(null)
-      setShowForm(false)
+    if (isOpen && currentWorkHours) {
+      // Mapear los días a inglés para el estado interno del modal
+      const mappedHours = currentWorkHours.map((h) => ({
+        ...h,
+        dia:
+          h.dia === "Lunes"
+            ? "Monday"
+            : h.dia === "Martes"
+              ? "Tuesday"
+              : h.dia === "Miércoles"
+                ? "Wednesday"
+                : h.dia === "Jueves"
+                  ? "Thursday"
+                  : h.dia === "Viernes"
+                    ? "Friday"
+                    : h.dia === "Sábado"
+                      ? "Saturday"
+                      : h.dia === "Domingo"
+                        ? "Sunday"
+                        : h.dia,
+      }))
+      setSchedules(mappedHours)
     }
-  }, [currentWorkHours, isOpen])
+  }, [isOpen, currentWorkHours])
 
-  const handleAddSchedule = () => {
-    setEditingSchedule({
-      id: null, // Temporary ID for new entries
-      dia: ALL_DAYS[0],
-      hora_inicio: "09:00",
-      hora_fin: "18:00",
-      duracion_sesion: DEFAULT_SESSION_DURATION,
-    })
-    setShowForm(true)
+  // Añadir un console.log para depurar el estado de los horarios
+  useEffect(() => {
+    console.log("Estado actual de schedules en WorkHoursModal:", schedules)
+  }, [schedules])
+
+  const handleDayChange = (index, value) => {
+    const newSchedules = [...schedules]
+    newSchedules[index].dia = value
+    setSchedules(newSchedules)
   }
 
-  const handleEditSchedule = (schedule) => {
-    setEditingSchedule(JSON.parse(JSON.stringify(schedule))) // Deep copy
-    setShowForm(true)
+  const handleTimeChange = (index, field, value) => {
+    const newSchedules = [...schedules]
+    newSchedules[index][field] = value
+    setSchedules(newSchedules)
   }
 
-  const handleDeleteSchedule = async (idToDelete) => {
-    const result = await Swal.fire({
-      title: "¿Estás seguro?",
-      text: "Esta acción eliminará el horario seleccionado.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
-    })
-
-    if (result.isConfirmed) {
-      setSchedules((prev) => prev.filter((s) => s.id !== idToDelete))
-      Swal.fire("Eliminado!", "El horario ha sido eliminado.", "success")
-    }
+  const handleDurationChange = (index, value) => {
+    const newSchedules = [...schedules]
+    newSchedules[index].duracion_sesion = value
+    setSchedules(newSchedules)
   }
 
-  const handleFormChange = (e) => {
-    const { name, value } = e.target
-    setEditingSchedule((prev) => ({ ...prev, [name]: value }))
+  const addScheduleBlock = () => {
+    // CAMBIO: Inicializar 'dia' como undefined para que el placeholder funcione correctamente
+    setSchedules([...schedules, { id: null, dia: undefined, hora_inicio: "", hora_fin: "", duracion_sesion: "" }])
   }
 
-  const handleSelectChange = (name, value) => {
-    setEditingSchedule((prev) => ({ ...prev, [name]: value }))
+  const removeScheduleBlock = (index) => {
+    const newSchedules = schedules.filter((_, i) => i !== index)
+    setSchedules(newSchedules)
   }
 
-  const handleSaveForm = () => {
-    if (
-      !editingSchedule.dia ||
-      !editingSchedule.hora_inicio ||
-      !editingSchedule.hora_fin ||
-      !editingSchedule.duracion_sesion
-    ) {
-      Swal.fire("Error", "Todos los campos son obligatorios.", "error")
+  const handleSave = () => {
+    // Validar que no haya bloques vacíos o incompletos
+    const isValid = schedules.every(
+      (s) => s.dia && s.hora_inicio && s.hora_fin && s.duracion_sesion !== undefined && s.duracion_sesion !== "",
+    )
+    if (!isValid) {
+      alert("Por favor, completa todos los campos de los horarios.")
       return
     }
-    if (editingSchedule.hora_inicio >= editingSchedule.hora_fin) {
-      Swal.fire("Error", "La hora de inicio debe ser anterior a la hora de fin.", "error")
-      return
-    }
-    if (editingSchedule.duracion_sesion <= 0) {
-      Swal.fire("Error", "La duración de la sesión debe ser un número positivo.", "error")
-      return
-    }
-
-    setSchedules((prev) => {
-      if (editingSchedule.id === null) {
-        // Add new schedule
-        return [...prev, { ...editingSchedule, id: Date.now() }] // Assign a temporary unique ID
-      } else {
-        // Update existing schedule
-        return prev.map((s) => (s.id === editingSchedule.id ? editingSchedule : s))
-      }
-    })
-    setShowForm(false)
-    setEditingSchedule(null)
-  }
-
-  const handleFinalSave = () => {
     onSave(schedules)
-    onClose()
   }
 
   if (!isOpen) return null
 
   return (
-    <div className="appointmentsAdmin-modal-overlay">
-      <div className="appointmentsAdmin-modal" style={{ maxWidth: "700px" }}>
-        <div className="appointmentsAdmin-modal-header">
-          <h2 className="appointmentsAdmin-modal-title">Ajustar Horario Laboral</h2>
-          <p className="appointmentsAdmin-modal-description">
-            Define los días, rangos horarios y duración de sesión para las citas.
-          </p>
-        </div>
-        <div className="appointmentsAdmin-modal-content">
-          {!showForm ? (
-            <>
-              <div className="mb-4">
-                {schedules.length === 0 ? (
-                  <p className="text-gray-500 text-center">No hay horarios configurados.</p>
-                ) : (
-                  <div className="space-y-3">
-                    {schedules.map((schedule) => (
-                      <div
-                        key={schedule.id}
-                        className="flex items-center justify-between p-3 border rounded-md bg-gray-50"
-                      >
-                        <div>
-                          <p className="font-semibold">{schedule.dia}</p>
-                          <p className="text-sm text-gray-600">
-                            {schedule.hora_inicio} - {schedule.hora_fin} ({schedule.duracion_sesion} min)
-                          </p>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="icon" onClick={() => handleEditSchedule(schedule)}>
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button variant="destructive" size="icon" onClick={() => handleDeleteSchedule(schedule.id)}>
-                            <Trash className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <Button onClick={handleAddSchedule} className="w-full">
-                <Plus className="mr-2 h-4 w-4" />
-                Añadir Nuevo Horario
-              </Button>
-            </>
-          ) : (
-            <div className="space-y-4">
-              <div className="appointmentsAdmin-form-group">
-                <Label htmlFor="dia">Día:</Label>
-                <Select
-                  name="dia"
-                  value={editingSchedule?.dia || ""}
-                  onValueChange={(value) => handleSelectChange("dia", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccione un día" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ALL_DAYS.map((day) => (
-                      <SelectItem key={day} value={day}>
-                        {day}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="appointmentsAdmin-form-group">
-                <Label htmlFor="hora_inicio">Hora Inicio:</Label>
-                <Input
-                  type="time"
-                  id="hora_inicio"
-                  name="hora_inicio"
-                  value={editingSchedule?.hora_inicio || ""}
-                  onChange={handleFormChange}
-                />
-              </div>
-              <div className="appointmentsAdmin-form-group">
-                <Label htmlFor="hora_fin">Hora Fin:</Label>
-                <Input
-                  type="time"
-                  id="hora_fin"
-                  name="hora_fin"
-                  value={editingSchedule?.hora_fin || ""}
-                  onChange={handleFormChange}
-                />
-              </div>
-              <div className="appointmentsAdmin-form-group">
-                <Label htmlFor="duracion_sesion">Duración Sesión (min):</Label>
-                <Input
-                  type="number"
-                  id="duracion_sesion"
-                  name="duracion_sesion"
-                  value={editingSchedule?.duracion_sesion || ""}
-                  onChange={handleFormChange}
-                  min="1"
-                />
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setShowForm(false)}>
-                  <X className="mr-2 h-4 w-4" />
-                  Cancelar
-                </Button>
-                <Button onClick={handleSaveForm}>
-                  <Save className="mr-2 h-4 w-4" />
-                  Guardar Horario
-                </Button>
-              </div>
-            </div>
+    <Dialog isOpen={isOpen} onClose={onClose}>
+      <DialogContent className="work-hours-modal-content">
+        <DialogHeader>
+          <DialogTitle className="work-hours-modal-title">Configurar Horario Laboral</DialogTitle>
+        </DialogHeader>
+        <div className="work-hours-modal-body">
+          {schedules.length === 0 && (
+            <p className="text-center text-gray-500">No hay horarios configurados. Añade uno.</p>
           )}
+          {schedules.map((schedule, index) => (
+            <div key={index} className="schedule-block">
+              <div className="schedule-inputs">
+                <div className="form-group">
+                  <Label htmlFor={`day-${index}`}>Día</Label>
+                  {/* CAMBIO: Eliminar || "" ya que 'undefined' es el valor esperado para no seleccionado */}
+                  <Select onValueChange={(value) => handleDayChange(index, value)} value={schedule.dia}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Selecciona un día" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {daysOfWeek.map((day) => (
+                        <SelectItem key={day.value} value={day.value}>
+                          {day.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="form-group">
+                  <Label htmlFor={`start-time-${index}`}>Hora Inicio</Label>
+                  <Input
+                    id={`start-time-${index}`}
+                    type="time"
+                    value={schedule.hora_inicio || ""}
+                    onChange={(e) => handleTimeChange(index, "hora_inicio", e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+                <div className="form-group">
+                  <Label htmlFor={`end-time-${index}`}>Hora Fin</Label>
+                  <Input
+                    id={`end-time-${index}`}
+                    type="time"
+                    value={schedule.hora_fin || ""}
+                    onChange={(e) => handleTimeChange(index, "hora_fin", e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+                <div className="form-group">
+                  <Label htmlFor={`duration-${index}`}>Duración Sesión</Label>
+                  <Select
+                    onValueChange={(value) => handleDurationChange(index, Number.parseInt(value))}
+                    value={schedule.duracion_sesion ? String(schedule.duracion_sesion) : ""}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Duración" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[15, 30, 45, 60].map((duration) => (
+                        <SelectItem key={duration} value={String(duration)}>
+                          {duration} min
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <Button variant="destructive" size="sm" onClick={() => removeScheduleBlock(index)}>
+                Eliminar
+              </Button>
+            </div>
+          ))}
+          <Button variant="outline" onClick={addScheduleBlock} className="add-block-button bg-transparent">
+            Añadir Bloque de Horario
+          </Button>
         </div>
-        <div className="appointmentsAdmin-modal-footer">
+        <DialogFooter className="work-hours-modal-footer">
           <Button variant="outline" onClick={onClose}>
-            Cerrar
+            Cancelar
           </Button>
-          <Button onClick={handleFinalSave} disabled={showForm}>
-            Guardar Cambios
-          </Button>
-        </div>
-      </div>
-    </div>
+          <Button onClick={handleSave}>Guardar Horario</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
-
-export default WorkHoursModal

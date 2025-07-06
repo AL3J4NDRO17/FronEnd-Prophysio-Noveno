@@ -1,245 +1,349 @@
+/* Variables CSS */
 
 
-/* Container */
+/* Estilos Generales del Panel de Administración */
 .companySettings-container {
-  padding: 1.5rem;
-  background-color: var(--admin-background);
-  min-height: 100vh;
-}
-
-/* Header */
-.companySettings-header {
-  background: white;
-  padding: 1rem 1.5rem;
-  background-color: white;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.companySettings-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--admin-text);
-  margin: 0;
-}
-
-.companySettings-subtitle {
-  font-size: 0.875rem;
-  color: var(--text-light);
-  margin: 0.25rem 0 0 0;
-}
-
-/* Tabs */
-.companySettings-tabs {
-  margin-bottom: 1.5rem;
-}
-
-.companySettings-tabs-list {
   display: flex;
-  background-color: var(--admin-background);
-  border-radius: 0.375rem;
-  padding: 0.25rem;
-  overflow-x: auto;
-  white-space: nowrap;
+  min-height: 100vh;
+  width: 100%;
+  color: var(--txt-default);
 }
 
-.companySettings-tab-button {
-  padding: 0.5rem 1rem;
-  border-radius: 0.25rem;
+.companySettings-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 256px;
+  /* 64 * 4px = 256px */
+  border-right: 1px solid var(--brd-default);
+  background-color: var(--bg-white);
+  padding: 16px;
+  /* 4 * 4px = 16px */
+  box-shadow: var(--shd-sm);
+}
+
+.companySettings-sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* 2 * 4px = 8px */
+  padding: 8px 0;
+  /* 2 * 4px = 8px */
+  margin-bottom: 16px;
+}
+
+.companySettings-sidebar-icon {
+  height: 24px;
+  width: 24px;
+  color: var(--clr-brand-primary);
+}
+
+.companySettings-sidebar-title {
+  font-size: 1.125rem;
+  /* text-lg */
+  font-weight: 600;
+  /* font-semibold */
+  color: var(--txt-heading);
+}
+
+.companySettings-nav {
+  display: grid;
+  gap: 8px;
+  /* 2 * 4px = 8px */
   font-size: 0.875rem;
+  /* text-sm */
   font-weight: 500;
-  color: var(--text-light);
+  /* font-medium */
+}
+
+.companySettings-nav-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* 3 * 4px = 12px */
+  padding: 8px 12px;
+  /* px-3 py-2 */
+  border-radius: var(--radius-md);
+  color: var(--txt-default);
   background-color: transparent;
   border: none;
   cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-.companySettings-tab-button:hover {
-  color: var(--admin-text);
+.companySettings-nav-button:hover {
+  color: var(--clr-brand-primary);
+  background-color: var(--bg-secondary);
 }
 
-.companySettings-tab-button.active {
-  background-color: var(--admin-white);
-  color: var(--admin-text);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+.companySettings-nav-button.active {
+  background-color: var(--bg-secondary);
+  color: var(--clr-brand-primary);
 }
 
-/* Content */
-.companySettings-content {
-  margin-top: 1.5rem;
+.companySettings-nav-button-icon {
+  height: 16px;
+  width: 16px;
 }
 
-/* Card */
+.companySettings-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* 4 * 4px = 16px */
+
+}
+
+.companySettings-section-header {
+  display: grid;
+  gap: 16px;
+}
+
+.companySettings-section-title {
+  font-size: 1.5rem;
+  /* text-2xl */
+  font-weight: 700;
+  /* font-bold */
+  color: var(--txt-heading);
+}
+
+.companySettings-separator {
+  height: 1px;
+  background-color: var(--brd-default);
+  margin: 16px 0;
+}
+
+/* Estilos para Cards */
 .companySettings-card {
-  background-color: var(--admin-white);
-  border-radius: 0.5rem;
-  border: 1px solid var(--admin-border);
-  overflow: hidden;
-  margin-bottom: 1.5rem;
+  background-color: var(--bg-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shd-default);
+  padding: 24px;
+  /* p-6 */
 }
 
 .companySettings-card-header {
-  padding: 1.25rem 1.25rem 0.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  /* Cambiado a columna para mejor control */
+  gap: 8px;
+  /* Espacio entre título y párrafo */
+  margin-bottom: 16px;
 }
 
 .companySettings-card-header h2 {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
+  /* text-xl */
   font-weight: 600;
-  color: var(--admin-text);
-  margin: 0;
+  /* font-semibold */
+  color: var(--txt-heading);
 }
 
 .companySettings-card-header p {
   font-size: 0.875rem;
-  color: var(--text-light);
-  margin: 0.25rem 0 0 0;
+  /* text-sm */
+  color: var(--txt-secondary);
+}
+
+/* Para el header de la card con botón */
+.companySettings-card-header.with-button {
+  flex-direction: row;
+  /* Vuelve a fila si hay botón */
+  justify-content: space-between;
+  align-items: center;
 }
 
 .companySettings-card-content {
-  padding: 1rem 1.25rem;
-}
-
-/* Form */
-.companySettings-form-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 16px;
+  /* grid gap-4 */
 }
 
+/* Estilos para Formularios */
 .companySettings-form-group {
-  margin-bottom: 1rem;
+  display: flex;
+  /* Cambiado a flex para label e input */
+  flex-direction: column;
+  gap: 8px;
+  /* grid gap-2 */
 }
 
 .companySettings-form-group label {
-  display: block;
   font-size: 0.875rem;
+  /* text-sm */
   font-weight: 500;
-  color: var(--admin-text);
-  margin-bottom: 0.5rem;
+  /* font-medium */
+  color: var(--txt-default);
 }
 
-.companySettings-input-with-icon {
-  position: relative;
-}
-
-.companySettings-input-with-icon i {
-  position: absolute;
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-lighter);
-}
-
-.companySettings-input-with-icon input {
-  padding-left: 2.5rem;
-}
-
-.companySettings-form-group input,
-.companySettings-form-group textarea {
+.companySettings-input,
+.companySettings-textarea,
+.companySettings-select {
+  display: block;
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.375rem;
-  border: 1px solid var(--admin-border);
-  font-size: 0.875rem;
-  color: var(--admin-text);
+  padding: 8px 12px;
+  /* px-3 py-2 */
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-white);
+  color: var(--txt-default);
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.companySettings-form-group textarea {
-  resize: vertical;
-  min-height: 100px;
-}
-
-.companySettings-form-group input:focus,
-.companySettings-form-group textarea:focus {
+.companySettings-input:focus,
+.companySettings-textarea:focus,
+.companySettings-select:focus {
   outline: none;
   border-color: var(--clr-brand-primary);
-  box-shadow: 0 0 0 2px var(--clr-brand-primary-light);
+  box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
+  /* focus:ring-primary */
 }
 
-/* Social Links */
-.companySettings-social-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.companySettings-textarea {
+  resize: vertical;
 }
 
-/* Logo Upload */
-.companySettings-logo-upload {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.companySettings-input-error {
+  border-color: var(--clr-status-danger);
 }
 
-.companySettings-logo-preview {
-  width: 100px;
-  height: 100px;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  border: 1px solid var(--admin-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.companySettings-error-message {
+  font-size: 0.75rem;
+  /* text-xs */
+  color: var(--clr-status-danger);
+  margin-top: 4px;
 }
 
-.companySettings-logo-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.companySettings-filepond {
-  margin-top: 0.5rem;
-}
-
-/* Misión y Visión */
-.companySettings-MV-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-}
-
-/* Form Actions */
 .companySettings-form-actions {
   display: flex;
+  gap: 8px;
+  /* gap-2 */
+  margin-top: 16px;
+  /* mt-4 */
   justify-content: flex-end;
-  margin-top: 1.5rem;
 }
 
-/* Buttons */
+/* Estilos para Botones */
 .companySettings-button-primary {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  border: none;
-  background-color: var(--clr-brand-primary);
-  color: var(--admin-white);
+  justify-content: center;
+  padding: 8px 16px;
+  /* px-4 py-2 */
+  border-radius: var(--radius-md);
   font-size: 0.875rem;
+  /* text-sm */
   font-weight: 500;
+  /* font-medium */
+  color: var(--clr-white);
+  background-color: var(--clr-brand-primary);
+  border: 1px solid var(--clr-brand-primary);
   cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
 }
 
 .companySettings-button-primary:hover {
   background-color: var(--clr-brand-primary-hover);
+  border-color: var(--clr-brand-primary-hover);
+}
+
+.companySettings-button-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .companySettings-button-outline {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  border: 1px solid var(--admin-border);
-  background-color: var(--admin-white);
-  color: var(--admin-text);
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
   font-size: 0.875rem;
   font-weight: 500;
+  color: var(--txt-default);
+  background-color: transparent;
+  border: 1px solid var(--brd-default);
   cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s, opacity 0.2s;
 }
 
 .companySettings-button-outline:hover {
-  background-color: var(--admin-background);
+  background-color: var(--bg-secondary);
+  border-color: var(--clr-brand-primary);
+  color: var(--clr-brand-primary);
+}
+
+.companySettings-button-outline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.companySettings-button-destructive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--clr-white);
+  background-color: var(--clr-status-danger);
+  border: 1px solid var(--clr-status-danger);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.companySettings-button-destructive:hover {
+  background-color: #c81e3e;
+  /* Un rojo más oscuro */
+  border-color: #c81e3e;
+}
+
+.companySettings-button-destructive:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.companySettings-button-small {
+  padding: 6px 10px;
+  font-size: 0.75rem;
+}
+
+.companySettings-icon-button-small {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  /* h-8 w-8 */
+  height: 32px;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.companySettings-icon-button-small:hover {
+  background-color: var(--bg-secondary);
+}
+
+.companySettings-icon-small {
+  height: 16px;
+  width: 16px;
+}
+
+.companySettings-button-icon {
+  height: 16px;
+  width: 16px;
+  margin-right: 8px;
+}
+
+.companySettings-button-icon-small {
+  height: 14px;
+  width: 14px;
+  margin-right: 4px;
 }
 
 .companySettings-button-full {
@@ -247,248 +351,461 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  border: none;
-  background-color: var(--clr-brand-primary);
-  color: var(--admin-white);
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
   font-size: 0.875rem;
   font-weight: 500;
+  color: var(--clr-white);
+  background-color: var(--clr-brand-primary);
+  border: 1px solid var(--clr-brand-primary);
   cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, opacity 0.2s;
 }
 
 .companySettings-button-full:hover {
   background-color: var(--clr-brand-primary-hover);
+  border-color: var(--clr-brand-primary-hover);
 }
 
-.companySettings-button-delete {
+.companySettings-button-full:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Estilos para Tabs */
+.companySettings-tabs {
+  padding: 16px;
+
+}
+
+.companySettings-tabs-list {
+  display: flex;
+  border-bottom: 1px solid var(--brd-default);
+
+  border-radius: var(--tab-border-radius);
+  padding: 4px;
+  box-shadow: var(--tab-shadow-sm);
+}
+
+.companySettings-tab-button {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--tab-foreground-secondary);
+  background-color: transparent;
+  border: none;
+  border-radius: var(--tab-border-radius);
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+  text-align: center;
+}
+
+.companySettings-tab-button.active {
+  color: var(--tab-foreground);
+  background-color: var(--tab-background);
+  box-shadow: var(--shd-sm);
+}
+
+/* Estilos para LogoManager */
+.company-adjustments-form-section {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shd-default);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.company-adjustments-section-title {
   display: flex;
   align-items: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.375rem;
-  border: 1px solid #fee2e2;
-  background-color: #fee2e2;
-  color: #b91c1c;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
+  gap: 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--txt-heading);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--brd-default);
 }
 
-.companySettings-button-delete:hover {
-  background-color: #fecaca;
+.company-adjustments-section-icon {
+  height: 20px;
+  width: 20px;
+  color: var(--clr-brand-primary);
 }
 
-.companySettings-button-icon {
-  width: 1rem;
-  height: 1rem;
-  margin-right: 0.5rem;
+.company-adjustments-logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
 }
 
-.companySettings-icon-button-small {
+.company-adjustments-logo-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--brd-default);
+  padding: 4px;
+  background-color: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.375rem;
-  border: none;
-  background-color: transparent;
-  color: var(--text-light);
+}
+
+.company-adjustments-logo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.company-adjustments-logo-placeholder {
+  color: var(--txt-secondary);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.company-adjustments-logo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.company-adjustments-filepond {
+  width: 100%;
+}
+
+.company-adjustments-logo-history {
+  width: 100%;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--brd-default);
+}
+
+.company-adjustments-logo-history-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--txt-heading);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.company-adjustments-logo-history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 16px;
+}
+
+.company-adjustments-logo-history-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
   cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+  transition: opacity 0.2s;
 }
 
-.companySettings-icon-button-small:hover {
-  background-color: var(--admin-background);
+.company-adjustments-logo-history-item img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--brd-default);
+  padding: 2px;
 }
 
-.companySettings-icon-small {
-  width: 1rem;
-  height: 1rem;
+.company-adjustments-logo-history-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+  border-radius: 50%;
 }
 
-/* FAQ Styles */
+.company-adjustments-logo-history-item:hover .company-adjustments-logo-history-overlay {
+  opacity: 1;
+}
+
+.company-adjustments-logo-current {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--clr-white);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.company-adjustments-logo-set-current {
+  background-color: var(--clr-brand-primary);
+  color: var(--clr-white);
+  border: none;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.company-adjustments-logo-set-current:hover {
+  background-color: var(--clr-brand-primary-hover);
+}
+
+.company-adjustments-delete-logo-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--clr-status-danger);
+  color: var(--clr-white);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.company-adjustments-logo-history-item:hover .company-adjustments-delete-logo-button {
+  opacity: 1;
+}
+
+.company-adjustments-delete-logo-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Estilos para SocialLinksManager */
+.company-adjustments-social-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  /* Ajustado para más espacio */
+  gap: 24px;
+  /* Mayor espacio entre elementos */
+}
+
+.company-adjustments-social-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brd-default);
+  box-shadow: var(--shd-sm);
+}
+
+.company-adjustments-social-item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.company-adjustments-social-icon {
+  height: 24px;
+  /* Iconos un poco más grandes */
+  width: 24px;
+  color: var(--clr-gray-dark);
+}
+
+.company-adjustments-social-platform {
+  font-weight: 600;
+  /* Más énfasis en el nombre */
+  color: var(--txt-heading);
+  font-size: 1rem;
+}
+
+.company-adjustments-social-input {
+  width: 100%;
+  /* Hereda estilos de .companySettings-input */
+}
+
+.company-adjustments-social-item-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  /* Botones a la derecha */
+  margin-top: 8px;
+}
+
+/* Estilos para FaqSettings */
 .companySettings-faq-list {
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .companySettings-faq-item {
-  border: 1px solid var(--admin-border);
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-md);
   overflow: hidden;
+  background-color: var(--bg-white);
 }
 
 .companySettings-faq-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  background-color: var(--admin-white);
+  padding: 12px 16px;
+  background-color: var(--bg-secondary);
+  cursor: pointer;
 }
 
 .companySettings-faq-question {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--txt-heading);
   flex: 1;
-  cursor: pointer;
 }
 
 .companySettings-faq-question h3 {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--admin-text);
   margin: 0;
-  flex: 1;
+  font-size: 1rem;
 }
 
 .companySettings-faq-icon {
+  height: 20px;
+  width: 20px;
   color: var(--clr-brand-primary);
-  width: 1.25rem;
-  height: 1.25rem;
 }
 
 .companySettings-faq-toggle {
-  color: var(--text-light);
-  width: 1rem;
-  height: 1rem;
+  height: 20px;
+  width: 20px;
+  color: var(--txt-secondary);
+  transition: transform 0.2s;
+}
+
+.companySettings-faq-header.expanded .companySettings-faq-toggle {
+  transform: rotate(180deg);
 }
 
 .companySettings-faq-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .companySettings-faq-answer {
-  padding: 0 1rem 1rem 3rem;
-  background-color: var(--admin-white);
+  padding: 16px;
+  border-top: 1px solid var(--brd-default);
+  color: var(--txt-default);
+  font-size: 0.9375rem;
 }
 
 .companySettings-faq-answer p {
   margin: 0;
-  font-size: 0.875rem;
-  color: var(--text-light);
-  line-height: 1.5;
 }
 
-.companySettings-faq-edit-input {
+.companySettings-faq-edit-input,
+.companySettings-faq-edit-textarea {
   width: 100%;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  border: 1px solid var(--admin-border);
-  font-size: 0.875rem;
+  padding: 8px;
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
 }
 
 .companySettings-faq-edit-textarea {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  border: 1px solid var(--admin-border);
-  font-size: 0.875rem;
   min-height: 80px;
   resize: vertical;
 }
 
 .companySettings-faq-form {
-  background-color: var(--admin-background);
-  padding: 1.5rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--admin-border);
-  margin-top: 1.5rem;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--brd-default);
 }
 
-/* Policy Styles */
+.companySettings-subtitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--txt-heading);
+  margin-bottom: 16px;
+}
+
+/* Estilos para PoliciesSettings */
 .companySettings-policy-item {
-  margin-bottom: 2rem;
+  margin-bottom: 24px;
 }
 
 .companySettings-policy-header {
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .companySettings-policy-title {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-}
-
-.companySettings-policy-title h3 {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--admin-text);
-  margin: 0;
+  gap: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--txt-heading);
 }
 
 .companySettings-policy-icon {
+  height: 20px;
+  width: 20px;
   color: var(--clr-brand-primary);
-  width: 1.25rem;
-  height: 1.25rem;
 }
 
-/* Incidents Styles */
+/* Estilos para IncidentsSettings */
 .companySettings-incidents {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  display: grid;
+  gap: 24px;
 }
 
 .companySettings-incidents-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .companySettings-search-container {
   position: relative;
+  flex: 1;
+  max-width: 300px;
+}
+
+.companySettings-search-input {
+  width: 100%;
+  padding-left: 32px;
 }
 
 .companySettings-search-icon {
   position: absolute;
-  left: 0.75rem;
+  left: 8px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-lighter);
-  width: 1rem;
-  height: 1rem;
+  height: 18px;
+  width: 18px;
+  color: var(--txt-secondary);
 }
 
-.companySettings-search-input {
-  padding: 0.5rem 1rem 0.5rem 2.5rem;
-  width: 16rem;
-  border-radius: 0.375rem;
-  border: 1px solid var(--admin-border);
-  background-color: var(--admin-white);
-  color: var(--admin-text);
-  font-size: 0.875rem;
-}
-
-.companySettings-search-input:focus {
-  outline: none;
-  border-color: var(--clr-brand-primary);
-  box-shadow: 0 0 0 2px var(--clr-brand-primary-light);
-}
-
-.companySettings-select {
-  height: 2.25rem;
-  padding: 0 0.75rem;
-  border-radius: 0.375rem;
-  border: 1px solid var(--admin-border);
-  background-color: var(--admin-white);
-  color: var(--admin-text);
-  font-size: 0.875rem;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.5rem center;
-  background-size: 1.25rem;
-  min-width: 8rem;
-}
-
-/* Table Styles */
 .companySettings-table-container {
   overflow-x: auto;
-  margin-bottom: 1rem;
 }
 
 .companySettings-table {
@@ -496,49 +813,46 @@
   border-collapse: collapse;
 }
 
-.companySettings-table th {
+.companySettings-table th,
+.companySettings-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--brd-default);
   text-align: left;
-  padding: 0.75rem 1rem;
-  font-size: 0.75rem;
+}
+
+.companySettings-table th {
+  background-color: var(--bg-secondary);
+  font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-light);
+  color: var(--txt-heading);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background-color: var(--admin-background);
-  border-bottom: 1px solid var(--admin-border);
 }
 
 .companySettings-table td {
-  padding: 0.75rem 1rem;
   font-size: 0.875rem;
-  color: var(--admin-text);
-  border-bottom: 1px solid var(--admin-border);
-}
-
-.companySettings-table tr:last-child td {
-  border-bottom: none;
+  color: var(--txt-default);
 }
 
 .companySettings-user-cell {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 8px;
 }
 
 .companySettings-user-avatar {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 9999px;
-  background-color: var(--admin-background);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .companySettings-user-icon {
-  width: 1rem;
-  height: 1rem;
-  color: var(--text-light);
+  height: 18px;
+  width: 18px;
+  color: var(--txt-secondary);
 }
 
 .companySettings-user-info {
@@ -548,257 +862,315 @@
 
 .companySettings-user-name {
   font-weight: 500;
+  color: var(--txt-heading);
 }
 
 .companySettings-user-email {
   font-size: 0.75rem;
-  color: var(--text-light);
+  color: var(--txt-secondary);
 }
 
 .companySettings-date-cell {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 4px;
 }
 
 .companySettings-date-icon {
-  width: 1rem;
-  height: 1rem;
-  color: var(--text-light);
+  height: 16px;
+  width: 16px;
+  color: var(--txt-secondary);
 }
 
 .companySettings-status-badge {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 9999px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
   font-size: 0.75rem;
   font-weight: 500;
 }
 
-.companySettings-status-permanent {
-  background-color: #fee2e2;
-  color: #b91c1c;
+.companySettings-status-temporary {
+  background-color: var(--appointmentsAdmin-color-pending-bg);
+  color: var(--appointmentsAdmin-color-pending);
 }
 
-.companySettings-status-temporary {
-  background-color: #fef3c7;
-  color: #92400e;
+.companySettings-status-permanent {
+  background-color: var(--appointmentsAdmin-color-cancelled-bg);
+  color: var(--appointmentsAdmin-color-cancelled);
 }
 
 .companySettings-table-actions {
   display: flex;
-  gap: 0.5rem;
-}
-
-.companySettings-button-small {
-  display: flex;
-  align-items: center;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  border: 1px solid var(--admin-border);
-  background-color: var(--admin-white);
-  color: var(--admin-text);
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
+  gap: 8px;
+  justify-content: flex-end;
 }
 
 .companySettings-button-warning {
-  border-color: #fef3c7;
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: var(--clr-status-warning);
+  color: var(--clr-white);
+  border-color: var(--clr-status-warning);
+}
+
+.companySettings-button-warning:hover {
+  background-color: #d98c00;
+  border-color: #d98c00;
 }
 
 .companySettings-button-danger {
-  border-color: #fee2e2;
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background-color: var(--clr-status-danger);
+  color: var(--clr-white);
+  border-color: var(--clr-status-danger);
 }
 
-.companySettings-button-icon-small {
-  width: 0.875rem;
-  height: 0.875rem;
-  margin-right: 0.375rem;
+.companySettings-button-danger:hover {
+  background-color: #c81e3e;
+  border-color: #c81e3e;
 }
 
 .companySettings-no-results {
   text-align: center;
-  padding: 2rem 0;
-  color: var(--text-light);
+  padding: 24px;
+  color: var(--txt-secondary);
 }
 
-/* Logger Styles */
 .companySettings-logger-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .companySettings-logger-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
 }
 
 .companySettings-logger-filters {
   display: flex;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .companySettings-logger-entries {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  max-height: 400px;
-  overflow-y: auto;
-  padding-right: 0.5rem;
+  gap: 8px;
 }
 
-.companySettings-log-entry {
-  padding: 0.75rem;
-  border-radius: 0.375rem;
-  border: 1px solid var(--admin-border);
-  background-color: var(--admin-background);
+
+/* Estilos para Diálogos (Modals) */
+.companySettings-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
-.companySettings-log-header {
+.companySettings-dialog-content {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shd-lg);
+  padding: 24px;
+  width: 90%;
+  max-width: 425px;
+  /* sm:max-w-[425px] */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* grid gap-4 py-4 */
+}
+
+.companySettings-dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+
+  border-bottom: 1px solid var(--brd-default);
 }
 
-.companySettings-log-level {
+.companySettings-dialog-title {
+  font-size: 1.25rem;
+  /* text-lg */
+  font-weight: 600;
+  /* font-semibold */
+  color: var(--txt-heading);
+}
+
+.companySettings-dialog-body {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 500;
-  font-size: 0.75rem;
+  flex-direction: column;
+  gap: 16px;
+  /* grid gap-4 */
 }
 
-.companySettings-log-icon {
-  width: 1rem;
-  height: 1rem;
+.companySettings-dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  /* gap-2 */
+  padding-top: 16px;
+  border-top: 1px solid var(--brd-default);
 }
 
-.companySettings-log-source {
-  font-size: 0.75rem;
-  color: var(--text-light);
+/* Estilos para Accordion (FAQ) */
+.companySettings-faq-list .companySettings-faq-item {
+  margin-bottom: 8px;
+  /* Espacio entre items del acordeón */
 }
 
-.companySettings-log-timestamp {
-  font-size: 0.75rem;
-  color: var(--text-light);
+.companySettings-faq-header.expanded {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-.companySettings-log-message {
+/* Estilos para min-height en textareas */
+.companySettings-min-h-200px {
+  min-height: 200px;
+}
+
+/* Nuevos estilos para el mapa */
+.companySettings-map-section {
+  grid-column: 1 / -1;
+  /* Ocupa todo el ancho en el grid */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--brd-default);
+}
+
+.companySettings-map-container {
+  width: 100%;
+  height: 350px;
+  /* Altura fija para el mapa */
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--brd-default);
+  box-shadow: var(--shd-sm);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.companySettings-map {
+  flex-grow: 1;
+  /* El mapa ocupa el espacio restante */
+  height: 100%;
+  /* Asegura que el mapa se estire dentro de su contenedor */
+  z-index: 0;
+  /* Asegúrate de que el mapa no superponga diálogos, etc. */
+}
+
+/* Necesario para que Leaflet funcione correctamente */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
+.companySettings-map-coords-display {
+  background-color: var(--bg-secondary);
+  padding: 8px 12px;
   font-size: 0.875rem;
-  color: var(--admin-text);
-  line-height: 1.5;
+  color: var(--txt-default);
+  border-top: 1px solid var(--brd-default);
+  text-align: center;
 }
 
-.companySettings-log-error {
-  border-color: #fee2e2;
-  background-color: #fef2f2;
-}
-
-.companySettings-log-error .companySettings-log-level {
-  color: #b91c1c;
-}
-
-.companySettings-log-error .companySettings-log-icon {
-  color: #b91c1c;
-}
-
-.companySettings-log-warning {
-  border-color: #fef3c7;
-  background-color: #fffbeb;
-}
-
-.companySettings-log-warning .companySettings-log-level {
-  color: #92400e;
-}
-
-.companySettings-log-warning .companySettings-log-icon {
-  color: #92400e;
-}
-
-.companySettings-log-info {
-  border-color: #dbeafe;
-  background-color: #eff6ff;
-}
-
-.companySettings-log-info .companySettings-log-level {
-  color: #1d4ed8;
-}
-
-.companySettings-log-info .companySettings-log-icon {
-  color: #1d4ed8;
-}
-
-/* Loading and Error States */
-.companySettings-loading {
+.companySettings-map-search-bar {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  font-size: 1rem;
-  color: var(--text-light);
+  gap: 8px;
+  padding: 12px;
+  background-color: var(--bg-white);
+  border-bottom: 1px solid var(--brd-default);
+  z-index: 1;
+  /* Asegura que la barra de búsqueda esté sobre el mapa */
 }
 
-.companySettings-error {
-  padding: 1rem;
-  background-color: #fee2e2;
-  color: #b91c1c;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
+.companySettings-map-search-input {
+  flex-grow: 1;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--brd-default);
+  padding: 8px 12px;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .companySettings-main-content {}
 
-  .companySettings-form-grid,
-  .companySettings-MV-container {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .companySettings-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
   }
 
-  .companySettings-policy-header,
-  .companySettings-faq-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+  .companySettings-incidents-actions {
+    flex-direction: row;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .companySettings-sidebar {
+    display: none;
   }
 
-  .companySettings-policy-actions,
-  .companySettings-faq-actions {
-    width: 100%;
-    justify-content: flex-end;
+  .companySettings-tabs-list {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .companySettings-tab-button {
+    flex: none;
+    width: calc(50% - 4px);
   }
 
   .companySettings-incidents-actions {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.5rem;
+    gap: 16px;
   }
 
   .companySettings-search-container {
-    width: 100%;
+    max-width: 100%;
   }
 
-  .companySettings-search-input {
+  .companySettings-table-actions {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .companySettings-button-small {
     width: 100%;
   }
 
   .companySettings-logger-header {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.5rem;
+    gap: 16px;
   }
 
   .companySettings-logger-filters {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 12px;
+  }
+
+  .company-adjustments-social-grid {
+    grid-template-columns: 1fr;
+    /* Una columna en móviles */
+  }
+
+  .companySettings-map-section {
+    padding-top: 12px;
+  }
+
+  .companySettings-map-search-bar {
+    flex-direction: column;
+    padding: 8px;
   }
 }

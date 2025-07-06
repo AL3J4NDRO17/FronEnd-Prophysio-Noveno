@@ -1,8 +1,51 @@
 "use client"
+import { useState, useEffect } from "react"
 import { FileText, Save } from "lucide-react"
+import { toast } from "react-toastify"
 
-const PoliciesSettings = ({ company, updateField, isSubmitting }) => {
-  if (!company) return null
+const PoliciesSettings = ({ company, policy, updatePolicy, isSubmitting }) => {
+  const [formData, setFormData] = useState({
+    privacy_policy: "",
+    terms_conditions: "",
+  })
+
+  useEffect(() => {
+    if (policy) {
+      setFormData({
+        privacy_policy: policy.privacy_policy || "",
+        terms_conditions: policy.terms_conditions || "",
+      })
+    } else {
+      setFormData({
+        privacy_policy: "",
+        terms_conditions: "",
+      })
+    }
+  }, [policy])
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleSavePolicy = async () => {
+    if (!company?.company_id) {
+      toast.error("ID de empresa no disponible.")
+      return
+    }
+    try {
+      await updatePolicy({
+        company_id: company.company_id,
+        ...formData,
+      })
+    } catch (error) {
+      console.error("Error al guardar políticas:", error)
+      toast.error("Error al guardar las políticas.")
+    }
+  }
 
   return (
     <div className="companySettings-card">
@@ -21,10 +64,11 @@ const PoliciesSettings = ({ company, updateField, isSubmitting }) => {
           <div className="companySettings-form-group">
             <textarea
               id="privacy-policy"
+              name="privacy_policy"
               className="companySettings-textarea"
               placeholder="Ingresa la política de privacidad..."
-              value={company.privacyPolicy || ""}
-              onChange={(e) => updateField("privacyPolicy", e.target.value)}
+              value={formData.privacy_policy}
+              onChange={handleInputChange}
               disabled={isSubmitting}
               rows="8"
             ></textarea>
@@ -41,10 +85,11 @@ const PoliciesSettings = ({ company, updateField, isSubmitting }) => {
           <div className="companySettings-form-group">
             <textarea
               id="terms"
+              name="terms_conditions"
               className="companySettings-textarea"
               placeholder="Ingresa los términos y condiciones..."
-              value={company.termsAndConditions || ""}
-              onChange={(e) => updateField("termsAndConditions", e.target.value)}
+              value={formData.terms_conditions}
+              onChange={handleInputChange}
               disabled={isSubmitting}
               rows="8"
             ></textarea>
@@ -52,9 +97,14 @@ const PoliciesSettings = ({ company, updateField, isSubmitting }) => {
         </div>
 
         <div className="companySettings-form-actions">
-          <button type="button" className="companySettings-button-primary" disabled={isSubmitting}>
+          <button
+            type="button"
+            className="companySettings-button-primary"
+            onClick={handleSavePolicy}
+            disabled={isSubmitting}
+          >
             <Save className="companySettings-button-icon" />
-            Guardar Cambios
+            {isSubmitting ? "Guardando..." : "Guardar Cambios"}
           </button>
         </div>
       </div>
@@ -63,4 +113,3 @@ const PoliciesSettings = ({ company, updateField, isSubmitting }) => {
 }
 
 export default PoliciesSettings
-

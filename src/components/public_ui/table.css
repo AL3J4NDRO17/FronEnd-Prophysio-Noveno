@@ -1,0 +1,69 @@
+/* Variables CSS para colores (ajusta según tu tema) */
+:root {
+  --border: 220 13% 91%; /* hsl(220 13% 91%) */
+  --muted: 220 14.3% 95.9%; /* hsl(220 14.3% 95.9%) */
+  --muted-foreground: 220 8.9% 46.1%; /* hsl(220 8.9% 46.1%) */
+}
+
+/* Contenedor responsivo para la tabla */
+.table-responsive {
+  width: 100%;
+  overflow: auto;
+}
+
+/* Estilos base de la tabla */
+.table-root {
+  width: 100%;
+  caption-side: bottom;
+  font-size: 0.875rem; /* text-sm */
+  border-collapse: collapse; /* Asegura que los bordes de las celdas se colapsen */
+}
+
+/* Estilos para el caption */
+.table-root > caption {
+  margin-top: 1rem; /* mt-4 */
+  color: var(--muted-foreground);
+}
+
+/* Estilos para el thead */
+.table-root > .table-header {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+/* Estilos para el tfoot */
+.table-root > .table-footer {
+  border-top: 1px solid hsl(var(--border));
+}
+
+/* Estilos para las filas */
+.table-row {
+  border-bottom: 1px solid hsl(var(--border));
+  transition: background-color 0.2s ease; /* transition-colors */
+}
+
+.table-row:last-child {
+  border-bottom: none; /* [&_tr:last-child]:border-b-0 */
+}
+
+.table-row:hover {
+  background-color: hsla(var(--muted), 0.5); /* hover:bg-muted/50 */
+}
+
+.table-row[data-state="selected"] {
+  background-color: hsl(var(--muted)); /* data-[state=selected]:bg-muted */
+}
+
+/* Estilos para los encabezados de columna (th) */
+.table-head {
+  padding: 1rem; /* p-4 */
+  text-align: left; /* text-left */
+  vertical-align: middle; /* align-middle */
+  font-weight: 500; /* font-medium */
+  color: hsl(var(--muted-foreground)); /* text-muted-foreground */
+}
+
+/* Estilos para las celdas (td) */
+.table-cell {
+  padding: 1rem; /* p-4 */
+  vertical-align: middle; /* align-middle */
+}

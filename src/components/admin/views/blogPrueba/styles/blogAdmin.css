@@ -1,10 +1,9 @@
-
 /* General Admin Layout */
 .blogAdmin-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
- 
+
 }
 
 .blogAdmin-content {
@@ -14,17 +13,17 @@
 
 .blogAdmin-layout {
   display: grid;
-  grid-template-columns: 1fr 300px; /* Main content and sidebar */
+  grid-template-columns: 1fr 300px;
+  /* Main content and sidebar */
   gap: 20px;
- 
+
   margin: 0 auto;
 }
 
 .blogAdmin-main {
- 
-  padding: 20px;
+
   border-radius: var(--radius-md);
- 
+
 }
 
 .blogAdmin-sidebar {
@@ -154,13 +153,19 @@
 
 /* Empty State for Blog Grid */
 .adminDashboard-blog-empty {
-  text-align: center;
-  padding: 50px;
+  grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  color: var(--txt-secondary);
+  justify-content: center;
+  padding: 3rem;
+  background-color: var(--admin-white);
+  border-radius: 0.5rem;
+  border: 1px solid var(--admin-border);
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text-light);
+  gap:15px
 }
 
 .adminDashboard-secondary-button {
@@ -189,7 +194,8 @@
 
 /* Estilos para el nuevo BlogDisplay */
 .blogAdmin-preview-container {
-  max-width: 800px; /* Ancho máximo del contenido del blog */
+  max-width: 800px;
+  /* Ancho máximo del contenido del blog */
   margin: 0 auto;
   background-color: var(--bg-white);
   box-shadow: var(--shd-default);
@@ -200,8 +206,10 @@
 .blogAdmin-preview-banner-display {
   position: relative;
   width: 100%;
-  height: 250px; /* Altura fija para el banner */
-  background-color: var(--clr-gray-medium); /* Color de fondo para el placeholder */
+  height: 250px;
+  /* Altura fija para el banner */
+  background-color: var(--clr-gray-medium);
+  /* Color de fondo para el placeholder */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -230,7 +238,8 @@
   right: 0;
   text-align: center;
   color: var(--clr-white);
-  font-size: 2.5rem; /* Tamaño de fuente grande para el título */
+  font-size: 2.5rem;
+  /* Tamaño de fuente grande para el título */
   font-weight: bold;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   padding: 0 20px;
@@ -304,13 +313,15 @@
 
 .blogAdmin-attached-images-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Columnas flexibles */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  /* Columnas flexibles */
   gap: 15px;
 }
 
 .blogAdmin-attached-image-item {
   width: 100%;
-  padding-bottom: 100%; /* Para mantener la relación de aspecto cuadrada */
+  padding-bottom: 100%;
+  /* Para mantener la relación de aspecto cuadrada */
   position: relative;
   background-color: var(--bg-secondary);
   border-radius: var(--radius-sm);
@@ -352,7 +363,8 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .blogAdmin-layout {
-    grid-template-columns: 1fr; /* Stack columns on smaller screens */
+    grid-template-columns: 1fr;
+    /* Stack columns on smaller screens */
   }
 
   .blogAdmin-header-controls {
@@ -379,7 +391,8 @@
 
   .blogAdmin-editor-sidebar {
     width: 100%;
-    order: 2; /* Move sidebar below main content in editor */
+    order: 2;
+    /* Move sidebar below main content in editor */
   }
 
   .blogAdmin-editor-main {

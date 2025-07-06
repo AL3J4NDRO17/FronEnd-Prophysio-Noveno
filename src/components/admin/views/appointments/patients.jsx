@@ -1,18 +1,19 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
-import { Search, Plus, Eye, CalendarDays, Users, Clock } from "lucide-react" // Añadido Users y 
-import "../appointments/appointments.css" // CSS principal de la página
+import { useState, useEffect, useCallback, useMemo } from "react"
+import { Search, Plus, Eye, CalendarDays, Users, Clock, XCircle } from "lucide-react" // Añadido XCircle para limpiar búsqueda
+import "./patients.css" // Importar el CSS dedicado para pacientes
 import { Input } from "../../../public_ui/input"
 import { Button } from "../../../public_ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../public_ui/card"
 import { Avatar, AvatarFallback } from "../../../public_ui/avatar"
 import { toast } from "react-toastify"
-import { userService } from "./services/userService" // Ruta actualizada
-import { useCitas } from "./hooks/useCitas" // Para el modal de cita
-import { horarioService } from "./services/horarioService" // Para el modal de cita
-import NewAppointmentModal from "./components/NewAppointmentModel" // Nuevo componente de modal
-import PatientDetailsPanel from "./components/PatientDetailsPanel" // Nuevo componente de panel de detalles
+import { userService } from "./services/userService"
+import { useCitas } from "./hooks/useCitas"
+import { horarioService } from "./services/horarioService"
+
+import NewAppointmentModal from "./components/NewAppointmentModel"
+import PatientDetailsPanel from "./components/PatientDetailsPanel"
 
 // Helper to get initials
 const getInitials = (name) => {
@@ -24,11 +25,24 @@ const getInitials = (name) => {
     .toUpperCase()
 }
 
+// Helper para formatear fecha y hora
+const formatDateTime = (isoString) => {
+  const date = new Date(isoString)
+  return date.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+}
+
 function PatientsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [patients, setPatients] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [filterStatus, setFilterStatus] = useState("all") // Nuevo estado para el filtro
 
   const [showNewAppointmentModal, setShowNewAppointmentModal] = useState(false)
   const [selectedPatientForAppointment, setSelectedPatientForAppointment] = useState(null)
@@ -38,7 +52,6 @@ function PatientsPage() {
 
   // Data needed for NewAppointmentModal
   const { citas, crearCita, actualizarCita, loading: loadingCitas } = useCitas()
-  const [appointmentDuration, setAppointmentDuration] = useState(null)
   const [clinicWorkHours, setClinicWorkHours] = useState([])
 
   // Load clinic data for appointment modal
@@ -47,16 +60,9 @@ function PatientsPage() {
       try {
         const hours = await horarioService.getHorariosClinica()
         setClinicWorkHours(hours)
-        if (hours.length > 0 && hours[0].duracion_sesion) {
-          setAppointmentDuration(hours[0].duracion_sesion)
-        } else {
-          setAppointmentDuration(60) // Default if not found
-          console.warn("No se encontró 'duracion_sesion' en los horarios, usando 60 minutos por defecto.")
-        }
       } catch (err) {
         console.error("Error al cargar horarios de la clínica:", err)
         toast.error("No se pudieron cargar los horarios de la clínica.")
-        setAppointmentDuration(60) // Fallback
       }
     }
     loadClinicData()
@@ -67,7 +73,6 @@ function PatientsPage() {
     setError(null)
     try {
       const data = await userService.getAllUsers()
-      // Filtrar para mostrar solo usuarios que no son 'admin'
       const nonAdminPatients = data.filter((user) => user.rol !== "admin")
       setPatients(nonAdminPatients)
     } catch (err) {
@@ -88,7 +93,6 @@ function PatientsPage() {
     setError(null)
     try {
       const data = await userService.searchUsers(searchTerm)
-      // Filtrar para mostrar solo usuarios que no son 'admin'
       const nonAdminPatients = data.filter((user) => user.rol !== "admin")
       setPatients(nonAdminPatients)
     } catch (err) {
@@ -99,6 +103,11 @@ function PatientsPage() {
       setLoading(false)
     }
   }, [searchTerm])
+
+  const clearSearch = () => {
+    setSearchTerm("")
+    fetchPatients() // Recargar todos los pacientes
+  }
 
   const openScheduleAppointmentModal = (patient) => {
     setSelectedPatientForAppointment(patient)
@@ -124,11 +133,40 @@ function PatientsPage() {
     setShowPatientDetailsPanel(true)
   }
 
-  const filteredPatients = patients.filter(
-    (patient) =>
-      patient.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      patient.email.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+  const filteredPatients = useMemo(() => {
+    const searchFiltered = patients.filter(
+      (patient) =>
+        patient.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        patient.email.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+
+    if (filterStatus === "all") {
+      return searchFiltered
+    }
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    return searchFiltered.filter((patient) => {
+      const hasUpcoming = citas.some((cita) => {
+        const citaDate = new Date(cita.fecha_hora)
+        citaDate.setHours(0, 0, 0, 0)
+        return (
+          cita.id_usuario === patient.id_usuario &&
+          (cita.estado === "pendiente" || cita.estado === "confirmada" || cita.estado === "postergada") &&
+          citaDate >= today
+        )
+      })
+
+      if (filterStatus === "with_upcoming_appointments") {
+        return hasUpcoming
+      }
+      if (filterStatus === "no_upcoming_appointments") {
+        return !hasUpcoming
+      }
+      return true
+    })
+  }, [patients, searchTerm, filterStatus, citas])
 
   // --- Cálculo de Estadísticas ---
   const totalPatients = patients.length
@@ -142,13 +180,22 @@ function PatientsPage() {
         const citaDate = new Date(cita.fecha_hora)
         citaDate.setHours(0, 0, 0, 0)
         return (
-          (cita.estado === "pendiente" || cita.estado === "confirmada" || cita.estado === "postergada") &&
+          (cita.estado === "confirmada" || cita.estado === "pendiente" || cita.estado === "postergada") &&
           citaDate >= today &&
           patients.some((p) => p.id_usuario === cita.id_usuario)
-        ) // Asegurarse de que sea un paciente no-admin
+        )
       })
       .map((cita) => cita.id_usuario),
   ).size
+
+  // --- Actividad Reciente de Citas ---
+  const recentAppointments = useMemo(() => {
+    // Filtra citas que tienen un usuario asociado y ordena por fecha_hora descendente
+    return citas
+      .filter((cita) => cita.usuario && cita.usuario.nombre) // Asegura que el usuario y su nombre existan
+      .sort((a, b) => new Date(b.fecha_hora).getTime() - new Date(a.fecha_hora).getTime())
+      .slice(0, 7) // Obtén las 7 citas más recientes
+  }, [citas])
 
   return (
     <div className="appointmentsAdmin-container">
@@ -169,6 +216,17 @@ function PatientsPage() {
                 if (e.key === "Enter") handleSearch()
               }}
             />
+            {searchTerm && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={clearSearch}
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-500 hover:text-gray-700"
+                title="Limpiar búsqueda"
+              >
+                <XCircle className="h-4 w-4" />
+              </Button>
+            )}
           </div>
           <Button variant="primary" onClick={() => openScheduleAppointmentModal(null)}>
             <Plus className="appointmentsAdmin-icon-sm appointmentsAdmin-icon-mr" />
@@ -178,92 +236,165 @@ function PatientsPage() {
       </header>
 
       <main className="appointmentsAdmin-main">
-        {/* Sección de Estadísticas */}
-        <div className="appointmentsAdmin-stats-grid mb-6">
-          <Card className="appointmentsAdmin-card">
-            <CardContent className="appointmentsAdmin-card-content flex items-center gap-4">
-              <div className="appointmentsAdmin-stat-icon appointmentsAdmin-stat-icon-time">
-                <Users className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="appointmentsAdmin-stat-label">Total de Pacientes</p>
-                <p className="appointmentsAdmin-stat-value">{totalPatients}</p>
+        <div className="appointmentsAdmin-dashboard-grid">
+          {/* Sección de Estadísticas */}
+          <div className="appointmentsAdmin-stats-grid">
+            <Card className="appointmentsAdmin-card">
+              <CardContent className="appointmentsAdmin-card-content flex items-center gap-4">
+                <div className="appointmentsAdmin-stat-icon appointmentsAdmin-stat-icon-time">
+                  <Users className="h-6 w-6" />
+                </div>
+                <div>
+                  <p className="appointmentsAdmin-stat-label">Total de Pacientes</p>
+                  <p className="appointmentsAdmin-stat-value">{totalPatients}</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="appointmentsAdmin-card">
+              <CardContent className="appointmentsAdmin-card-content flex items-center gap-4">
+                <div className="appointmentsAdmin-stat-icon appointmentsAdmin-stat-icon-pending">
+                  <Clock className="h-6 w-6" />
+                </div>
+                <div>
+                  <p className="appointmentsAdmin-stat-label">Pacientes con Citas Próximas</p>
+                  <p className="appointmentsAdmin-stat-value">{patientsWithUpcomingAppointments}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Nueva Tarjeta: Actividad Reciente de Citas */}
+          <Card className="appointmentsAdmin-card appointmentsAdmin-recent-activity-card">
+            <CardHeader className="appointmentsAdmin-card-header">
+              <CardTitle className="appointmentsAdmin-card-title">Actividad Reciente de Citas</CardTitle>
+            </CardHeader>
+            <CardContent className="appointmentsAdmin-card-content">
+              {recentAppointments.length > 0 ? (
+                <ul className="appointmentsAdmin-recent-list">
+                  {recentAppointments.map((cita) => (
+                    <li key={cita.id_cita} className="appointmentsAdmin-recent-item">
+                      <Avatar>
+                        <AvatarFallback className="appointmentsAdmin-avatar">
+                          {getInitials(cita.usuario?.nombre || "")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="appointmentsAdmin-recent-item-info">
+                        <p className="appointmentsAdmin-recent-item-patient">
+                          {cita.usuario?.nombre || "Paciente Desconocido"}
+                        </p>
+                        <p className="appointmentsAdmin-recent-item-details">{formatDateTime(cita.fecha_hora)}</p>
+                      </div>
+                      <span className={`appointmentsAdmin-badge ${cita.estado}`}>{cita.estado}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-center text-gray-500">No hay actividad reciente de citas.</p>
+              )}
+              <div className="mt-4 text-right">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    /* Navegar a la página de citas */
+                  }}
+                >
+                  Ver todas las citas
+                </Button>
               </div>
             </CardContent>
           </Card>
-          <Card className="appointmentsAdmin-card">
-            <CardContent className="appointmentsAdmin-card-content flex items-center gap-4">
-              <div className="appointmentsAdmin-stat-icon appointmentsAdmin-stat-icon-pending">
-                <Clock className="h-6 w-6" />
+
+          {/* Lista de Pacientes (existente) */}
+          <Card className="appointmentsAdmin-card appointmentsAdmin-patients-list-card">
+            <CardHeader className="appointmentsAdmin-card-header">
+              <CardTitle className="appointmentsAdmin-card-title">Lista de Pacientes</CardTitle>
+            </CardHeader>
+            <CardContent className="appointmentsAdmin-card-content">
+              {/* Filtros de estado */}
+              <div className="appointmentsAdmin-filters">
+                <Button
+                  className={`appointmentsAdmin-filter-button ${filterStatus === "all" ? "active" : ""}`}
+                  onClick={() => setFilterStatus("all")}
+                >
+                  Todos
+                </Button>
+                <Button
+                  className={`appointmentsAdmin-filter-button ${filterStatus === "with_upcoming_appointments" ? "active" : ""}`}
+                  onClick={() => setFilterStatus("with_upcoming_appointments")}
+                >
+                  Con Citas Próximas
+                </Button>
+                <Button
+                  className={`appointmentsAdmin-filter-button ${filterStatus === "no_upcoming_appointments" ? "active" : ""}`}
+                  onClick={() => setFilterStatus("no_upcoming_appointments")}
+                >
+                  Sin Citas Próximas
+                </Button>
               </div>
-              <div>
-                <p className="appointmentsAdmin-stat-label">Pacientes con Citas Próximas</p>
-                <p className="appointmentsAdmin-stat-value">{patientsWithUpcomingAppointments}</p>
-              </div>
+
+              {loading && <p>Cargando pacientes...</p>}
+              {error && <p>Error al cargar pacientes: {error.message || error}</p>}
+              {!loading && !error && filteredPatients.length === 0 && (
+                <p>No hay pacientes registrados que coincidan con la búsqueda o los filtros.</p>
+              )}
+              {!loading && !error && filteredPatients.length > 0 && (
+                <table className="appointmentsAdmin-table">
+                  <thead>
+                    <tr>
+                      <th className="appointmentsAdmin-th">Nombre</th>
+                      <th className="appointmentsAdmin-th">Email</th>
+                      <th className="appointmentsAdmin-th">Rol</th>
+                      <th className="appointmentsAdmin-th appointmentsAdmin-th-actions">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredPatients.map((patient) => (
+                      <tr key={patient.id_usuario}>
+                        <td className="appointmentsAdmin-td" data-label="Nombre">
+                          <div className="appointmentsAdmin-patient-info">
+                            <Avatar>
+                              <AvatarFallback className="appointmentsAdmin-avatar">
+                                {getInitials(patient.nombre)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>{patient.nombre}</div>
+                          </div>
+                        </td>
+                        <td className="appointmentsAdmin-td" data-label="Email">
+                          {patient.email}
+                        </td>
+                        <td className="appointmentsAdmin-td" data-label="Rol">
+                          {patient.rol}
+                        </td>
+                        <td className="appointmentsAdmin-td appointmentsAdmin-td-actions" data-label="Acciones">
+                          <div className="appointmentsAdmin-actions">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => openPatientDetailsPanel(patient.id_usuario)}
+                              title="Ver Detalles"
+                            >
+                              <Eye className="appointmentsAdmin-icon-sm" />
+                            </Button>
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              onClick={() => openScheduleAppointmentModal(patient)}
+                              title="Agendar Cita"
+                            >
+                              <CalendarDays className="appointmentsAdmin-icon-sm" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </CardContent>
           </Card>
         </div>
-
-        <Card className="appointmentsAdmin-card">
-          <CardHeader className="appointmentsAdmin-card-header">
-            <CardTitle className="appointmentsAdmin-card-title">Lista de Pacientes</CardTitle>
-          </CardHeader>
-          <CardContent className="appointmentsAdmin-card-content">
-            {loading && <p>Cargando pacientes...</p>}
-            {error && <p>Error al cargar pacientes: {error.message || error}</p>}
-            {!loading && !error && filteredPatients.length === 0 && (
-              <p>No hay pacientes registrados que coincidan con la búsqueda.</p>
-            )}
-            {!loading && !error && filteredPatients.length > 0 && (
-              <table className="appointmentsAdmin-table">
-                <thead>
-                  <tr>
-                    <th className="appointmentsAdmin-th">Nombre</th>
-                    <th className="appointmentsAdmin-th">Email</th>
-                    <th className="appointmentsAdmin-th">Rol</th>
-                    <th className="appointmentsAdmin-th appointmentsAdmin-th-actions">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredPatients.map((patient) => (
-                    <tr key={patient.id_usuario}>
-                      <td className="appointmentsAdmin-td">
-                        <div className="appointmentsAdmin-patient-info">
-                          <Avatar>
-                            <AvatarFallback>{getInitials(patient.nombre)}</AvatarFallback>
-                          </Avatar>
-                          <div>{patient.nombre}</div>
-                        </div>
-                      </td>
-                      <td className="appointmentsAdmin-td">{patient.email}</td>
-                      <td className="appointmentsAdmin-td">{patient.rol}</td>
-                      <td className="appointmentsAdmin-td appointmentsAdmin-td-actions">
-                        <div className="appointmentsAdmin-actions">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => openPatientDetailsPanel(patient.id_usuario)}
-                            title="Ver Detalles"
-                          >
-                            <Eye className="appointmentsAdmin-icon-sm" />
-                          </Button>
-                          <Button
-                            variant="primary"
-                            size="sm"
-                            onClick={() => openScheduleAppointmentModal(patient)}
-                            title="Agendar Cita"
-                          >
-                            <CalendarDays className="appointmentsAdmin-icon-sm" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-          </CardContent>
-        </Card>
       </main>
 
       {/* New/Edit Appointment Modal (reused component) */}
@@ -273,7 +404,6 @@ function PatientsPage() {
         onSave={handleSaveAppointment}
         editingAppointment={null} // Always null when opened from patients page for new appointment
         initialSelectedUser={selectedPatientForAppointment}
-        appointmentDuration={appointmentDuration}
         clinicWorkHours={clinicWorkHours}
         allAppointments={citas}
         userService={userService}
@@ -293,5 +423,4 @@ function PatientsPage() {
     </div>
   )
 }
-
 export default PatientsPage

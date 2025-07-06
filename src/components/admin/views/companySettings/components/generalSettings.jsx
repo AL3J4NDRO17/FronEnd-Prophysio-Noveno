@@ -4,25 +4,24 @@ import { useState, useEffect } from "react"
 import { Save, Building, FileText } from "lucide-react"
 import { toast } from "react-toastify"
 import LogoManager from "./logoManager"
-import SocialLinksManager from "./socialLinksManager"
+import LocationPickerMap from "./locationPickerMap" // Importa el nuevo componente del mapa
 
 const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     address: "",
+    latitude: null,
+    longitude: null,
     description: "",
     mission: "",
     vision: "",
-    logo_url: "",
-    socialLinks: [],
+    logo_url: null, // Ahora es un objeto o null
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState({})
 
-  // Cargar datos de la empresa cuando estén disponibles
   useEffect(() => {
     if (company && Object.keys(company).length > 0) {
       setFormData({
@@ -30,16 +29,16 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
         email: company.email || "",
         phone: company.phone || "",
         address: company.address || "",
+        latitude: company.latitude || null,
+        longitude: company.longitude || null,
         description: company.description || "",
         mission: company.mission || "",
         vision: company.vision || "",
-        logo_url: company.logo_url || "",
-        socialLinks: company.socialLinks || [],
+        logo_url: company.logo_url || null, // Asegúrate de que sea un objeto o null
       })
     }
   }, [company])
 
-  // Manejar cambios en los campos del formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({
@@ -48,27 +47,25 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
     }))
   }
 
-  // Actualizar el logo en el formulario
-  const handleLogoUpdate = (logoUrl) => {
+  const handleLocationSelect = (lat, lng) => {
     setFormData((prev) => ({
       ...prev,
-      logo_url: logoUrl,
+      latitude: lat,
+      longitude: lng,
     }))
   }
 
-  // Actualizar los enlaces sociales
-  const handleSocialLinksUpdate = (socialLinks) => {
+  const handleLogoUpdate = (logoData) => {
+    // logoData ahora es un objeto { url, public_id }
     setFormData((prev) => ({
       ...prev,
-      socialLinks,
+      logo_url: logoData,
     }))
   }
 
-  // Enviar el formulario
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Validación básica
     const newErrors = {}
 
     if (!formData.name.trim()) {
@@ -89,13 +86,12 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
     try {
       setIsSubmitting(true)
 
-      // Llamar a la función de actualización proporcionada por el componente padre
       await updateCompany({
         company_id: company?.company_id,
         ...formData,
       })
 
-      toast.success("Cambios guardados correctamente")
+    
     } catch (error) {
       console.error("Error al actualizar la empresa:", error)
       setErrors({ submit: "Error al guardar los cambios. Inténtelo de nuevo." })
@@ -105,14 +101,12 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
   }
 
   if (isLoading) {
-    return <div className="company-adjustments-loading">Cargando información de la empresa...</div>
+    return <div className="companySettings-loading">Cargando información de la empresa...</div>
   }
 
   return (
     <div className="company-adjustments-container">
-      <div className="company-adjustments-header">
-        <h2 className="company-adjustments-title">Ajustes de la Empresa</h2>
-      </div>
+  
       <form className="company-adjustments-form" onSubmit={handleSubmit}>
         <div className="company-adjustments-form-section">
           <h3 className="company-adjustments-section-title">
@@ -129,11 +123,11 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
-                className={errors.name ? "company-adjustments-input-error" : ""}
+                className={errors.name ? "companySettings-input companySettings-input-error" : "companySettings-input"}
                 placeholder="Nombre de la empresa"
                 required
               />
-              {errors.name && <div className="company-adjustments-error-message">{errors.name}</div>}
+              {errors.name && <div className="companySettings-error-message">{errors.name}</div>}
             </div>
 
             <div className="company-adjustments-form-group">
@@ -144,11 +138,11 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={errors.email ? "company-adjustments-input-error" : ""}
+                className={errors.email ? "companySettings-input companySettings-input-error" : "companySettings-input"}
                 placeholder="correo@empresa.com"
                 required
               />
-              {errors.email && <div className="company-adjustments-error-message">{errors.email}</div>}
+              {errors.email && <div className="companySettings-error-message">{errors.email}</div>}
             </div>
           </div>
 
@@ -162,6 +156,7 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
                 value={formData.phone}
                 onChange={handleInputChange}
                 placeholder="+1 234 567 890"
+                className="companySettings-input"
               />
             </div>
 
@@ -174,8 +169,21 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
                 value={formData.address}
                 onChange={handleInputChange}
                 placeholder="Dirección de la empresa"
+                className="companySettings-input"
               />
             </div>
+          </div>
+
+          <div className="company-adjustments-form-group companySettings-map-section">
+            <label>Ubicación Geográfica</label>
+            <LocationPickerMap
+              latitude={formData.latitude}
+              longitude={formData.longitude}
+              onLocationSelect={handleLocationSelect}
+            />
+            {/* Mantener inputs ocultos o deshabilitados si quieres que los valores persistan en el DOM para la forma */}
+            <input type="hidden" name="latitude" value={formData.latitude || ""} />
+            <input type="hidden" name="longitude" value={formData.longitude || ""} />
           </div>
         </div>
 
@@ -187,6 +195,20 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
 
           <div className="company-adjustments-form-row">
             <div className="company-adjustments-form-group">
+              <label htmlFor="company-description">Descripción</label>
+              <textarea
+                id="company-description"
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                placeholder="Descripción de la empresa"
+                rows="3"
+                className="companySettings-textarea"
+              ></textarea>
+            </div>
+          </div>
+          <div className="company-adjustments-form-row">
+            <div className="company-adjustments-form-group">
               <label htmlFor="company-mission">Misión</label>
               <textarea
                 id="company-mission"
@@ -194,7 +216,8 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
                 value={formData.mission}
                 onChange={handleInputChange}
                 placeholder="Misión de la empresa"
-                rows={4}
+                rows="4"
+                className="companySettings-textarea"
               ></textarea>
             </div>
 
@@ -206,23 +229,20 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
                 value={formData.vision}
                 onChange={handleInputChange}
                 placeholder="Visión de la empresa"
-                rows={4}
+                rows="4"
+                className="companySettings-textarea"
               ></textarea>
             </div>
           </div>
         </div>
 
-        {/* Componente de gestión de logos */}
         <LogoManager companyId={company?.company_id} currentLogo={formData.logo_url} onLogoUpdate={handleLogoUpdate} />
 
-        {/* Componente de gestión de redes sociales */}
-        <SocialLinksManager socialLinks={formData.socialLinks} onSocialLinksUpdate={handleSocialLinksUpdate} />
-
-        {errors.submit && <div className="company-adjustments-error-alert">{errors.submit}</div>}
+        {errors.submit && <div className="companySettings-error-message">{errors.submit}</div>}
 
         <div className="company-adjustments-form-actions">
-          <button type="submit" className="company-adjustments-button-primary" disabled={isSubmitting}>
-            <Save className="company-adjustments-button-icon" />
+          <button type="submit" className="companySettings-button-primary" disabled={isSubmitting}>
+            <Save className="companySettings-button-icon" />
             {isSubmitting ? "Guardando..." : "Guardar Cambios"}
           </button>
         </div>
@@ -232,4 +252,3 @@ const GeneralSettings = ({ company = {}, updateCompany, isLoading }) => {
 }
 
 export default GeneralSettings
-

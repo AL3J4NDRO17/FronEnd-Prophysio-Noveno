@@ -1,202 +1,285 @@
-/* Overlay para el panel de detalles */
-.appointmentsAdmin-details-panel-overlay {
+/* Variables de color para el tema claro (puedes añadir un bloque para modo oscuro si lo necesitas) */
+:root {
+  --background-color: hsl(0 0% 100%); /* Blanco */
+  --foreground-color: hsl(222.2 47.4% 11.2%); /* Gris oscuro casi negro */
+  --muted-background-color: hsl(210 40% 96.1%); /* Gris muy claro */
+  --muted-foreground-color: hsl(215.4 16.3% 46.9%); /* Gris medio */
+  --border-color: hsl(214.3 31.8% 91.4%); /* Gris claro para bordes */
+  --primary-color: hsl(222.2 47.4% 11.2%); /* Color primario (ej. azul oscuro) */
+  --primary-foreground-color: hsl(210 40% 98%); /* Texto sobre primario (blanco) */
+  --destructive-color: hsl(0 84.2% 60.2%); /* Rojo para acciones destructivas */
+  --destructive-foreground-color: hsl(210 40% 98%); /* Texto sobre destructivo (blanco) */
+  --accent-color: hsl(210 40% 96.1%); /* Color de acento (gris claro) */
+  --accent-foreground-color: hsl(222.2 47.4% 11.2%); /* Texto sobre acento */
+  --radius: 0.5rem; /* Radio de borde por defecto */
+
+  /* Colores específicos para estados de citas */
+  --status-confirmed-bg: hsl(142.1 76.2% 36.3%); /* Verde */
+  --status-confirmed-text: hsl(0 0% 100%);
+  --status-pending-bg: hsl(48 96% 50%); /* Amarillo */
+  --status-pending-text: hsl(48 96% 20%);
+  --status-cancelled-bg: hsl(0 84.2% 60.2%); /* Rojo */
+  --status-cancelled-text: hsl(0 0% 100%);
+  --status-postponed-bg: hsl(217.2 91.2% 59.8%); /* Azul */
+  --status-postponed-text: hsl(0 0% 100%);
+  --status-completed-bg: hsl(215.4 16.3% 46.9%); /* Gris */
+  --status-completed-text: hsl(0 0% 100%);
+  --status-missed-bg: hsl(262.1 83.3% 57.8%); /* Morado */
+  --status-missed-text: hsl(0 0% 100%);
+}
+
+/* Overlay del modal */
+.appointment-details-panel-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente más oscuro */
   display: flex;
-  justify-content: flex-end; /* Alinea a la derecha */
-  align-items: stretch; /* Estira verticalmente */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
   z-index: 1000;
+  animation: fadeIn 0.3s ease-out forwards; /* Animación de aparición */
 }
 
-/* Panel de detalles en sí */
-.appointmentsAdmin-details-panel {
-  background-color: var(--bg-white);
-  width: 600px; /* Ancho del panel */
-  max-width: 90%; /* Máximo ancho en pantallas pequeñas */
-  box-shadow: var(--shd-lg);
-  transform: translateX(100%); /* Inicia fuera de la pantalla a la derecha */
-  transition: transform 0.3s ease-out; /* Transición para el movimiento */
+/* Animación de aparición del overlay */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Contenedor principal del modal */
+.appointment-details-panel {
+  background-color: var(--background-color);
+  width: 90%; /* Ancho relativo */
+  max-width: 600px; /* Ancho máximo para pantallas grandes */
+  max-height: 90vh; /* Altura máxima para evitar desbordamiento */
+  border-radius: var(--radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Asegura que el contenido no se desborde del borde redondeado */
+  animation: scaleIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; /* Animación de escala */
 }
 
-.appointmentsAdmin-details-panel.is-open {
-  transform: translateX(0%); /* Se desliza a la posición visible */
+/* Animación de escala para el modal */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-/* Contenedor principal de la tarjeta dentro del panel */
-.appointmentsAdmin-details-card {
-  height: 100%;
+/* Encabezado del modal */
+.appointment-details-header {
   display: flex;
-  flex-direction: column;
-}
-
-/* Encabezado de la tarjeta */
-.appointmentsAdmin-details-card-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: space-between;
-  padding-bottom: 1rem; /* pb-4 */
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
 }
 
-.appointmentsAdmin-details-card-title {
-  font-size: 1.25rem; /* text-xl */
+.appointment-details-title {
+  font-size: 1.5rem; /* Título más grande */
+  font-weight: 700;
+  color: var(--foreground-color);
 }
 
-/* Contenido de la tarjeta */
-.appointmentsAdmin-details-card-content {
-  flex: 1; /* flex-1 */
-  overflow-y: auto; /* overflow-y-auto */
-  padding: 1rem; /* p-4 */
-}
-
-/* Diseño de cuadrícula para las columnas principales */
-.appointmentsAdmin-details-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* grid-cols-1 */
-  gap: 1.5rem; /* gap-6 */
-  height: 100%;
-}
-
-@media (min-width: 1024px) {
-  /* lg:grid-cols-[2fr_1fr] */
-  .appointmentsAdmin-details-grid {
-    grid-template-columns: 2fr 1fr;
-  }
-}
-
-/* Espaciado dentro de las secciones */
-.appointmentsAdmin-details-section-spacing {
-  margin-bottom: 1.5rem; /* space-y-6 */
-}
-
-/* Contenedor de la columna derecha */
-.appointmentsAdmin-details-right-column {
-  border-left: 1px solid var(--brd-default); /* border-l border-gray-200 */
-  padding-left: 1.5rem; /* pl-6 */
-}
-
-/* Diseño de cuadrícula para los campos de contacto */
-.appointmentsAdmin-details-contact-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* grid-cols-1 */
-  gap: 1rem; /* gap-4 */
-}
-
-@media (min-width: 640px) {
-  /* sm:grid-cols-2 */
-  .appointmentsAdmin-details-contact-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* Estilo para cada ítem de detalle (icono + texto) */
-.appointmentsAdmin-detail-item {
+.appointment-details-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  color: var(--muted-foreground-color);
   display: flex;
   align-items: center;
-  gap: 0.5rem; /* gap-2 */
+  justify-content: center;
+  transition: background-color 0.2s ease;
 }
 
-.appointmentsAdmin-detail-item-start {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem; /* gap-2 */
+.appointment-details-close-btn:hover {
+  background-color: var(--muted-background-color);
 }
 
-/* Iconos de detalle */
-.appointmentsAdmin-detail-icon {
-  height: 1.25rem; /* h-5 */
-  width: 1.25rem; /* w-5 */
-  color: var(--txt-secondary); /* text-gray-500 */
+/* Contenido del modal (scrollable) */
+.appointment-details-content {
+  flex-grow: 1;
+  padding: 1.5rem;
+  overflow-y: auto; /* Permite el scroll si el contenido es largo */
 }
 
-.appointmentsAdmin-detail-icon-top {
-  margin-top: 0.25rem; /* mt-1 */
+.appointment-details-section {
+  margin-bottom: 1.5rem;
 }
 
-/* Etiquetas de detalle (Email, Teléfono, etc.) */
-.appointmentsAdmin-detail-label {
-  font-size: 0.75rem; /* text-xs */
-  color: var(--txt-secondary); /* text-gray-500 */
-  text-transform: uppercase; /* uppercase */
-}
-
-/* Valores de detalle (el email real, el número de teléfono) */
-.appointmentsAdmin-detail-value {
-  font-weight: 500; /* font-medium */
-  font-size: 0.875rem; /* text-sm */
-}
-
-/* Info básica del paciente (avatar, nombre, etc.) */
-.appointmentsAdmin-patient-info-header {
+.appointment-details-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
   display: flex;
   align-items: center;
-  gap: 1rem; /* gap-4 */
+  gap: 0.5rem;
 }
 
-.appointmentsAdmin-patient-avatar {
-  width: 3rem; /* w-12 */
-  height: 3rem; /* h-12 */
+.appointment-details-section-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--primary-color);
 }
 
-
-.appointmentsAdmin-patient-name {
-  font-weight: 600; /* font-semibold */
-  font-size: 1.125rem; /* text-lg */
+.appointment-details-section-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Diseño responsivo en cuadrícula */
+  gap: 0.75rem;
 }
 
-.appointmentsAdmin-patient-meta {
-  font-size: 0.875rem; /* text-sm */
-  color: var(--txt-secondary); /* text-gray-500 */
-}
-
-/* Botones de acción del paciente */
-.appointmentsAdmin-patient-actions {
+.appointment-details-item {
   display: flex;
-  gap: 0.5rem; /* gap-2 */
+  align-items: center;
+  color: var(--foreground-color);
+  font-size: 0.95rem;
+  line-height: 1.4;
 }
 
-.appointmentsAdmin-patient-action-button {
-  flex: 1; /* flex-1 */
+.appointment-details-icon {
+  margin-right: 0.75rem;
+  color: var(--muted-foreground-color);
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
-.appointmentsAdmin-patient-action-icon {
-  height: 1rem; /* h-4 */
-  width: 1rem; /* w-4 */
-  margin-right: 0.5rem; /* mr-2 */
+.appointment-details-label {
+  font-weight: 500;
+  margin-right: 0.5rem;
+  color: var(--muted-foreground-color);
 }
 
-/* Títulos de subsecciones (Detalles del Paciente, Detalles de Contacto) */
-.appointmentsAdmin-subsection-title {
-  font-size: 0.875rem; /* text-sm */
-  font-weight: 600; /* font-semibold */
-  color: var(--txt-default); /* text-gray-700 */
-  text-transform: uppercase; /* uppercase */
+.appointment-details-status-badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: var(--primary-foreground-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px; /* Ancho mínimo para consistencia */
+}
+
+/* Colores de estado */
+.status-confirmada {
+  background-color: var(--status-confirmed-bg);
+  color: var(--status-confirmed-text);
+}
+.status-pendiente {
+  background-color: var(--status-pending-bg);
+  color: var(--status-pending-text);
+}
+.status-cancelada {
+  background-color: var(--status-cancelled-bg);
+  color: var(--status-cancelled-text);
+}
+.status-postergada {
+  background-color: var(--status-postponed-bg);
+  color: var(--status-postponed-text);
+}
+.status-completada {
+  background-color: var(--status-completed-bg);
+  color: var(--status-completed-text);
+}
+.status-inasistencia {
+  background-color: var(--status-missed-bg);
+  color: var(--status-missed-text);
+}
+
+.notes-content {
+  display: block; /* Para que el párrafo de notas ocupe su propia línea */
+  padding-left: calc(18px + 0.75rem); /* Alinea el texto con los iconos de arriba */
+}
+
+.notes-content p {
+  margin: 0;
+  color: var(--foreground-color);
 }
 
 /* Pie de página del modal */
-.appointmentsAdmin-modal-footer-panel {
+.appointment-details-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--border-color);
   display: flex;
-  justify-content: flex-end; /* justify-end */
-  padding: 1rem; /* p-4 */
-  border-top: 1px solid var(--brd-default); /* border-t border-gray-200 */
-  gap: 0.75rem; /* gap-3 */
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-/* Nuevos estilos para el historial de citas en PatientDetailsPanel */
-.appointmentsAdmin-history-card {
-  border-left-width: 4px; /* border-l-4 */
-  border-left-color: #60a5fa; /* border-blue-400 */
-  box-shadow: var(--appointmentsAdmin-shadow-sm); /* shadow-sm */
-}
-
-.appointmentsAdmin-history-card-title {
+.appointment-details-action-button {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Estilos para los botones de shadcn/ui (si no los tienes ya definidos globalmente) */
+/* Estos son ejemplos, asegúrate de que coincidan con tus definiciones de Button */
+.appointment-details-action-button[variant="default"] {
+  background-color: var(--primary-color);
+  color: var(--primary-foreground-color);
+  border: 1px solid var(--primary-color);
+}
+.appointment-details-action-button[variant="default"]:hover:not(:disabled) {
+  background-color: hsl(222.2 47.4% 20%); /* Un poco más oscuro */
+}
+
+.appointment-details-action-button[variant="destructive"] {
+  background-color: var(--destructive-color);
+  color: var(--destructive-foreground-color);
+  border: 1px solid var(--destructive-color);
+}
+.appointment-details-action-button[variant="destructive"]:hover:not(:disabled) {
+  background-color: hsl(0 84.2% 50%); /* Un poco más oscuro */
+}
+
+.appointment-details-action-button[variant="outline"] {
+  background-color: transparent;
+  color: var(--foreground-color);
+  border: 1px solid var(--border-color);
+}
+.appointment-details-action-button[variant="outline"]:hover:not(:disabled) {
+  background-color: var(--muted-background-color);
+}
+
+.appointment-details-action-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+  .appointment-details-panel {
+    width: 95%; /* Un poco más de ancho en móviles */
+    max-width: none; /* Sin ancho máximo en móviles */
+  }
+
+  .appointment-details-section-grid {
+    grid-template-columns: 1fr; /* Una columna en móviles */
+  }
 }

@@ -10,7 +10,7 @@ import { Textarea } from "../../public_ui/textarea"
 import { Select } from "../../public_ui/select"
 import Swal from "sweetalert2"
 
-const ENGLISH_DAYS_OF_WEEK = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday"]
+const ENGLISH_DAYS_OF_WEEK = ["Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 // Mantenemos los nombres en español si se necesitan para la visualización
 const SPANISH_DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
 

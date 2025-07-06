@@ -2,33 +2,51 @@
 
 import { useState, useEffect } from "react"
 import Swal from "sweetalert2"
-import "../styles/CancelPostponeModal.css" // Ruta actualizada
+import "../styles/CancelPostponeModal.css"
 
-const isSlotWithinWorkHours = (dateTime, workHoursConfig) => {
-  const selectedDay = new Date(dateTime).getDay() // 0 for Sunday, 1 for Monday, etc.
-  const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][selectedDay]
+// Alinear con el orden que funciona para el usuario: Lunes (0) a Domingo (6)
+const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+const SPANISH_DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
 
-  if (!workHoursConfig.days.includes(dayName)) {
-    Swal.fire("Error", `La clínica no trabaja los ${dayName}s.`, "error")
+const isSlotWithinWorkHours = (dateTime, clinicWorkHours, appointmentDuration) => {
+  const selectedDate = new Date(dateTime)
+  const selectedDayIndex = selectedDate.getDay()
+  const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[selectedDayIndex]
+
+  const daySchedules = clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameEnglish)
+
+  if (daySchedules.length === 0) {
+    Swal.fire("Error", `La clínica no trabaja los ${SPANISH_DAYS_OF_WEEK[selectedDayIndex]}s.`, "error")
     return false
   }
 
-  const newAppTime = new Date(dateTime).getTime()
+  const newAppStartTime = selectedDate.getTime()
+  let isWithinWorkHours = false
 
-  const workStartTimeParts = workHoursConfig.startTime.split(":")
-  const workEndTimeParts = workHoursConfig.endTime.split(":")
+  for (const schedule of daySchedules) {
+    const workStartTimeParts = schedule.hora_inicio.split(":").map(Number)
+    const workEndTimeParts = schedule.hora_fin.split(":").map(Number)
 
-  const workStartDateTime = new Date(dateTime)
-  workStartDateTime.setHours(Number.parseInt(workStartTimeParts[0]), Number.parseInt(workStartTimeParts[1]), 0, 0)
+    const workStartDateTime = new Date(selectedDate)
+    workStartDateTime.setHours(workStartTimeParts[0], workStartTimeParts[1], 0, 0)
 
-  const workEndDateTime = new Date(dateTime)
-  workEndDateTime.setHours(Number.parseInt(workEndTimeParts[0]), Number.parseInt(workEndTimeParts[1]), 0, 0)
+    const workEndDateTime = new Date(selectedDate)
+    workEndDateTime.setHours(workEndTimeParts[0], workEndTimeParts[1], 0, 0)
 
-  // For simplicity, just checking start time. A full check would consider duration.
-  if (newAppTime < workStartDateTime.getTime() || newAppTime >= workEndDateTime.getTime()) {
+    // Check if the new appointment's start time falls within this schedule block
+    if (newAppStartTime >= workStartDateTime.getTime() && newAppStartTime < workEndDateTime.getTime()) {
+      const newAppEndTime = newAppStartTime + appointmentDuration * 60 * 1000
+      if (newAppEndTime <= workEndDateTime.getTime()) {
+        isWithinWorkHours = true
+        break
+      }
+    }
+  }
+
+  if (!isWithinWorkHours) {
     Swal.fire(
       "Error",
-      `La nueva hora está fuera del horario laboral (${workHoursConfig.startTime} - ${workHoursConfig.endTime}).`,
+      "La nueva fecha y hora están fuera del horario laboral de la clínica para este día o la duración excede el bloque.",
       "error",
     )
     return false
@@ -36,7 +54,15 @@ const isSlotWithinWorkHours = (dateTime, workHoursConfig) => {
   return true
 }
 
-const CancelPostponeModal = ({ isOpen, onClose, onConfirm, appointmentFechaHora, mode, workHours }) => {
+const CancelPostponeModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  appointmentFechaHora,
+  mode,
+  clinicWorkHours,
+  appointmentDuration,
+}) => {
   const [motivo, setMotivo] = useState("")
   const [nuevaFecha, setNuevaFecha] = useState("")
   const [nuevaHora, setNuevaHora] = useState("")
@@ -52,27 +78,29 @@ const CancelPostponeModal = ({ isOpen, onClose, onConfirm, appointmentFechaHora,
       Swal.fire("Error", "El motivo es obligatorio.", "error")
       return
     }
-    if (mode === "postpone" && (!nuevaFecha || !nuevaHora)) {
-      Swal.fire("Error", "La nueva fecha y hora son obligatorias para postergar.", "error")
-      return
-    }
-
-    const details = { motivo }
     if (mode === "postpone") {
-      const fechaHoraISO = new Date(`${nuevaFecha}T${nuevaHora}:00`).toISOString()
-      details.nuevaFecha = fechaHoraISO
+      if (!nuevaFecha || !nuevaHora) {
+        Swal.fire("Error", "La nueva fecha y hora son obligatorias para postergar.", "error")
+        return
+      }
 
-      if (new Date(details.nuevaFecha) < new Date(appointmentFechaHora)) {
+      const combinedNewDateTime = `${nuevaFecha}T${nuevaHora}:00`
+      const newAppointmentDateTime = new Date(combinedNewDateTime)
+
+      if (newAppointmentDateTime < new Date(appointmentFechaHora)) {
         Swal.fire("Error", "La nueva fecha no puede ser anterior a la fecha original de la cita.", "error")
         return
       }
 
-      if (!isSlotWithinWorkHours(details.nuevaFecha, workHours)) {
+      // Validar que el nuevo slot esté dentro del horario laboral
+      if (!isSlotWithinWorkHours(newAppointmentDateTime, clinicWorkHours, appointmentDuration)) {
         return
       }
-    }
 
-    onConfirm(details)
+      onConfirm({ motivo, nuevaFecha: newAppointmentDateTime.toISOString() })
+    } else {
+      onConfirm({ motivo })
+    }
   }
 
   if (!isOpen) return null

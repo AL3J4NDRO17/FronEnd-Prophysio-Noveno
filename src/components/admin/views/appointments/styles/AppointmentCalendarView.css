@@ -7,24 +7,23 @@
   width: 100%;
   overflow: hidden; /* Ensures content doesn't overflow */
 }
-.calendar-grid{
-    height: 100vh
+.calendar-grid {
+  height: 100vh;
 }
 /* El encabezado del calendario ahora es manejado por react-big-calendar's .rbc-toolbar */
 /* Si necesitas estilos adicionales para el contenedor del toolbar, puedes aplicarlos aquí */
 /* Por ejemplo, si el toolbar de react-big-calendar no tiene un padding o fondo que te guste */
 /* .rbc-toolbar { ... } */
 .rbc-row-bg {
-
   right: 0px;
 }
 .rbc-day-slot .rbc-events-container {
-    bottom: 0;
-    left: 0;
-    position: static;
-    right: 0;
-    margin-right: 10px;
-    top: 0;
+  bottom: 0;
+  left: 0;
+  position: static;
+  right: 0;
+  margin-right: 10px;
+  top: 0;
 }
 .rbc-event {
   background-color: var(--appointmentsAdmin-color-confirmed);

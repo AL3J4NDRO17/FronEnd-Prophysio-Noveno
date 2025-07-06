@@ -11,16 +11,22 @@ const Tabs = ({ activeTab, setActiveTab }) => {
           Información General
         </button>
         <button
-          className={`companySettings-tab-button ${activeTab === "policies" ? "active" : ""}`}
-          onClick={() => setActiveTab("policies")}
+          className={`companySettings-tab-button ${activeTab === "social-links" ? "active" : ""}`}
+          onClick={() => setActiveTab("social-links")}
         >
-          Políticas
+          Redes Sociales
         </button>
         <button
           className={`companySettings-tab-button ${activeTab === "faq" ? "active" : ""}`}
           onClick={() => setActiveTab("faq")}
         >
           FAQ
+        </button>
+        <button
+          className={`companySettings-tab-button ${activeTab === "policies" ? "active" : ""}`}
+          onClick={() => setActiveTab("policies")}
+        >
+          Políticas
         </button>
         <button
           className={`companySettings-tab-button ${activeTab === "incidents" ? "active" : ""}`}
@@ -34,4 +40,3 @@ const Tabs = ({ activeTab, setActiveTab }) => {
 }
 
 export default Tabs
-

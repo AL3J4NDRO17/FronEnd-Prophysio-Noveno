@@ -1,0 +1,29 @@
+/* Base para el separador */
+.separator {
+  flex-shrink: 0;
+  background-color: hsl(214.3 31.8% 91.4%); /* Color de borde por defecto (gris claro) */
+}
+
+/* Estilos para el separador horizontal */
+.separator-horizontal {
+  height: 1px;
+  width: 100%;
+}
+
+/* Estilos para el separador vertical */
+.separator-vertical {
+  height: 100%;
+  width: 1px;
+}
+
+/* Puedes añadir más estilos o variables CSS aquí si lo deseas */
+/* Por ejemplo, para un modo oscuro o diferentes temas */
+/*
+:root {
+  --separator-color: hsl(214.3 31.8% 91.4%);
+}
+
+.separator {
+  background-color: var(--separator-color);
+}
+*/

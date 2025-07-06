@@ -1,0 +1,468 @@
+/* Base para la página de administración de citas y pacientes */
+.appointmentsAdmin-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-page);
+  color: var(--txt-default);
+}
+
+/* Header de la página */
+.appointmentsAdmin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--brd-default);
+  background-color: var(--bg-white);
+  box-shadow: var(--shd-sm);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.appointmentsAdmin-header-title h1 {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700; /* font-bold */
+  color: var(--txt-heading);
+}
+
+.appointmentsAdmin-header-actions {
+  display: flex;
+  gap: 0.75rem; /* gap-3 */
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Estilos para botones de icono */
+.appointmentsAdmin-btn-icon {
+  height: 2.5rem; /* h-10 */
+  width: 2.5rem; /* w-10 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brd-default);
+  background-color: var(--bg-white);
+  color: var(--txt-default);
+  transition: all 0.2s ease-in-out;
+}
+
+.appointmentsAdmin-btn-icon:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--clr-brand-primary);
+  color: var(--clr-brand-primary);
+}
+
+/* Iconos */
+.appointmentsAdmin-icon-sm {
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+}
+
+.appointmentsAdmin-icon-mr {
+  margin-right: 0.5rem; /* mr-2 */
+}
+
+/* Contenedor principal de contenido */
+.appointmentsAdmin-main {
+  flex: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* gap-6 */
+}
+
+/* Grid principal del dashboard para pacientes */
+.appointmentsAdmin-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Por defecto una columna */
+  gap: 1.5rem; /* gap-6 */
+}
+
+@media (min-width: 1024px) {
+  .appointmentsAdmin-dashboard-grid {
+    grid-template-columns: 1fr 2fr; /* Dos columnas en pantallas grandes */
+    grid-template-rows: auto 1fr; /* Filas para stats/recent y luego la lista */
+  }
+
+  .appointmentsAdmin-stats-grid {
+    grid-column: 1 / 2; /* Ocupa la primera columna */
+    grid-row: 1 / 2; /* Ocupa la primera fila */
+  }
+
+  .appointmentsAdmin-recent-activity-card {
+    grid-column: 2 / 3; /* Ocupa la segunda columna */
+    grid-row: 1 / 2; /* Ocupa la primera fila */
+  }
+
+  .appointmentsAdmin-patients-list-card {
+    grid-column: 1 / 3; /* Ocupa ambas columnas */
+    grid-row: 2 / 3; /* Ocupa la segunda fila */
+  }
+}
+
+/* Grid de estadísticas */
+.appointmentsAdmin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem; /* gap-6 */
+}
+
+.appointmentsAdmin-card {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brd-default);
+  box-shadow: var(--shd-sm);
+  overflow: hidden;
+}
+
+.appointmentsAdmin-card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--brd-default);
+}
+
+.appointmentsAdmin-card-title {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600; /* font-semibold */
+  color: var(--txt-heading);
+}
+
+.appointmentsAdmin-card-content {
+  padding: 1.5rem;
+}
+
+.appointmentsAdmin-stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem; /* h-12 */
+  width: 3rem; /* w-12 */
+  border-radius: var(--radius-md);
+  color: var(--clr-white);
+}
+
+.appointmentsAdmin-stat-icon-time {
+  background-color: var(--clr-brand-primary);
+}
+
+.appointmentsAdmin-stat-icon-pending {
+  background-color: var(--clr-status-warning);
+}
+
+.appointmentsAdmin-stat-label {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--txt-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.appointmentsAdmin-stat-value {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 700; /* font-bold */
+  color: var(--txt-heading);
+}
+
+/* Search input */
+.appointmentsAdmin-search-container {
+  position: relative;
+  flex-grow: 1;
+  max-width: 300px; /* Ajusta según necesidad */
+}
+
+.appointmentsAdmin-search-icon {
+  position: absolute;
+  left: 0.75rem; /* left-3 */
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+  color: var(--clr-gray-medium);
+}
+
+.appointmentsAdmin-search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem; /* py-2 px-3 pl-10 */
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-white);
+  color: var(--txt-default);
+  font-size: 0.875rem; /* text-sm */
+  box-shadow: var(--shd-sm-alt);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.appointmentsAdmin-search-input:focus {
+  outline: none;
+  border-color: var(--clr-brand-primary);
+  box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2); /* ring-2 con color primario */
+}
+
+/* Filtros */
+.appointmentsAdmin-filters {
+  display: flex;
+  gap: 0.75rem; /* gap-3 */
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.appointmentsAdmin-filter-button {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brd-default);
+  background-color: var(--bg-white);
+  color: var(--txt-default);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.appointmentsAdmin-filter-button:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--clr-brand-primary);
+  color: var(--clr-brand-primary);
+}
+
+.appointmentsAdmin-filter-button.active {
+  background-color: var(--clr-brand-primary);
+  color: var(--clr-white);
+  border-color: var(--clr-brand-primary);
+}
+
+/* Tabla */
+.appointmentsAdmin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem; /* text-sm */
+}
+
+.appointmentsAdmin-th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600; /* font-semibold */
+  color: var(--txt-secondary);
+  border-bottom: 1px solid var(--brd-default);
+  background-color: var(--bg-off-white);
+}
+
+.appointmentsAdmin-td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--brd-default);
+  color: var(--txt-default);
+}
+
+.appointmentsAdmin-td-actions {
+  text-align: right;
+}
+
+.appointmentsAdmin-patient-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* gap-3 */
+}
+
+.appointmentsAdmin-actions {
+  display: flex;
+  gap: 0.5rem; /* gap-2 */
+  justify-content: flex-end;
+}
+
+/* Estilos para Avatar */
+.appointmentsAdmin-avatar {
+  height: 2.5rem; /* h-10 */
+  width: 2.5rem; /* w-10 */
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--clr-brand-primary-light);
+  color: var(--clr-brand-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500; /* font-medium */
+  font-size: 1rem; /* text-base */
+}
+
+/* Estilos para los botones de shadcn/ui (ajustados para usar variables) */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  user-select: none;
+  height: 2.5rem; /* h-10 */
+  padding: 0 1rem; /* px-4 py-2 */
+}
+
+.button.primary {
+  background-color: var(--clr-brand-primary);
+  color: var(--clr-white);
+  border: 1px solid var(--clr-brand-primary);
+}
+
+.button.primary:hover {
+  background-color: var(--clr-brand-primary-hover);
+  border-color: var(--clr-brand-primary-hover);
+}
+
+.button.outline {
+  border: 1px solid var(--brd-default);
+  background-color: var(--bg-white);
+  color: var(--txt-default);
+}
+
+.button.outline:hover {
+  background-color: var(--bg-secondary);
+  color: var(--txt-default);
+  border-color: var(--clr-brand-primary);
+}
+
+.button.sm {
+  height: 2.25rem; /* h-9 */
+  padding: 0 0.75rem; /* px-3 */
+  font-size: 0.8125rem; /* text-sm */
+}
+
+.button.icon {
+  height: 2.5rem; /* h-10 */
+  width: 2.5rem; /* w-10 */
+  padding: 0;
+}
+
+/* Estilos para la lista de actividad reciente */
+.appointmentsAdmin-recent-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.appointmentsAdmin-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* gap-3 */
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--brd-default);
+}
+
+.appointmentsAdmin-recent-item:last-child {
+  border-bottom: none;
+}
+
+.appointmentsAdmin-recent-item-info {
+  flex-grow: 1;
+}
+
+.appointmentsAdmin-recent-item-patient {
+  font-weight: 500;
+  color: var(--txt-heading);
+}
+
+.appointmentsAdmin-recent-item-details {
+  font-size: 0.875rem;
+  color: var(--txt-secondary);
+}
+
+/* Estilos para los badges de estado de cita */
+.appointmentsAdmin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.appointmentsAdmin-badge.confirmada {
+  background-color: var(--appointmentsAdmin-color-confirmed-bg);
+  color: var(--appointmentsAdmin-color-confirmed);
+}
+
+.appointmentsAdmin-badge.pendiente {
+  background-color: var(--appointmentsAdmin-color-pending-bg);
+  color: var(--appointmentsAdmin-color-pending);
+}
+
+.appointmentsAdmin-badge.cancelada {
+  background-color: var(--appointmentsAdmin-color-cancelled-bg);
+  color: var(--appointmentsAdmin-color-cancelled);
+}
+
+.appointmentsAdmin-badge.postergada {
+  background-color: var(--bg-status-info-light);
+  color: var(--clr-status-info);
+}
+
+.appointmentsAdmin-badge.completada {
+  background-color: var(--appointmentsAdmin-color-confirmed-bg);
+  color: var(--appointmentsAdmin-color-confirmed);
+}
+
+.appointmentsAdmin-badge.inasistencia {
+  background-color: var(--bg-status-inactive-light);
+  color: var(--clr-status-inactive);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .appointmentsAdmin-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .appointmentsAdmin-header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .appointmentsAdmin-search-container {
+    width: 100%;
+    max-width: none;
+  }
+
+  .appointmentsAdmin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .appointmentsAdmin-table thead {
+    display: none; /* Hide table headers on small screens */
+  }
+
+  .appointmentsAdmin-table,
+  .appointmentsAdmin-td {
+    display: block;
+    width: 100%;
+  }
+
+  .appointmentsAdmin-td {
+    border-bottom: none;
+    position: relative;
+    padding-left: 50%; /* Space for pseudo-element label */
+    text-align: right;
+  }
+
+  .appointmentsAdmin-td::before {
+    content: attr(data-label); /* Use data-label for content */
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 1rem;
+    font-weight: 600;
+    color: var(--txt-secondary);
+    text-align: left;
+  }
+
+  .appointmentsAdmin-td-actions {
+    text-align: center;
+    padding-left: 0;
+  }
+
+  .appointmentsAdmin-td-actions::before {
+    content: "";
+  }
+
+  .appointmentsAdmin-actions {
+    justify-content: center;
+  }
+}

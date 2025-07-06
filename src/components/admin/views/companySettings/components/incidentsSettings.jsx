@@ -1,136 +1,104 @@
 "use client"
 
 import { useState } from "react"
-import { Ban, AlertTriangle, Clock, User, Calendar, Search, RefreshCw } from "lucide-react"
+import { Ban, AlertTriangle, Clock, User, Calendar, Search, RefreshCw } from "lucide-react" // Se 
+import useLogs from "../hooks/useLogs"
 
 const IncidentsSettings = () => {
   const [searchTerm, setSearchTerm] = useState("")
+  const [filterLevel, setFilterLevel] = useState("all")
+  const [filterRuta, setFilterRuta] = useState("all")
+  const [filterMessage, setFilterMessage] = useState("")
 
-  // Datos estáticos para la tabla de usuarios bloqueados
-  const blockedUsers = [
-    {
-      id: 1,
-      name: "Juan Pérez",
-      email: "juan.perez@example.com",
-      reason: "Comportamiento inapropiado",
-      blockedAt: "2023-10-15T14:30:00",
-      blockedBy: "Admin",
-      status: "Permanente",
-    },
-    {
-      id: 2,
-      name: "María López",
-      email: "maria.lopez@example.com",
-      reason: "Spam repetitivo",
-      blockedAt: "2023-11-05T09:15:00",
-      blockedBy: "Moderador",
-      status: "Temporal (30 días)",
-    },
-    {
-      id: 3,
-      name: "Carlos Rodríguez",
-      email: "carlos.rodriguez@example.com",
-      reason: "Violación de términos de servicio",
-      blockedAt: "2023-12-01T16:45:00",
-      blockedBy: "Sistema",
-      status: "Permanente",
-    },
-    {
-      id: 4,
-      name: "Ana Martínez",
-      email: "ana.martinez@example.com",
-      reason: "Múltiples reportes de usuarios",
-      blockedAt: "2024-01-10T11:20:00",
-      blockedBy: "Admin",
-      status: "Temporal (7 días)",
-    },
-    {
-      id: 5,
-      name: "Roberto Sánchez",
-      email: "roberto.sanchez@example.com",
-      reason: "Intento de acceso no autorizado",
-      blockedAt: "2024-02-18T08:05:00",
-      blockedBy: "Sistema",
-      status: "Permanente",
-    },
-  ]
+  const today = new Date().toISOString().split("T")[0]
+  const { logs: logEntries, loading: logsLoading, error: logsError, setDate, currentDate, fetchLogs } = useLogs(today)
 
-  // Datos estáticos para el logger
-  const logEntries = [
-    {
-      id: 1,
-      timestamp: "2024-03-01T08:30:45",
-      level: "INFO",
-      message: "Usuario admin inició sesión",
-      source: "AuthService",
-    },
-    {
-      id: 2,
-      timestamp: "2024-03-01T09:15:22",
-      level: "WARNING",
-      message: "Intento fallido de inicio de sesión para usuario: roberto.sanchez@example.com",
-      source: "AuthService",
-    },
-    {
-      id: 3,
-      timestamp: "2024-03-01T10:05:17",
-      level: "ERROR",
-      message: "Error en la conexión a la base de datos",
-      source: "DatabaseService",
-    },
-    {
-      id: 4,
-      timestamp: "2024-03-01T11:30:05",
-      level: "INFO",
-      message: "Usuario bloqueado: ana.martinez@example.com",
-      source: "UserService",
-    },
-    {
-      id: 5,
-      timestamp: "2024-03-01T12:45:33",
-      level: "INFO",
-      message: "Backup del sistema completado",
-      source: "BackupService",
-    },
-    {
-      id: 6,
-      timestamp: "2024-03-01T14:20:11",
-      level: "WARNING",
-      message: "Uso elevado de CPU detectado",
-      source: "MonitoringService",
-    },
-    {
-      id: 7,
-      timestamp: "2024-03-01T15:55:48",
-      level: "ERROR",
-      message: "Fallo en el proceso de envío de correos",
-      source: "EmailService",
-    },
-  ]
+  // Función para extraer información de usuario bloqueado de una entrada de log
+  const extractBlockedUserInfo = (logEntry) => {
+    if (!logEntry || typeof logEntry.mensaje !== "string") {
+      return null // No es una entrada de log válida para extraer información de bloqueo
+    }
 
-  // Filtrar usuarios bloqueados según el término de búsqueda
-  const filteredUsers = blockedUsers.filter(
+    const message = logEntry.mensaje
+    // Nuevo patrón para "Usuario [email] bloqueado por [razón]."
+    const blockedUserRegex = /Usuario (.+?) bloqueado por (.+?)\./
+    const match = message.match(blockedUserRegex)
+
+    if (match) {
+      const [, email, reason] = match
+      return {
+        id: logEntry.id, // Usar el ID del log para la clave única
+        name: email.trim(), // Usamos el email como nombre si no hay un nombre explícito
+        email: email.trim(),
+        reason: reason.trim(),
+        blockedAt: logEntry.timestamp,
+        blockedBy: "Sistema", // Asumimos que es un bloqueo del sistema por intentos fallidos
+        status: "Permanente", // Asumimos "Permanente" si no se especifica lo contrario
+      }
+    }
+    // Fallback si el mensaje es más simple, solo contiene "Usuario bloqueado"
+    // Esto es menos específico y podría capturar mensajes no deseados si no se ajusta el regex principal
+    if (message.includes("Usuario bloqueado")) {
+      return {
+        id: logEntry.id,
+        name: "Usuario Desconocido",
+        email: "N/A",
+        reason: message, // El mensaje completo como razón
+        blockedAt: logEntry.timestamp,
+        blockedBy: "Sistema",
+        status: "Desconocido",
+      }
+    }
+    return null // No es una entrada de log de usuario bloqueado
+  }
+
+  // Derivar usuarios bloqueados de los logs
+  const blockedUsersFromLogs = logEntries.map(extractBlockedUserInfo).filter(Boolean)
+
+  // Filtrar usuarios bloqueados por el término de búsqueda
+  const filteredUsers = blockedUsersFromLogs.filter(
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.reason.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
-  // Formatear fecha para mostrar
+  // Filtrar entradas de log para la sección de Logger
+  const filteredLogEntries = logEntries.filter((entry) => {
+    // **CORRECCIÓN:** Asegurarse de que entry.mensaje sea una cadena antes de usar .toLowerCase()
+    const entryMessage = typeof entry.mensaje === "string" ? entry.mensaje : ""
+
+    const matchesLevel = filterLevel === "all" || entry.level.toLowerCase() === filterLevel.toLowerCase()
+    const matchesRuta = filterRuta === "all" || entry.ruta.toLowerCase().includes(filterRuta.toLowerCase())
+    const matchesMessage = filterMessage === "" || entryMessage.toLowerCase().includes(filterMessage.toLowerCase())
+    return matchesLevel && matchesRuta && matchesMessage
+  })
+
   const formatDate = (dateString) => {
-    const date = new Date(dateString)
+    // Asume formato "YYYY-MM-DD HH:MM:SS"
+    // **CORRECCIÓN:** Añadir un chequeo para dateString
+    if (!dateString) return "N/A"
+    const [datePart, timePart] = dateString.split(" ")
+    const [year, month, day] = datePart.split("-")
+    const [hour, minute, second] = timePart.split(":")
+    const date = new Date(year, month - 1, day, hour, minute, second)
     return date.toLocaleString()
   }
 
-  // Obtener clase CSS según el nivel del log
   const getLogLevelClass = (level) => {
-    switch (level) {
+    // **CORRECCIÓN:** Añadir un chequeo para level
+    if (typeof level !== "string") return ""
+
+    switch (level.toUpperCase()) {
       case "ERROR":
         return "companySettings-log-error"
       case "WARNING":
+      case "WARN": // Añadir 'WARN' para capturar ambos formatos
         return "companySettings-log-warning"
       case "INFO":
         return "companySettings-log-info"
+      case "CRITICAL": // Nuevo caso para CRITICAL
+        return "companySettings-log-critical"
       default:
         return ""
     }
@@ -150,7 +118,7 @@ const IncidentsSettings = () => {
               <input
                 type="text"
                 placeholder="Buscar usuario..."
-                className="companySettings-search-input"
+                className="companySettings-search-input companySettings-input"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -239,42 +207,98 @@ const IncidentsSettings = () => {
           <div className="companySettings-logger-container">
             <div className="companySettings-logger-header">
               <div className="companySettings-logger-filters">
-                <select className="companySettings-select">
+                {/* Selector de fecha para los logs */}
+                <input
+                  type="date"
+                  className="companySettings-input companySettings-select"
+                  value={currentDate}
+                  onChange={(e) => setDate(e.target.value)}
+                  disabled={logsLoading}
+                />
+                <select
+                  className="companySettings-select"
+                  value={filterLevel}
+                  onChange={(e) => setFilterLevel(e.target.value)}
+                  disabled={logsLoading}
+                >
                   <option value="all">Todos los niveles</option>
-                  <option value="info">Info</option>
-                  <option value="warning">Warning</option>
-                  <option value="error">Error</option>
+                  <option value="INFO">Info</option>
+                  <option value="WARNING">Warning</option>
+                  <option value="ERROR">Error</option>
+                  <option value="CRITICAL">Critical</option> {/* Añadir opción para Critical */}
                 </select>
-                <select className="companySettings-select">
-                  <option value="all">Todas las fuentes</option>
-                  <option value="AuthService">AuthService</option>
-                  <option value="UserService">UserService</option>
-                  <option value="DatabaseService">DatabaseService</option>
-                  <option value="EmailService">EmailService</option>
+                <select
+                  className="companySettings-select"
+                  value={filterRuta}
+                  onChange={(e) => setFilterRuta(e.target.value)}
+                  disabled={logsLoading}
+                >
+                  <option value="all">Todas las rutas</option>
+                  <option value="/api/auth">/api/auth</option>
+                  <option value="/api/companie">/api/companie</option>
+                  <option value="/api/policies">/api/policies</option>
+                  <option value="/api/faqs">/api/faqs</option>
+                  <option value="/api/email">/api/email</option>
+                  <option value="/db">/db</option>
+                  <option value="/monitoring">/monitoring</option>
+                  <option value="/system">/system</option>
                 </select>
+                {/* Campo de entrada para filtrar por mensaje */}
+                <input
+                  type="text"
+                  placeholder="Filtrar por mensaje..."
+                  className="companySettings-input"
+                  value={filterMessage}
+                  onChange={(e) => setFilterMessage(e.target.value)}
+                  disabled={logsLoading}
+                />
               </div>
-              <button className="companySettings-button-outline">
+              <button
+                className="companySettings-button-outline"
+                onClick={() => fetchLogs(currentDate)}
+                disabled={logsLoading}
+              >
                 <RefreshCw className="companySettings-button-icon" />
-                Actualizar
+                {logsLoading ? "Cargando..." : "Actualizar"}
               </button>
             </div>
 
             <div className="companySettings-logger-entries">
-              {logEntries.map((entry) => (
-                <div key={entry.id} className={`companySettings-log-entry ${getLogLevelClass(entry.level)}`}>
-                  <div className="companySettings-log-header">
-                    <div className="companySettings-log-level">
-                      {entry.level === "ERROR" && <AlertTriangle className="companySettings-log-icon" />}
-                      {entry.level === "WARNING" && <AlertTriangle className="companySettings-log-icon" />}
-                      {entry.level === "INFO" && <Clock className="companySettings-log-icon" />}
-                      <span>{entry.level}</span>
+              {logsLoading ? (
+                <p className="companySettings-no-results">Cargando entradas de registro...</p>
+              ) : logsError ? (
+                <p className="companySettings-error">Error al cargar los logs: {logsError}</p>
+              ) : filteredLogEntries.length > 0 ? (
+                filteredLogEntries.map((entry) => (
+                  <div key={entry.id} className={`companySettings-log-entry ${getLogLevelClass(entry.level)}`}>
+                    <div className="companySettings-log-header">
+                      <div className="companySettings-log-level">
+                        {/* Iconos basados en el nivel */}
+                        {(entry.level.toUpperCase() === "ERROR" || entry.level.toUpperCase() === "CRITICAL") && (
+                          <AlertTriangle className="companySettings-log-icon" />
+                        )}
+                        {(entry.level.toUpperCase() === "WARNING" || entry.level.toUpperCase() === "WARN") && (
+                          <AlertTriangle className="companySettings-log-icon" />
+                        )}
+                        {entry.level.toUpperCase() === "INFO" && <Clock className="companySettings-log-icon" />}
+                        <span>{entry.level.toUpperCase()}</span>
+                      </div>
+                      <div className="companySettings-log-source">{entry.ruta}</div>
+                      <div className="companySettings-log-timestamp">{formatDate(entry.timestamp)}</div>
                     </div>
-                    <div className="companySettings-log-source">{entry.source}</div>
-                    <div className="companySettings-log-timestamp">{formatDate(entry.timestamp)}</div>
+                    <div className="companySettings-log-message">{entry.mensaje}</div>
+                    <div className="companySettings-log-details">
+                      <small>
+                        IP: {entry.ip} | Método: {entry.metodo} | Protocolo: {entry.protocolo}
+                      </small>
+                    </div>
                   </div>
-                  <div className="companySettings-log-message">{entry.message}</div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="companySettings-no-results">
+                  No se encontraron entradas de registro para la fecha seleccionada o los filtros aplicados.
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -284,4 +308,3 @@ const IncidentsSettings = () => {
 }
 
 export default IncidentsSettings
-

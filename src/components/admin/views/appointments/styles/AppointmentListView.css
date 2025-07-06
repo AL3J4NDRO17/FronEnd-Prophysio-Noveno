@@ -1,0 +1,146 @@
+/* Contenedor principal de la vista de lista */
+.appointments-list-view-container {
+  background-color: var(--bg-white);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brd-default);
+  box-shadow: var(--shd-sm);
+  overflow: hidden;
+  padding: 1.5rem; /* Espacio interno */
+}
+
+/* Reutilizar estilos de tabla de patients.css o crear específicos si es necesario */
+.appointments-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem; /* text-sm */
+}
+
+.appointments-list-th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600; /* font-semibold */
+  color: var(--txt-secondary);
+  border-bottom: 1px solid var(--brd-default);
+  background-color: var(--bg-off-white);
+}
+
+.appointments-list-td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--brd-default);
+  color: var(--txt-default);
+}
+
+.appointments-list-td-actions {
+  text-align: right;
+}
+
+.appointments-list-patient-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* gap-3 */
+}
+
+.appointments-list-actions {
+  display: flex;
+  gap: 0.5rem; /* gap-2 */
+  justify-content: flex-end;
+}
+
+/* Estilos para Avatar (reutilizados de appointments.css) */
+.appointments-list-avatar {
+  height: 2.5rem; /* h-10 */
+  width: 2.5rem; /* w-10 */
+  border-radius: 9999px; /* rounded-full */
+  background-color: var(--clr-brand-primary-light);
+  color: var(--clr-brand-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500; /* font-medium */
+  font-size: 1rem; /* text-base */
+}
+
+/* Estilos para los badges de estado de cita (reutilizados de appointments.css) */
+.appointments-list-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.appointments-list-badge.confirmada {
+  background-color: var(--appointmentsAdmin-color-confirmed-bg);
+  color: var(--appointmentsAdmin-color-confirmed);
+}
+
+.appointments-list-badge.pendiente {
+  background-color: var(--appointmentsAdmin-color-pending-bg);
+  color: var(--appointmentsAdmin-color-pending);
+}
+
+.appointments-list-badge.cancelada {
+  background-color: var(--appointmentsAdmin-color-cancelled-bg);
+  color: var(--appointmentsAdmin-color-cancelled);
+}
+
+.appointments-list-badge.postergada {
+  background-color: var(--bg-status-info-light);
+  color: var(--clr-status-info);
+}
+
+.appointments-list-badge.completada {
+  background-color: var(--appointmentsAdmin-color-confirmed-bg);
+  color: var(--appointmentsAdmin-color-confirmed);
+}
+
+.appointments-list-badge.inasistencia {
+  background-color: var(--bg-status-inactive-light);
+  color: var(--clr-status-inactive);
+}
+
+/* Responsive adjustments for table */
+@media (max-width: 768px) {
+  .appointments-list-table thead {
+    display: none; /* Hide table headers on small screens */
+  }
+
+  .appointments-list-table,
+  .appointments-list-td {
+    display: block;
+    width: 100%;
+  }
+
+  .appointments-list-td {
+    border-bottom: none;
+    position: relative;
+    padding-left: 50%; /* Space for pseudo-element label */
+    text-align: right;
+  }
+
+  .appointments-list-td::before {
+    content: attr(data-label); /* Use data-label for content */
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 1rem;
+    font-weight: 600;
+    color: var(--txt-secondary);
+    text-align: left;
+  }
+
+  .appointments-list-td-actions {
+    text-align: center;
+    padding-left: 0;
+  }
+
+  .appointments-list-td-actions::before {
+    content: "";
+  }
+
+  .appointments-list-actions {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,276 @@
+/* Estilos específicos para IncidentsSettings */
+.companySettings-incidents {
+  display: grid;
+  gap: 24px;
+}
+
+.companySettings-incidents-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.companySettings-search-container {
+  position: relative;
+  flex: 1;
+  max-width: 300px;
+}
+
+.companySettings-search-input {
+  width: 100%;
+  padding-left: 32px;
+}
+
+.companySettings-search-icon {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 18px;
+  width: 18px;
+  color: var(--txt-secondary);
+}
+
+.companySettings-table-container {
+  overflow-x: auto;
+}
+
+.companySettings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.companySettings-table th,
+.companySettings-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--brd-default);
+  text-align: left;
+}
+
+.companySettings-table th {
+  background-color: var(--bg-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--txt-heading);
+  text-transform: uppercase;
+}
+
+.companySettings-table td {
+  font-size: 0.875rem;
+  color: var(--txt-default);
+}
+
+.companySettings-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.companySettings-user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.companySettings-user-icon {
+  height: 18px;
+  width: 18px;
+  color: var(--txt-secondary);
+}
+
+.companySettings-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.companySettings-user-name {
+  font-weight: 500;
+  color: var(--txt-heading);
+}
+
+.companySettings-user-email {
+  font-size: 0.75rem;
+  color: var(--txt-secondary);
+}
+
+.companySettings-date-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.companySettings-date-icon {
+  height: 16px;
+  width: 16px;
+  color: var(--txt-secondary);
+}
+
+.companySettings-status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.companySettings-status-temporary {
+  background-color: var(--appointmentsAdmin-color-pending-bg);
+  color: var(--appointmentsAdmin-color-pending);
+}
+
+.companySettings-status-permanent {
+  background-color: var(--appointmentsAdmin-color-cancelled-bg);
+  color: var(--appointmentsAdmin-color-cancelled);
+}
+
+.companySettings-table-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.companySettings-button-warning {
+  background-color: var(--clr-status-warning);
+  color: var(--clr-white);
+  border-color: var(--clr-status-warning);
+}
+
+.companySettings-button-warning:hover {
+  background-color: #d98c00;
+  border-color: #d98c00;
+}
+
+.companySettings-button-danger {
+  background-color: var(--clr-status-danger);
+  color: var(--clr-white);
+  border-color: var(--clr-status-danger);
+}
+
+.companySettings-button-danger:hover {
+  background-color: #c81e3e;
+  border-color: #c81e3e;
+}
+
+.companySettings-no-results {
+  text-align: center;
+  padding: 24px;
+  color: var(--txt-secondary);
+}
+
+.companySettings-logger-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.companySettings-logger-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.companySettings-logger-filters {
+  display: flex;
+  gap: 8px;
+}
+
+.companySettings-logger-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.companySettings-log-entry {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--brd-default);
+  background-color: var(--bg-white);
+}
+
+/* Estilos para niveles de log */
+.companySettings-log-error {
+  border-color: var(--clr-status-danger);
+  background-color: var(--appointmentsAdmin-color-cancelled-bg);
+}
+
+.companySettings-log-error .companySettings-log-level {
+  color: var(--clr-status-danger);
+}
+
+.companySettings-log-warning {
+  border-color: var(--clr-status-warning);
+  background-color: var(--appointmentsAdmin-color-pending-bg);
+}
+
+.companySettings-log-warning .companySettings-log-level {
+  color: var(--clr-status-warning);
+}
+
+.companySettings-log-info {
+  border-color: var(--clr-status-info);
+  background-color: var(--bg-status-info-light);
+}
+
+.companySettings-log-info .companySettings-log-level {
+  color: var(--clr-status-info);
+}
+
+/* Nuevo estilo para nivel CRITICAL */
+.companySettings-log-critical {
+  border-color: #dc2626; /* Un rojo más oscuro para el borde */
+  background-color: #fee2e2; /* Fondo similar al error, pero puedes ajustarlo */
+}
+
+.companySettings-log-critical .companySettings-log-level {
+  color: #b91c1c; /* Un rojo aún más oscuro para el texto del nivel */
+  font-weight: bold; /* Para que resalte más */
+}
+
+.companySettings-log-source {
+  font-weight: 500;
+  color: var(--txt-secondary);
+}
+
+.companySettings-log-timestamp {
+  margin-left: auto;
+  color: var(--txt-tertiary);
+}
+
+.companySettings-log-message {
+  font-size: 0.9375rem;
+  color: var(--txt-default);
+}
+
+/* Responsive adjustments for incidents */
+@media (max-width: 767px) {
+  .companySettings-incidents-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .companySettings-search-container {
+    max-width: 100%;
+  }
+
+  .companySettings-table-actions {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .companySettings-logger-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .companySettings-logger-filters {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

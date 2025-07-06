@@ -1,0 +1,53 @@
+.appointments-section-container {
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.appointments-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.appointments-section-header h2 {
+  font-size: 1.5em;
+  color: #333;
+  margin: 0;
+}
+
+.appointments-section-add-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.appointments-section-add-button:hover {
+  background-color: #0056b3;
+}
+
+.appointments-section-loading,
+.appointments-section-error,
+.appointments-section-no-appointments {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.appointments-section-error {
+  color: #dc3545;
+}
+
+.appointments-section-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}

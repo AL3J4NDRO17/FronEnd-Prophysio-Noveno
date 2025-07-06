@@ -1,0 +1,105 @@
+/* Estilos específicos para el componente LocationPickerMap */
+.companySettings-map-section {
+  grid-column: 1 / -1; /* Ocupa todo el ancho en el grid */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--brd-default);
+}
+
+.companySettings-map-container {
+  width: 100%;
+  height: 350px; /* Altura fija para el mapa */
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--brd-default);
+  box-shadow: var(--shd-sm);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.companySettings-map {
+  flex-grow: 1; /* El mapa ocupa el espacio restante */
+  height: 100%; /* Asegura que el mapa se estire dentro de su contenedor */
+  z-index: 0; /* Asegúrate de que el mapa no superponga diálogos, etc. */
+}
+
+/* Necesario para que Leaflet funcione correctamente */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
+.companySettings-map-coords-display {
+  background-color: var(--bg-secondary);
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  color: var(--txt-default);
+  border-top: 1px solid var(--brd-default);
+  text-align: center;
+}
+
+.companySettings-map-search-bar {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background-color: var(--bg-white);
+  border-bottom: 1px solid var(--brd-default);
+  z-index: 1; /* Asegura que la barra de búsqueda esté sobre el mapa */
+}
+
+.companySettings-map-search-input {
+  flex-grow: 1;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--brd-default);
+  padding: 8px 12px;
+}
+
+/* Estilos para los resultados de búsqueda */
+.companySettings-search-results {
+  background-color: var(--bg-white);
+  border: 1px solid var(--brd-default);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  max-height: 150px; /* Limitar altura para scroll */
+  overflow-y: auto;
+  z-index: 10; /* Asegurar que esté por encima del mapa */
+  position: relative; /* Para que el z-index funcione */
+  box-shadow: var(--shd-sm);
+}
+
+.companySettings-search-result-item {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--brd-default);
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--txt-default);
+  transition: background-color 0.2s;
+}
+
+.companySettings-search-result-item:last-child {
+  border-bottom: none;
+}
+
+.companySettings-search-result-item:hover {
+  background-color: var(--bg-secondary);
+}
+
+/* Responsive adjustments for map */
+@media (max-width: 767px) {
+  .companySettings-map-section {
+    padding-top: 12px;
+  }
+
+  .companySettings-map-search-bar {
+    flex-direction: column;
+    padding: 8px;
+  }
+}

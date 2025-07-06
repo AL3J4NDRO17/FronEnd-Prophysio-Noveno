@@ -28,7 +28,7 @@ export const userService = {
   },
 
   // Nueva función para obtener todos los usuarios
-  getAllUsers: async () => {
+  getAllUsers : async () => {
     try {
       const res = await axiosInstance.get(`${API_URL}/getAllUsers`) // Asume que GET /usuarios devuelve todos
       return res.data

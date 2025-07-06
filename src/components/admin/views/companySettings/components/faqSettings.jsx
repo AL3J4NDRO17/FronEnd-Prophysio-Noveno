@@ -1,33 +1,77 @@
 "use client"
 
 import { useState } from "react"
-import { HelpCircle, Plus, Edit, Trash2, Save, ChevronDown, ChevronUp } from "lucide-react"
+import { PlusCircle, Edit, Trash2, Save, XCircle, ChevronDown, ChevronUp } from "lucide-react"
+import { toast } from "react-toastify" // Usar react-toastify
+import Swal from "sweetalert2" // Usar SweetAlert2
 
-const FaqSettings = ({ faqs, loading, error, addFaq, updateFaq, deleteFaq, companyId }) => {
-  const [newFaq, setNewFaq] = useState({ question: "", answer: "" })
+export default function FaqsManagement({ faqs, loading, error, addFaq, updateFaq, deleteFaq, companyId }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [currentFaq, setCurrentFaq] = useState(null)
+  const [isSaving, setIsSaving] = useState(false)
   const [expandedFaqs, setExpandedFaqs] = useState({})
-  const [editingFaqId, setEditingFaqId] = useState(null)
 
-  const handleAddFaq = async () => {
-    if (!newFaq.question || !newFaq.answer) return
-
-    await addFaq({
-      company_id: companyId,
-      question: newFaq.question,
-      answer: newFaq.answer,
-    })
-
-    setNewFaq({ question: "", answer: "" })
+  const handleAddFaq = () => {
+    setCurrentFaq({ company_id: companyId, question: "", answer: "" })
+    setIsDialogOpen(true)
   }
 
-  const handleUpdateFaq = (id, field, value) => {
-    const updatedFaq = faqs.find((faq) => faq.faq_id === id)
-    if (!updatedFaq) return
+  const handleEditFaq = (faq) => {
+    setCurrentFaq({ ...faq })
+    setIsDialogOpen(true)
+  }
 
-    updateFaq(id, {
-      ...updatedFaq,
-      [field]: value,
+  const handleDeleteFaq = async (faqId) => {
+    const result = await Swal.fire({
+      title: "¿Estás seguro?",
+      text: "¡No podrás revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
     })
+
+    if (!result.isConfirmed) return
+
+    try {
+      await deleteFaq(faqId)
+      toast.success("FAQ eliminada correctamente.")
+    } catch (err) {
+      toast.error("Error al eliminar FAQ.")
+      console.error(err)
+    }
+  }
+
+  const handleSaveFaq = async () => {
+    if (!currentFaq || !currentFaq.question.trim() || !currentFaq.answer.trim()) {
+      toast.error("La pregunta y la respuesta no pueden estar vacías.")
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      if (currentFaq.faq_id) {
+        await updateFaq(currentFaq.faq_id, {
+          question: currentFaq.question,
+          answer: currentFaq.answer,
+        })
+      } else {
+        await addFaq({
+          company_id: companyId,
+          question: currentFaq.question,
+          answer: currentFaq.answer,
+        })
+      }
+      setIsDialogOpen(false)
+      toast.success("FAQ guardada correctamente.")
+    } catch (err) {
+      toast.error("Error al guardar la FAQ.")
+      console.error(err)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const toggleFaqExpand = (id) => {
@@ -37,12 +81,8 @@ const FaqSettings = ({ faqs, loading, error, addFaq, updateFaq, deleteFaq, compa
     }))
   }
 
-  const handleEditFaq = (id) => {
-    setEditingFaqId(id === editingFaqId ? null : id)
-  }
-
   if (loading) {
-    return <div className="companySettings-loading">Cargando preguntas frecuentes...</div>
+    return <div className="companySettings-loading">Cargando FAQs...</div>
   }
 
   if (error) {
@@ -53,100 +93,101 @@ const FaqSettings = ({ faqs, loading, error, addFaq, updateFaq, deleteFaq, compa
     <div className="companySettings-card">
       <div className="companySettings-card-header">
         <h2>Preguntas Frecuentes</h2>
-        <p>Administra las FAQ que verán tus usuarios</p>
+        <button onClick={handleAddFaq} className="companySettings-button-primary" disabled={isSaving}>
+          <PlusCircle className="companySettings-button-icon" />
+          Añadir FAQ
+        </button>
       </div>
       <div className="companySettings-card-content">
-        <div className="companySettings-faq-list">
-          {faqs.map((faq) => (
-            <div key={faq.faq_id} className="companySettings-faq-item">
-              <div className="companySettings-faq-header">
-                <div className="companySettings-faq-question" onClick={() => toggleFaqExpand(faq.faq_id)}>
-                  <HelpCircle className="companySettings-faq-icon" />
-                  {editingFaqId === faq.faq_id ? (
-                    <input
-                      type="text"
-                      value={faq.question}
-                      onChange={(e) => handleUpdateFaq(faq.faq_id, "question", e.target.value)}
-                      className="companySettings-faq-edit-input"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  ) : (
+        {faqs.length === 0 ? (
+          <p className="companySettings-no-results">No hay FAQs registradas.</p>
+        ) : (
+          <div className="companySettings-faq-list">
+            {faqs.map((faq) => (
+              <div key={faq.faq_id} className="companySettings-faq-item">
+                <div className="companySettings-faq-header" onClick={() => toggleFaqExpand(faq.faq_id)}>
+                  <div className="companySettings-faq-question">
                     <h3>{faq.question}</h3>
-                  )}
-                  {expandedFaqs[faq.faq_id] ? (
-                    <ChevronUp className="companySettings-faq-toggle" />
-                  ) : (
-                    <ChevronDown className="companySettings-faq-toggle" />
-                  )}
-                </div>
-                <div className="companySettings-faq-actions">
-                  <button className="companySettings-icon-button-small" onClick={() => handleEditFaq(faq.faq_id)}>
-                    {editingFaqId === faq.faq_id ? (
-                      <Save className="companySettings-icon-small" />
+                    {expandedFaqs[faq.faq_id] ? (
+                      <ChevronUp className="companySettings-faq-toggle" />
                     ) : (
-                      <Edit className="companySettings-icon-small" />
+                      <ChevronDown className="companySettings-faq-toggle" />
                     )}
-                  </button>
-                  <button className="companySettings-icon-button-small" onClick={() => deleteFaq(faq.faq_id)}>
-                    <Trash2 className="companySettings-icon-small" />
-                  </button>
+                  </div>
+                  <div className="companySettings-faq-actions">
+                    <button
+                      className="companySettings-icon-button-small"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleEditFaq(faq)
+                      }}
+                    >
+                      <Edit className="companySettings-icon-small" />
+                    </button>
+                    <button
+                      className="companySettings-icon-button-small companySettings-button-destructive"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleDeleteFaq(faq.faq_id)
+                      }}
+                    >
+                      <Trash2 className="companySettings-icon-small" />
+                    </button>
+                  </div>
+                </div>
+                {expandedFaqs[faq.faq_id] && (
+                  <div className="companySettings-faq-answer">
+                    <p>{faq.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {isDialogOpen && (
+          <div className="companySettings-dialog-overlay">
+            <div className="companySettings-dialog-content">
+              <div className="companySettings-dialog-header">
+                <h3 className="companySettings-dialog-title">
+                  {currentFaq?.faq_id ? "Editar FAQ" : "Añadir Nueva FAQ"}
+                </h3>
+              </div>
+              <div className="companySettings-dialog-body">
+                <div className="companySettings-form-group">
+                  <label htmlFor="question">Pregunta</label>
+                  <input
+                    id="question"
+                    className="companySettings-input"
+                    value={currentFaq?.question || ""}
+                    onChange={(e) => setCurrentFaq((prev) => (prev ? { ...prev, question: e.target.value } : null))}
+                  />
+                </div>
+                <div className="companySettings-form-group">
+                  <label htmlFor="answer">Respuesta</label>
+                  <textarea
+                    id="answer"
+                    className="companySettings-textarea"
+                    value={currentFaq?.answer || ""}
+                    onChange={(e) => setCurrentFaq((prev) => (prev ? { ...prev, answer: e.target.value } : null))}
+                    rows={4}
+                  />
                 </div>
               </div>
-              {(expandedFaqs[faq.faq_id] || editingFaqId === faq.faq_id) && (
-                <div className="companySettings-faq-answer">
-                  {editingFaqId === faq.faq_id ? (
-                    <textarea
-                      value={faq.answer}
-                      onChange={(e) => handleUpdateFaq(faq.faq_id, "answer", e.target.value)}
-                      className="companySettings-faq-edit-textarea"
-                    ></textarea>
-                  ) : (
-                    <p>{faq.answer}</p>
-                  )}
-                </div>
-              )}
+              <div className="companySettings-dialog-footer">
+                <button className="companySettings-button-outline" onClick={() => setIsDialogOpen(false)}>
+                  <XCircle className="companySettings-button-icon" />
+                  Cancelar
+                </button>
+                <button onClick={handleSaveFaq} className="companySettings-button-primary" disabled={isSaving}>
+                  <Save className="companySettings-button-icon" />
+                  {isSaving ? "Guardando..." : "Guardar"}
+                </button>
+              </div>
             </div>
-          ))}
-        </div>
-
-        <div className="companySettings-faq-form">
-          <h3 className="companySettings-subtitle">Agregar Nueva Pregunta Frecuente</h3>
-          <div className="companySettings-form-group">
-            <label>Pregunta</label>
-            <input
-              type="text"
-              className="companySettings-input"
-              placeholder="Escriba la pregunta"
-              value={newFaq.question}
-              onChange={(e) => setNewFaq({ ...newFaq, question: e.target.value })}
-            />
           </div>
-          <div className="companySettings-form-group">
-            <label>Respuesta</label>
-            <textarea
-              className="companySettings-textarea"
-              rows="3"
-              placeholder="Escriba la respuesta"
-              value={newFaq.answer}
-              onChange={(e) => setNewFaq({ ...newFaq, answer: e.target.value })}
-            ></textarea>
-          </div>
-          <div className="companySettings-form-actions">
-            <button
-              type="button"
-              className="companySettings-button-full"
-              onClick={handleAddFaq}
-              disabled={!newFaq.question || !newFaq.answer}
-            >
-              <Plus className="companySettings-button-icon" />
-              Agregar Pregunta
-            </button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   )
 }
-
-export default FaqSettings
-

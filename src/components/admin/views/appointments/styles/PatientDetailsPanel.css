@@ -1,0 +1,252 @@
+/* Overlay para el panel de detalles */
+.patient-details-panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+/* Panel de detalles en sí */
+.patient-details-panel {
+  background-color: white;
+  width: 100%;
+  max-width: 600px;
+  height: 100%;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.patient-details-panel.is-open {
+  transform: translateX(0);
+}
+
+/* Contenedor principal de la tarjeta dentro del panel */
+.patient-details-card {
+  border: none;
+  border-radius: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Encabezado de la tarjeta */
+.patient-details-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.patient-details-card-title {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Contenido de la tarjeta */
+.patient-details-card-content {
+  flex-grow: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+/* Diseño de cuadrícula para las columnas principales */
+.patient-details-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .patient-details-grid {
+    grid-template-columns: 1fr 1.5fr;
+  }
+}
+
+/* Espaciado dentro de las secciones */
+.patient-details-section-spacing {
+  margin-bottom: 1.5rem;
+}
+
+/* Contenedor de la columna derecha */
+.patient-details-right-column {
+  border-left: 1px solid #f0f0f0;
+  padding-left: 1.5rem;
+}
+
+@media (max-width: 767px) {
+  .patient-details-right-column {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 1.5rem;
+  }
+}
+
+/* Diseño de cuadrícula para los campos de contacto */
+.patient-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .patient-contact-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Estilo para cada ítem de detalle (icono + texto) */
+.patient-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.patient-detail-item-start {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+/* Iconos de detalle */
+.patient-detail-icon {
+  width: 20px;
+  height: 20px;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.patient-detail-icon-top {
+  margin-top: 4px;
+}
+
+/* Etiquetas de detalle (Email, Teléfono, etc.) */
+.patient-detail-label {
+  font-size: 0.85em;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+/* Valores de detalle (el email real, el número de teléfono) */
+.patient-detail-value {
+  font-size: 0.95em;
+  color: #333;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Info básica del paciente (avatar, nombre, etc.) */
+.patient-info-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.patient-avatar {
+  width: 60px;
+  height: 60px;
+  font-size: 1.5rem;
+}
+
+.patient-avatar-fallback {
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.patient-name {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #333;
+}
+
+.patient-meta {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.patient-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.patient-action-button {
+  padding: 0.6rem 1rem;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.patient-action-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Títulos de subsecciones (Detalles del Paciente, Detalles de Contacto) */
+.patient-subsection-title {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.5rem;
+}
+
+/* Pie de página del modal */
+.patient-details-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Nuevos estilos para el historial de citas en PatientDetailsPanel */
+.patient-history-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #f8fafc;
+}
+
+.patient-history-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.patient-history-date {
+  font-size: 0.75rem; /* text-xs */
+  color: #6b7280; /* text-gray-500 */
+}
+
+.patient-history-notes {
+  font-size: 0.875rem; /* text-sm */
+  color: #4b5563; /* text-gray-600 */
+  margin-top: 0.5rem; /* mt-2 */
+}
+
+/* Common icon styles */
+.icon-medium {
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+}
+
+.icon-small {
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+}

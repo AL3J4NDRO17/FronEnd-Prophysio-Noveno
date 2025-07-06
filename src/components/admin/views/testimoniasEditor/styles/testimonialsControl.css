@@ -2,7 +2,7 @@
 
 /* Contenedor principal */
 .adminDashboard-testimonials-container {
-  padding: 1.5rem;
+
   background-color: var(--admin-background);
   min-height: 100vh;
 }
@@ -13,7 +13,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  padding:20px;
+  background-color: var(--bg-white);
   border-bottom: 1px solid var(--admin-border);
 }
 
@@ -75,6 +76,7 @@
 
 .adminDashboard-select-container {
   display: flex;
+  
   align-items: center;
 }
 
@@ -281,6 +283,7 @@
 
 /* Estado vacío */
 .adminDashboard-testimonials-empty {
+  margin: 20px;
   grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
@@ -439,7 +442,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  margin-top: 2rem;
+  margin: 20px;
 }
 
 .adminDashboard-testimonials-stats-row {

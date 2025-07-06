@@ -1,31 +1,45 @@
 "use client"
 
-import { useState, } from "react"
-import useCompany from "./hooks/useCompany"
-import useFaqs from "./hooks/useFaqs"
-import { usePolicy } from "./hooks/usePolicies"
-import Tabs from "./components/tabs"
-
+import { useState } from "react"
+import { Home, Building, Users, FileText, Globe } from "lucide-react"
 import CompanySettingsHeader from "./components/header"
-import useSocialLinks from "./hooks/useSocialLink"
+import Tabs from "./components/tabs"
 import GeneralSettings from "./components/generalSettings"
 import FaqSettings from "./components/faqSettings"
 import PoliciesSettings from "./components/policiesSettings"
-import IncidentsSettings from "./components/incidentsSettings"
+import IncidentsSettings from "./components/incidentsSettings" // Mantener si se va a usar
+import SocialLinksManagement from "./components/socialLinksManager" // Asegurarse de que el nombre del archivo sea correcto
+
+import useCompany from "./hooks/useCompany"
+import useFaqs from "./hooks/useFaqs"
+import { usePolicy } from "./hooks/usePolicies"
+import useSocialLinks from "./hooks/useSocialLink"
+
+import "./styles/locationPicker.css"
+import "./styles/incidentsSettings.css"
+import "./styles/header.css"
 import "./styles/companySettings.css"
 import "./styles/generalSettings.css"
-import { updateDataCompany } from "./services/companyService"
-import AdminLoader from "@uiLoader"
 
-export default function CompanySettings() {
-  const [activeTab, setActiveTab] = useState("general")
+// Simulación de AdminLoader si no tienes uno real
+// Simulación de AdminLoader si no tienes uno real
+const AdminLoader = () => <div className="companySettings-loading">Cargando...</div>
+
+export default function AdminPanel() {
+  const [activeSection, setActiveSection] = useState("general")
   const { company, loading: companyLoading, error: companyError, updateCompany, isUpdating } = useCompany()
-  const { faqs, loading: faqsLoading, error: faqsError, addFaq, updateFaq, deleteFaq } = useFaqs(company?.id)
-  const { policy, isLoading: policyLoading, error: policyError, createOrUpdatePolicy } = usePolicy(company?.id)
-  const { socialLinks, loading: socialLinksLoading } = useSocialLinks(company?.id)
-
+  const { faqs, loading: faqsLoading, error: faqsError, addFaq, updateFaq, deleteFaq } = useFaqs(company?.company_id)
+  const { policy, isLoading: policyLoading, error: policyError, createOrUpdatePolicy } = usePolicy(company?.company_id)
+  const {
+    socialLinks,
+    loading: socialLinksLoading,
+    addSocialLink,
+    updateSocialLink,
+    removeSocialLink,
+  } = useSocialLinks(company?.company_id)
+  console.log(company)
   if (companyLoading) {
-    return <AdminLoader/>
+    return <AdminLoader />
   }
 
   if (companyError) {
@@ -33,24 +47,16 @@ export default function CompanySettings() {
   }
 
   return (
-    <>
-      <CompanySettingsHeader />
-      <div className="companySettings-container">
-
-
-        <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-
+    <div className="companySettings-container">
+      <main className="companySettings-main-content">
+        <CompanySettingsHeader />
+        <Tabs activeTab={activeSection} setActiveTab={setActiveSection} />
         <div className="companySettings-content">
-          {activeTab === "general" && (
-            <GeneralSettings
-              company={company}
-              updateCompany={updateCompany}
-              isLoading={companyLoading || isUpdating}
-
-            />
+          {activeSection === "general" && (
+            <GeneralSettings company={company} updateCompany={updateCompany} isLoading={companyLoading || isUpdating} />
           )}
 
-          {activeTab === "faq" && (
+          {activeSection === "faq" && (
             <FaqSettings
               faqs={faqs || []}
               loading={faqsLoading}
@@ -58,18 +64,33 @@ export default function CompanySettings() {
               addFaq={addFaq}
               updateFaq={updateFaq}
               deleteFaq={deleteFaq}
-              companyId={company?.id}
+              companyId={company?.company_id}
             />
           )}
 
-          {activeTab === "policies" && (
-            <PoliciesSettings company={company} updateCompany={updateCompany} isSubmitting={isUpdating} />
+          {activeSection === "social-links" && (
+            <SocialLinksManagement
+              socialLinks={socialLinks}
+              loading={socialLinksLoading}
+              addSocialLink={addSocialLink}
+              updateSocialLink={updateSocialLink}
+              removeSocialLink={removeSocialLink}
+              companyId={company?.company_id}
+            />
           )}
 
-          {activeTab === "incidents" && <IncidentsSettings />}
+          {activeSection === "policies" && (
+            <PoliciesSettings
+              company={company}
+              policy={policy}
+              updatePolicy={createOrUpdatePolicy}
+              isSubmitting={policyLoading}
+            />
+          )}
+
+          {activeSection === "incidents" && <IncidentsSettings />}
         </div>
-      </div>
-    </>
+      </main>
+    </div>
   )
 }
-

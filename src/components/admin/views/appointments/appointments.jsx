@@ -1,284 +1,237 @@
 "use client"
 
+import { useState, useEffect, useCallback } from "react"
+import { Calendar, List, Settings, Plus, Search } from "lucide-react"
+import { useCitas } from "./hooks/useCitas"
+import { horarioService } from "./services/horarioService"
+import { userService } from "./services/userService"
+import { Button } from "@button"
 
-import { useState, useEffect, useMemo } from "react"
-import { Plus, SettingsIcon } from "lucide-react"
-import "./appointments.css"
-import { useCitas } from "./hooks/useCitas.js"
-
-import CalendarSidebar from "./components/CalendarSidebar"
-import AppointmentsCalendarView from "./components/AppointmentCalendarView"
-// import AppointmentItemRow from "./components/AppointmentItemRow"
-import CancelPostponeModal from "./components/CancelPostponeModal"
-import WorkHoursModal from "./components/WorksHourModal"
-import NewAppointmentModal from "./components/NewAppointmentModel"
-import AppointmentDetailsPanel from "./components/AppointmentDetailsPanel" // Nuevo componente
-import { Button } from "../../../public_ui/button"
-// import { Input } from "../../../public_ui/input"
-// import { Label } from "../../../public_ui/label"
-// import { Select, SelectItem } from "../../../public_ui/select"
-// import { Card, CardContent, CardHeader, CardTitle } from "../../../public_ui/card"
+import { Input } from "../../../public_ui/input"
 import { toast } from "react-toastify"
-import { userService } from "./services/userService" // Nuevo servicio de usuarios
-import { horarioService } from "./services/horarioService" // Ruta actualizada
-// import { Tabs, TabsList, TabsTrigger } from "../../ui/tabs/tabs.jsx" // Importar Tabs desde shadcn
-// // Helper to get initials
-// // Helper to get initials
-const getInitials = (name) => {
-  if (!name || typeof name !== "string") return "?"
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-}
 
-// Default work hours (example) - This will be replaced by fetched data
-const DEFAULT_WORK_HOURS = [] // Initialize as empty array
+import AppointmentCalendarView from "./components/AppointmentCalendarView"
+import CalendarSidebar from "./components/CalendarSidebar"
+import NewAppointmentModal from "./components/NewAppointmentModel"
+import WorkHoursModal from "./components/WorksHourModal"
+import AppointmentDetailsPanel from "./components/AppointmentDetailsPanel"
+import CancelPostponeModal from "./components/CancelPostponeModal"
 
-function AppointmentsPage() {
-  const {
-    citas,
-    loading,
-    error,
-    crearCita,
-    actualizarCita,
-    eliminarCita,
-    postergarCita,
-    cancelarCita,
-    marcarAsistida,
-    marcarInasistencia,
-  } = useCitas()
+import "./appointments.css"
+import "./styles/AppointmentCalendarView.css"
+import "./styles/AppointmentFormModal.css"
+import "./styles/AppointmentPopover.css"
+import "./styles/AppointmentDetailsPanel.css"
+import "./styles/reactBigCalendar.css"
+import "./styles/CancelPostponeModal.css"
 
-  // AÑADE ESTE CONSOLE.LOG AQUÍ
-  console.log("Citas recibidas en AppointmentsPage (desde useCitas):", citas)
-
-  const [showNewAppointmentModal, setShowNewAppointmentModal] = useState(false)
+const AppointmentsAdmin = () => {
+  const { citas, loading, error, fetchCitas, addCita, updateCita, deleteCita, cancelCita, postponeCita } = useCitas()
+  const [viewMode, setViewMode] = useState("calendar") // 'calendar' o 'list'
+  const [isNewAppointmentModalOpen, setIsNewAppointmentModalOpen] = useState(false)
+  const [isWorkHoursModalOpen, setIsWorkHoursModalOpen] = useState(false)
+  const [isDetailsPanelOpen, setIsDetailsPanelOpen] = useState(false)
+  const [selectedAppointmentForDetails, setSelectedAppointmentForDetails] = useState(null)
+  const [isCancelPostponeModalOpen, setIsCancelPostponeModalOpen] = useState(false)
+  const [cancelPostponeMode, setCancelPostponeMode] = useState("cancel") // 'cancel' o 'postpone'
+  const [appointmentToModify, setAppointmentToModify] = useState(null)
   const [editingAppointment, setEditingAppointment] = useState(null)
-  const [appointmentToCancelOrPostpone, setAppointmentToCancelOrPostpone] = useState(null)
-  const [cancelPostponeMode, setCancelPostponeMode] = useState("cancel")
-  const [showCancelPostponeModal, setShowCancelPostponeModal] = useState(false)
-  const [showWorkHoursModal, setShowWorkHoursModal] = useState(false)
-  const [selectedAppointmentDetails, setSelectedAppointmentDetails] = useState(null)
-  const [showDetailsPanel, setShowDetailsPanel] = useState(false)
-
-  // `workHours` ahora almacenará el array completo de horarios configurados por el usuario
-  const [workHours, setWorkHours] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("prophysioWorkHours")
-      return saved ? JSON.parse(saved) : DEFAULT_WORK_HOURS
-    }
-    return DEFAULT_WORK_HOURS
-  })
-
-  // `clinicWorkHours` se usará para los horarios obtenidos del backend
+  const [initialSelectedUser, setInitialSelectedUser] = useState(null)
   const [clinicWorkHours, setClinicWorkHours] = useState([])
-  // Eliminar appointmentDuration, ya no es necesario como estado global
-  //- const [appointmentDuration, setAppointmentDuration] = useState(null)
-  const [configLoading, setConfigLoading] = useState(true)
+  const [isSavingAppointment, setIsSavingAppointment] = useState(false)
+  const [searchTerm, setSearchTerm] = useState("")
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("prophysioWorkHours", JSON.stringify(workHours))
+  const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  const SPANISH_DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+
+  const fetchClinicHours = useCallback(async () => {
+    try {
+      const hours = await horarioService.getHorariosClinica()
+      setClinicWorkHours(hours)
+    } catch (err) {
+      console.error("Error fetching clinic hours:", err)
+      toast.error("Error al cargar los horarios de la clínica.")
     }
-  }, [workHours])
-
-  useEffect(() => {
-    const loadClinicData = async () => {
-      try {
-        setConfigLoading(true)
-        const hours = await horarioService.getHorariosClinica()
-        // Mapear los días a nombres en inglés para consistencia con el modal de cita
-        const mappedHours = hours.map((h) => ({
-          ...h,
-          dia:
-            h.dia === "Lunes"
-              ? "Monday"
-              : h.dia === "Martes"
-                ? "Tuesday"
-                : h.dia === "Miércoles"
-                  ? "Wednesday"
-                  : h.dia === "Jueves"
-                    ? "Thursday"
-                    : h.dia === "Viernes"
-                      ? "Friday"
-                      : h.dia === "Sábado"
-                        ? "Saturday"
-                        : h.dia === "Domingo"
-                          ? "Sunday"
-                          : h.dia, // Fallback
-        }))
-        setClinicWorkHours(mappedHours)
-
-        // La duración de la sesión ya no se establece aquí globalmente,
-        // sino que se obtiene por cada bloque de horario en NewAppointmentModal.
-        //- if (hours.length > 0 && hours[0].duracion_sesion) {
-        //-   setAppointmentDuration(hours[0].duracion_sesion)
-        //- } else {
-        //-   setAppointmentDuration(60)
-        //-   console.warn("No se encontró 'duracion_sesion' en los horarios, usando 60 minutos por defecto.")
-        //- }
-      } catch (err) {
-        console.error("Error al cargar horarios de la clínica:", err)
-        toast.error("No se pudieron cargar los horarios de la clínica.")
-        //- setAppointmentDuration(60) // Fallback si no se cargan horarios
-      } finally {
-        setConfigLoading(false)
-      }
-    }
-    loadClinicData()
   }, [])
 
-  const openNewAppointmentModal = (appointment = null) => {
-    setEditingAppointment(appointment)
-    setShowNewAppointmentModal(true)
+  useEffect(() => {
+    fetchClinicHours()
+  }, [fetchClinicHours])
+
+  const handleSaveWorkHours = async (updatedHours) => {
+    try {
+      const hoursToSend = updatedHours.map((h) => ({
+        ...h,
+        dia:
+          SPANISH_DAYS_OF_WEEK.indexOf(h.dia) !== -1
+            ? ENGLISH_DAYS_OF_WEEK[SPANISH_DAYS_OF_WEEK.indexOf(h.dia)]
+            : h.dia,
+      }))
+      await horarioService.updateClinicHours(hoursToSend)
+      fetchClinicHours()
+      setIsWorkHoursModalOpen(false)
+    } catch (error) {
+      console.error("Error saving work hours:", error)
+      toast.error("Error al guardar los horarios de trabajo.")
+    }
   }
 
-  const handleSaveAppointment = async (appointmentPayload, isEditing) => {
+  const handleOpenNewAppointmentModal = (user = null) => {
+    setEditingAppointment(null)
+    setInitialSelectedUser(user)
+    setIsNewAppointmentModalOpen(true)
+  }
+
+  const handleOpenEditAppointmentModal = (appointment) => {
+    setEditingAppointment(appointment)
+    setIsNewAppointmentModalOpen(true)
+  }
+
+  const handleSaveAppointment = async (appointmentData, isEditing) => {
+    setIsSavingAppointment(true)
     try {
       if (isEditing) {
-        await actualizarCita(editingAppointment.id_cita, appointmentPayload)
+        await updateCita(editingAppointment.id_cita, appointmentData)
       } else {
-        await crearCita(appointmentPayload)
+        await addCita(appointmentData)
       }
-      setShowNewAppointmentModal(false)
+      setIsNewAppointmentModalOpen(false)
       setEditingAppointment(null)
+      setInitialSelectedUser(null)
     } catch (err) {
-      // Error toast is handled by useCitas
+      console.error("Error saving appointment:", err)
+    } finally {
+      setIsSavingAppointment(false)
     }
   }
 
-  const openCancelPostponeModal = (appointment, mode) => {
-    setAppointmentToCancelOrPostpone(appointment)
+  const handleOpenCancelPostponeModal = (appointment, mode) => {
+    setAppointmentToModify(appointment)
     setCancelPostponeMode(mode)
-    setShowCancelPostponeModal(true)
+    setIsCancelPostponeModalOpen(true)
   }
 
-  const handleConfirmCancelPostpone = async (details) => {
-    if (!appointmentToCancelOrPostpone) return
-
+  const handleConfirmCancelPostpone = async (reason, newDateTime = null) => {
     try {
       if (cancelPostponeMode === "cancel") {
-        await cancelarCita(appointmentToCancelOrPostpone.id_cita, details.motivo)
-      } else if (cancelPostponeMode === "postpone") {
-        await postergarCita(appointmentToCancelOrPostpone.id_cita, details.motivo, details.nuevaFecha)
+        await cancelCita(appointmentToModify.id_cita, reason)
+      } else if (cancelPostponeMode === "postpone" && newDateTime) {
+        await postponeCita(appointmentToModify.id_cita, newDateTime, reason)
       }
-      setShowCancelPostponeModal(false)
-      setAppointmentToCancelOrPostpone(null)
+      setIsCancelPostponeModalOpen(false)
+      setAppointmentToModify(null)
     } catch (err) {
-      // Error toast handled by useCitas
+      console.error("Error modifying appointment:", err)
     }
   }
 
-  const handleViewDetails = (appointment) => {
-    setSelectedAppointmentDetails(appointment)
-    setShowDetailsPanel(true)
+  const handleOpenDetailsPanel = (appointment) => {
+    setSelectedAppointmentForDetails(appointment)
+    setIsDetailsPanelOpen(true)
   }
 
-  const filteredCitas = useMemo(() => citas, [citas])
+  const handleCloseDetailsPanel = () => {
+    setIsDetailsPanelOpen(false)
+    setSelectedAppointmentForDetails(null)
+  }
+
+  const filteredCitas = citas.filter((cita) => {
+    const patientName = cita.usuario?.nombre?.toLowerCase() || ""
+    const patientEmail = cita.usuario?.email?.toLowerCase() || ""
+    const notes = cita.notes?.toLowerCase() || ""
+    const term = searchTerm.toLowerCase()
+    return patientName.includes(term) || patientEmail.includes(term) || notes.includes(term)
+  })
+
+  if (loading) return <div className="appointments-loading-message">Cargando citas...</div>
+  if (error) return <div className="appointments-error-message">Error: {error.message}</div>
 
   return (
-    <div className="appointmentsAdmin-container">
-      {/* Header */}
-      <header className="appointmentsAdmin-header">
-        <div className="appointmentsAdmin-header-title">
-          <h1>Gestión de Citas</h1>
-        </div>
-        <div className="appointmentsAdmin-header-actions">
+    <div className="appointments-page-container">
+      <div className="appointments-page-header">
+        <h1 className="appointments-page-title">Gestión de Citas</h1>
+        <div className="appointments-page-actions">
+          <div className="appointments-search-bar">
+            <Search className="appointments-search-icon" />
+            <Input
+              placeholder="Buscar citas..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="appointments-search-input"
+            />
+          </div>
+          <Button onClick={() => handleOpenNewAppointmentModal()} className="appointments-add-button">
+            <Plus className="icon-small-margin-right" />
+            Nueva Cita
+          </Button>
           <Button
             variant="outline"
-            size="icon"
-            onClick={() => setShowWorkHoursModal(true)}
-            className="appointmentsAdmin-btn-icon"
-            title="Ajustar Horario Laboral"
+            onClick={() => setIsWorkHoursModalOpen(true)}
+            className="appointments-settings-button"
           >
-            <SettingsIcon className="appointmentsAdmin-icon-sm" />
+            <Settings className="icon-small" />
+            <span className="sr-only">Ajustar Horario</span>
           </Button>
-          <Button variant="primary" onClick={() => openNewAppointmentModal()}>
-            <Plus className="appointmentsAdmin-icon-sm appointmentsAdmin-icon-mr" />
-            Nueva cita
-          </Button>
+          
         </div>
-      </header>
-
-      {/* Content Wrapper: Sidebar + Main Content */}
-      <div className="appointmentsAdmin-content-wrapper">
-        {/* Calendar Sidebar */}
-        <CalendarSidebar
-          citas={citas} // Pass all citas for the queue
-        />
-
-        {/* Main content area */}
-        <main className="appointmentsAdmin-main-content">
-          <AppointmentsCalendarView
-            citas={filteredCitas} // Pass filtered citas to the calendar view
-            clinicWorkHours={clinicWorkHours}
-            // Eliminar appointmentDuration
-            //- appointmentDuration={appointmentDuration}
-            openNewAppointmentModal={openNewAppointmentModal}
-            onViewAppointmentDetails={handleViewDetails}
-          />
-        </main>
       </div>
 
-      {/* New/Edit Appointment Modal (reused component) */}
+      <div className="appointments-content-wrapper">
+        {viewMode === "calendar" ? (
+          <AppointmentCalendarView
+            events={filteredCitas}
+            onSelectEvent={handleOpenDetailsPanel}
+            onSelectSlot={handleOpenNewAppointmentModal}
+            clinicWorkHours={clinicWorkHours}
+          />
+        ) : (
+          <CalendarSidebar
+            appointments={filteredCitas}
+            onEditAppointment={handleOpenEditAppointmentModal}
+            onCancelPostpone={handleOpenCancelPostponeModal}
+            onViewDetails={handleOpenDetailsPanel}
+            onScheduleAppointment={handleOpenNewAppointmentModal}
+          />
+        )}
+      </div>
+
       <NewAppointmentModal
-        isOpen={showNewAppointmentModal}
-        onClose={() => setShowNewAppointmentModal(false)}
+        isOpen={isNewAppointmentModalOpen}
+        onClose={() => setIsNewAppointmentModalOpen(false)}
         onSave={handleSaveAppointment}
         editingAppointment={editingAppointment}
-        initialSelectedUser={null}
-        clinicWorkHours={clinicWorkHours} // Pasar el array completo de horarios
-        allAppointments={citas} // All appointments for time slot validation
+        initialSelectedUser={initialSelectedUser}
+        clinicWorkHours={clinicWorkHours}
+        allAppointments={citas}
         userService={userService}
-        isSaving={loading}
-        // Eliminar appointmentDuration
-        //- appointmentDuration={appointmentDuration}
+        isSaving={isSavingAppointment}
       />
 
-      {/* Cancel/Postpone Modal */}
-      {showCancelPostponeModal && appointmentToCancelOrPostpone && (
-        <CancelPostponeModal
-          isOpen={showCancelPostponeModal}
-          onClose={() => setShowCancelPostponeModal(false)}
-          onConfirm={handleConfirmCancelPostpone}
-          appointmentFechaHora={appointmentToCancelOrPostpone.fecha_hora}
-          mode={cancelPostponeMode}
-          workHours={workHours} // Usar los workHours configurados por el usuario
-        />
-      )}
+      <WorkHoursModal
+        isOpen={isWorkHoursModalOpen}
+        onClose={() => setIsWorkHoursModalOpen(false)}
+        currentWorkHours={clinicWorkHours}
+        onSave={handleSaveWorkHours}
+      />
 
-      {/* Work Hours Modal */}
-      {showWorkHoursModal && (
-        <WorkHoursModal
-          isOpen={showWorkHoursModal}
-          onClose={() => setShowWorkHoursModal(false)}
-          currentWorkHours={clinicWorkHours} // Pasar los horarios del backend para editar
-          onSave={(newHours) => {
-            // Aquí deberías llamar a un servicio para guardar los nuevos horarios en tu backend
-            // Por ahora, solo actualizamos el estado local y el localStorage
-            setWorkHours(newHours) // Esto es para persistencia local, no para el backend
-            setClinicWorkHours(newHours) // Actualizar los horarios usados por el calendario/modal de cita
-            setShowWorkHoursModal(false)
-            toast.success("Horario laboral actualizado.")
-          }}
-        />
-      )}
+      <AppointmentDetailsPanel
+        isOpen={isDetailsPanelOpen}
+        onClose={handleCloseDetailsPanel}
+        appointment={selectedAppointmentForDetails}
+        onScheduleAppointment={handleOpenNewAppointmentModal}
+      />
 
-      {/* Appointment Details Panel */}
-      {showDetailsPanel && selectedAppointmentDetails && (
-        <AppointmentDetailsPanel
-          isOpen={showDetailsPanel}
-          onClose={() => setShowDetailsPanel(false)}
-          patientId={selectedAppointmentDetails.id_usuario}
-          onScheduleAppointment={(patient) => {
-            setShowDetailsPanel(false)
-            openNewAppointmentModal({ initialSelectedUser: patient })
-          }}
-        />
-      )}
+      <CancelPostponeModal
+        isOpen={isCancelPostponeModalOpen}
+        onClose={() => setIsCancelPostponeModalOpen(false)}
+        mode={cancelPostponeMode}
+        appointment={appointmentToModify}
+        onConfirm={handleConfirmCancelPostpone}
+        clinicWorkHours={clinicWorkHours}
+        allAppointments={citas}
+      />
     </div>
   )
 }
 
-export default AppointmentsPage
+export default AppointmentsAdmin

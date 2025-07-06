@@ -1,65 +1,79 @@
 "use client"
 
-import React from "react"
-import "./select.css"
+import * as SelectPrimitive from "@radix-ui/react-select"
+import { ChevronDown } from "lucide-react"
+import { forwardRef } from "react"
+import "./select.css" // Importar el nuevo CSS para Select
 
-const Select = React.forwardRef(({ className, children, ...props }, ref) => {
-  return (
-    <select className={`appointmentsAdmin-select ${className || ""}`} ref={ref} {...props}>
-      {children}
-    </select>
-  )
-})
-Select.displayName = "Select"
+// Select component (main wrapper)
+export const Select = SelectPrimitive.Root
 
-const SelectTrigger = React.forwardRef(({ className, children, ...props }, ref) => {
-  // This component is typically used with shadcn's Select, which has a custom trigger.
-  // For a native select, the trigger is the select element itself.
-  // We'll just render a div that looks like a trigger, but the actual select is the interactive part.
-  // If you need a custom styled select, you'd need a more complex component with state.
-  return (
-    <div className={`appointmentsAdmin-select-trigger ${className || ""}`} ref={ref} {...props}>
-      {children}
-      {/* You might want an icon here */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        className="appointmentsAdmin-select-icon"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-      </svg>
-    </div>
-  )
-})
-SelectTrigger.displayName = "SelectTrigger"
+// SelectGroup (for grouping items, optional)
+export const SelectGroup = SelectPrimitive.Group
 
-const SelectValue = ({ placeholder, children }) => {
-  // This component is typically used to display the selected value.
-  // For a native select, the value is shown by the browser.
-  // We'll just render the children or placeholder.
-  return children || placeholder
-}
-SelectValue.displayName = "SelectValue"
+// SelectValue (displays the selected value)
+export const SelectValue = SelectPrimitive.Value
 
-const SelectContent = React.forwardRef(({ className, children, ...props }, ref) => {
-  // For a native select, the options are rendered directly inside the <select> tag.
-  // This component is more relevant for custom dropdowns.
-  // We'll just render the children.
-  return (
-    <div className={`appointmentsAdmin-select-content ${className || ""}`} ref={ref} {...props}>
-      {children}
-    </div>
-  )
-})
-SelectContent.displayName = "SelectContent"
-
-const SelectItem = React.forwardRef(({ className, children, value, ...props }, ref) => (
-  <option className={`appointmentsAdmin-select-item ${className || ""}`} value={value} ref={ref} {...props}>
+// SelectTrigger (the button that opens the dropdown)
+export const SelectTrigger = forwardRef(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Trigger
+    ref={ref}
+    className={`select-trigger ${className || ""}`} // Aplicar clase CSS personalizada
+    {...props}
+  >
     {children}
-  </option>
+    <SelectPrimitive.Icon asChild>
+      <ChevronDown className="select-trigger-icon" />
+    </SelectPrimitive.Icon>
+  </SelectPrimitive.Trigger>
 ))
-SelectItem.displayName = "SelectItem"
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
 
-export { Select, SelectTrigger, SelectValue, SelectContent, SelectItem }
+// SelectContent (the dropdown content itself)
+export const SelectContent = forwardRef(({ className, children, position = "popper", ...props }, ref) => (
+  <SelectPrimitive.Portal>
+    <SelectPrimitive.Content
+      ref={ref}
+      className={`select-content ${className || ""}`} // Aplicar clase CSS personalizada
+      position={position}
+      {...props}
+    >
+      <SelectPrimitive.Viewport className={position === "popper" ? "select-viewport-popper" : "select-viewport"}>
+        {children}
+      </SelectPrimitive.Viewport>
+    </SelectPrimitive.Content>
+  </SelectPrimitive.Portal>
+))
+SelectContent.displayName = SelectPrimitive.Content.displayName
+
+// SelectItem (individual option in the dropdown)
+export const SelectItem = forwardRef(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Item
+    ref={ref}
+    className={`select-item ${className || ""}`} // Aplicar clase CSS personalizada
+    {...props}
+  >
+    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+  </SelectPrimitive.Item>
+))
+SelectItem.displayName = SelectPrimitive.Item.displayName
+
+// SelectLabel (for grouping items)
+export const SelectLabel = forwardRef(({ className, ...props }, ref) => (
+  <SelectPrimitive.Label
+    ref={ref}
+    className={`select-label ${className || ""}`} // Aplicar clase CSS personalizada
+    {...props}
+  />
+))
+SelectLabel.displayName = SelectPrimitive.Label.displayName
+
+// SelectSeparator (for separating items)
+export const SelectSeparator = forwardRef(({ className, ...props }, ref) => (
+  <SelectPrimitive.Separator
+    ref={ref}
+    className={`select-separator ${className || ""}`} // Aplicar clase CSS personalizada
+    {...props}
+  />
+))
+SelectSeparator.displayName = SelectPrimitive.Separator.displayName

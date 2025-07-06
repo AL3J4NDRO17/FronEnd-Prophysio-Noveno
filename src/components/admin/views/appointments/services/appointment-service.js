@@ -1,39 +1,96 @@
 import axiosInstance from "@/components/api/axiosConfig";
-
-
-
-// Asegúrate de que esta URL sea accesible desde tu frontend
-// Si Next.js y tu backend están en el mismo dominio en producción, puedes usar rutas relativas.
-// Para desarrollo, localhost:3000 puede ser tu backend y Next.js en otro puerto.
-
-export const citaService = {
-  crearCita: async (data) => {
-    const res = await axiosInstance.post(`citas//createCita`, data)
-    return res.data
+const API_URL= "/citas"
+export const appointmentService = {
+  getAllAppointments: async () => {
+    try {
+      const response = await axiosInstance.get(`${API_URL}/getAllCitas`)
+      return response.data
+    } catch (error) {
+      console.error("Error fetching all appointments:", error)
+      throw error
+    }
   },
 
-  obtenerCitas: async () => {
-    const res = await axiosInstance.get(`citas/getallCitas`)
-    return res.data
+  createAppointment: async (appointmentData) => {
+    try {
+      const response = await axiosInstance.post(`${API_URL}/adminCreateCita`, appointmentData)
+      return response.data
+    } catch (error) {
+      console.error("Error creating appointment:", error)
+      throw error
+    }
   },
 
-  obtenerCitaPorId: async (id_cita) => {
-    const res = await axiosInstance.get(`citas/getCitaById/${id_cita}`)
-    return res.data
-  },
-  obtenerPerfilPorCita: async (id_cita) => {
-    const res = await axiosInstance.get(`citas/getPerfilPorCita/${id_cita}`)
-    return res.data
-  },
-  actualizarCita: async (id_cita, data) => {
-    const res = await axiosInstance.put(`citas/updateCitaEstado/${id_cita}`, data)
-    return res.data
+  updateAppointment: async (id, appointmentData) => {
+    try {
+      const response = await axiosInstance.put(`${API_URL}/citas/${id}`, appointmentData)
+      return response.data
+    } catch (error) {
+      console.error(`Error updating appointment ${id}:`, error)
+      throw error
+    }
   },
 
-  eliminarCita: async (id_cita) => {
-    const res = await axiosInstance.delete(`citas/deleteCita/${id_cita}`)
-    return res.data
+  deleteAppointment: async (id) => {
+    try {
+      const response = await axiosInstance.delete(`${API_URL}/deleteCita/${id}`)
+      return response.data
+    } catch (error) {
+      console.error(`Error deleting appointment ${id}:`, error)
+      throw error
+    }
   },
-  // No necesitamos una función específica para postergar o cancelar si usamos `actualizarCita`
-  // para cambiar el estado y otros campos. Si tu backend tiene endpoints dedicados, añádelos aquí.
+
+  cancelAppointment: async (id, reason) => {
+    try {
+      const response = await axiosInstance.put(`${API_URL}/cancelarCita/${id}`, { motivo_cancelacion: reason })
+      return response.data
+    } catch (error) {
+      console.error(`Error cancelling appointment ${id}:`, error)
+      throw error
+    }
+  },
+
+  postponeAppointment: async (id, newDateTime, reason) => {
+    try {
+      const response = await axiosInstance.put(`${API_URL}/postergarCita/${id}`, {
+        nueva_fecha_hora: newDateTime,
+        motivo_postergacion: reason,
+      })
+      return response.data
+    } catch (error) {
+      console.error(`Error postponing appointment ${id}:`, error)
+      throw error
+    }
+  },
+
+  markAsAttended: async (id) => {
+    try {
+      const response = await axiosInstance.put(`${API_URL}/markAsistio/${id}`)
+      return response.data
+    } catch (error) {
+      console.error(`Error marking appointment ${id} as attended:`, error)
+      throw error
+    }
+  },
+
+  markAsNoShow: async (id) => {
+    try {
+      const response = await axiosInstance.put(`${API_URL}/markInasistencia/${id}`)
+      return response.data
+    } catch (error) {
+      console.error(`Error marking appointment ${id} as no-show:`, error)
+      throw error
+    }
+  },
+
+  getAppointmentAndUserProfile: async (appointmentId) => {
+    try {
+      const response = await axiosInstance.get(`${API_URL}/getPerfilPorCita/${appointmentId}`)
+      return response.data
+    } catch (error) {
+      console.error(`Error fetching appointment and user profile for appointment ${appointmentId}:`, error)
+      throw error
+    }
+  },
 }

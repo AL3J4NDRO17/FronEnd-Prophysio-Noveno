@@ -2,48 +2,93 @@
 
 /* Popover styles */
 .appointment-popover {
-  position: absolute;
+  position: fixed;
   background-color: white;
-  border: 1px solid #e0e0e0;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  width: 320px; /* Fixed width for popover */
-  z-index: 50; /* Ensure it's above other elements */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  padding: 15px;
+  z-index: 100; /* Ensure it's above other elements */
+  min-width: 280px;
+  max-width: 350px;
+  transform: translate(-50%, -100%);
+  margin-top: 100px;
+}
+
+.appointmentsAdmin-popover {
+  position: fixed;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 15px;
+  z-index: 100; /* Asegura que esté por encima del calendario */
+  min-width: 280px;
+  max-width: 350px;
+  transform: translate(-50%, -100%);
+  margin-top: -10px; /* Ajuste para que no tape el evento */
 }
 
 .popover-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.appointmentsAdmin-popover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
 }
 
 .popover-title {
-  font-size: 1.1rem;
+  font-size: 1.1em;
   font-weight: 600;
   color: #333;
 }
 
-.popover-close-btn {
-  /* Styles for shadcn button variant="ghost" size="icon" */
-  width: 30px;
-  height: 30px;
+.appointmentsAdmin-popover-title {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #333;
+}
+
+.popover-close-button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+}
+
+.appointmentsAdmin-popover-close-button {
+  width: 28px;
+  height: 28px;
   padding: 0;
 }
 
 .popover-content {
-  padding: 16px;
-  overflow-y: auto;
+  margin-bottom: 15px;
+}
+
+.appointmentsAdmin-popover-content {
+  margin-bottom: 15px;
 }
 
 .popover-section {
-  margin-bottom: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.appointmentsAdmin-popover-section {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f5f5f5;
 }
 
 .popover-section:last-child {
@@ -52,11 +97,24 @@
   border-bottom: none;
 }
 
-.popover-section .section-title {
-  font-size: 1rem;
-  font-weight: 600;
+.appointmentsAdmin-popover-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.popover-patient-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 10px;
-  color: #333;
+}
+
+.appointmentsAdmin-popover-patient-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .patient-info {
@@ -66,26 +124,49 @@
 }
 
 .popover-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-color: #e0f2f7;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  color: #007bff;
+  width: 40px;
+  height: 40px;
+  font-size: 0.9em;
+}
+
+.appointmentsAdmin-popover-avatar {
+  width: 40px;
+  height: 40px;
+  font-size: 0.9em;
 }
 
 .popover-patient-name {
-  font-weight: 600;
-  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.appointmentsAdmin-popover-patient-name {
+  font-weight: 500;
   color: #333;
 }
 
 .popover-patient-email {
-  font-size: 0.85rem;
-  color: #777;
+  font-size: 0.8em;
+  color: #666;
+}
+
+.appointmentsAdmin-popover-patient-email {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.popover-status-badge {
+  font-size: 0.75em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: auto; /* Alinea a la derecha */
+}
+
+.appointmentsAdmin-popover-status-badge {
+  font-size: 0.75em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: auto; /* Alinea a la derecha */
 }
 
 .appointment-info .info-item,
@@ -98,15 +179,117 @@
   color: #555;
 }
 
-.appointment-info .info-item:last-child,
-.patient-details .info-item:last-child {
-  margin-bottom: 0;
+.appointmentsAdmin-popover-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.popover-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.appointmentsAdmin-popover-detail-item-block {
+  display: flex;
+  gap: 8px;
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.popover-detail-item-block {
+  display: flex;
+  gap: 8px;
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.appointmentsAdmin-popover-detail-item-block .appointmentsAdmin-popover-icon-top {
+  align-self: flex-start;
+  margin-top: 4px; /* Ajuste para alinear con el texto multilínea */
+}
+
+.popover-icon-top {
+  align-self: flex-start;
+  margin-top: 4px; /* Ajuste para alinear con el texto multilínea */
+}
+
+.appointmentsAdmin-popover-icon {
+  width: 16px;
+  height: 16px;
+  color: #94a3b8;
+  flex-shrink: 0; /* Evita que el icono se encoja */
+}
+
+.popover-icon {
+  width: 16px;
+  height: 16px;
+  color: #94a3b8;
+  flex-shrink: 0; /* Evita que el icono se encoja */
 }
 
 .info-icon {
   width: 18px;
   height: 18px;
   color: #888;
+}
+
+.popover-detail-label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.appointmentsAdmin-popover-detail-label {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.popover-detail-value {
+  color: #555;
+  line-height: 1.4;
+}
+
+.appointmentsAdmin-popover-detail-value {
+  color: #555;
+  line-height: 1.4;
+}
+
+.popover-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.appointmentsAdmin-popover-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+/* Common icon styles (re-defined for this component's context if not global) */
+.icon-small {
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+}
+
+.popover-loading-message,
+.popover-error-message {
+  text-align: center;
+  padding: 1rem;
+  color: #ef4444; /* text-red-500 */
 }
 
 /* Responsive adjustments */

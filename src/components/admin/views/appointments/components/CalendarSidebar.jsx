@@ -5,48 +5,40 @@ import { es } from "date-fns/locale"
 import { Card, CardContent, CardHeader, CardTitle } from "../../../../public_ui/card"
 import { Badge } from "../../../../public_ui/badge"
 import { Avatar, AvatarFallback } from "../../../../public_ui/avatar"
-// Importar el CSS para la barra lateral
 
-// Helper to get initials
 const getInitials = (name) => {
-    if (!name || typeof name !== "string") return "?"
-    return name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
+  if (!name || typeof name !== "string") return "?"
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
 }
 
-
 const CalendarSidebar = ({ citas }) => {
-  const [activeTab, setActiveTab] = useState("queue") // 'queue' o 'history'
+  const [activeTab, setActiveTab] = useState("queue")
 
   const sortedCitas = useMemo(() => {
     return [...citas].sort((a, b) => new Date(a.fecha_hora).getTime() - new Date(b.fecha_hora).getTime())
   }, [citas])
 
   const upcomingAppointments = useMemo(() => {
+    const now = new Date()
     return sortedCitas.filter((cita) => {
       const appDate = new Date(cita.fecha_hora)
-      // Las citas futuras no deben ser canceladas, completadas o inasistencias
       return (
-        appDate >= new Date() &&
-        cita.estado !== "cancelada" &&
-        cita.estado !== "completada" &&
-        cita.estado !== "inasistencia"
+        appDate >= now && cita.estado !== "cancelada" && cita.estado !== "completada" && cita.estado !== "inasistencia"
       )
     })
   }, [sortedCitas])
 
   const pastAppointments = useMemo(() => {
+    const now = new Date()
     return sortedCitas.filter((cita) => {
       const appDate = new Date(cita.fecha_hora)
-      // Las citas pasadas deben ser completadas o inasistencias, o simplemente haber pasado la fecha
-      // Excluimos explícitamente las canceladas de aquí también si no quieres verlas en el historial
+      // Incluir citas que ya pasaron y no están canceladas, o que están completadas/inasistencia
       return (
-        (appDate < new Date() && cita.estado !== "cancelada") || // Si la fecha ya pasó Y NO está cancelada
-        cita.estado === "completada" ||
-        cita.estado === "inasistencia"
+        (appDate < now && cita.estado !== "cancelada") || cita.estado === "completada" || cita.estado === "inasistencia"
       )
     })
   }, [sortedCitas])

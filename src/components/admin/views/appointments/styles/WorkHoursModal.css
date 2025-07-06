@@ -1,0 +1,83 @@
+/* Estilos para el contenido del modal de horario laboral */
+.work-hours-modal-content {
+  padding: 0; /* Eliminar padding del DialogContent para controlar el padding internamente */
+}
+
+.work-hours-modal-title {
+  /* Estilos del título, ya definidos en dialog.css */
+}
+
+.work-hours-modal-body {
+  padding: 1.5rem; /* Espacio interno para el cuerpo del modal */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Espacio entre bloques de horario */
+}
+
+.schedule-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Espacio entre inputs y botón de eliminar */
+  padding: 1rem;
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-off-white); /* Un fondo ligeramente diferente para cada bloque */
+}
+
+.schedule-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Columnas flexibles para inputs */
+  gap: 1rem; /* Espacio entre los inputs */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem; /* Espacio entre label e input */
+}
+
+.form-group label {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  color: var(--txt-default);
+}
+
+/* Estilos para los componentes de UI (Input, Select) dentro del modal */
+.form-group .input,
+.form-group .select-trigger {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--brd-default);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-white);
+  color: var(--txt-default);
+  font-size: 0.875rem;
+  box-shadow: var(--shd-sm-alt);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.form-group .input:focus,
+.form-group .select-trigger:focus-visible {
+  outline: none;
+  border-color: var(--clr-brand-primary);
+  box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
+}
+
+/* Estilo para el botón de añadir bloque */
+.add-block-button {
+  width: fit-content; /* Ajustar al contenido */
+  align-self: flex-start; /* Alinear a la izquierda */
+  margin-top: 0.5rem;
+}
+
+/* Footer del modal */
+.work-hours-modal-footer {
+  /* Estilos del footer, ya definidos en dialog.css */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .schedule-inputs {
+    grid-template-columns: 1fr; /* Una columna en móviles */
+  }
+}
