@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../publ
 import { Button } from "../../public_ui/button"
 import { Input } from "../../public_ui/input"
 import { Label } from "../../public_ui/label"
-import {Select} from "../../public_ui/select"
+import {Select} from "@select"
 
 export default function ClientDetailsStep({ onNext, onPrev, formData, onFormChange }) {
   const handleChange = (e) => {

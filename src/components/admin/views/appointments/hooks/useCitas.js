@@ -1,58 +1,100 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { appointmentService } from "../services/appointment-service"
 import { toast } from "react-toastify"
 import Swal from "sweetalert2"
 
 export const useCitas = () => {
-  const [citas, setCitas] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const queryClient = useQueryClient()
 
-  const fetchCitas = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const data = await appointmentService.getAllAppointments()
-      setCitas(data)
-    } catch (err) {
-      setError(err)
-      toast.error("Error al cargar las citas.")
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const {
+    data: citas = [],
+    isLoading: loading,
+    isError,
+    error,
+    refetch: fetchCitas,
+  } = useQuery({
+    queryKey: ["citas"],
+    queryFn: appointmentService.getAllAppointments,
+  })
 
-  useEffect(() => {
-    fetchCitas()
-  }, [fetchCitas])
-
-  const addCita = async (citaData) => {
-    try {
-      const newCita = await appointmentService.createAppointment(citaData)
-      setCitas((prev) => [...prev, newCita])
+  const addCitaMutation = useMutation({
+    mutationFn: appointmentService.createAppointment,
+    onSuccess: (newCita) => {
+      queryClient.setQueryData(["citas"], (prev = []) => [...prev, newCita])
       toast.success("Cita agendada con éxito.")
-      return newCita
-    } catch (err) {
-      console.error("Error al crear cita:", err)
+    },
+    onError: (err) => {
       toast.error(err.response?.data?.message || "Error al agendar la cita.")
-      throw err
-    }
-  }
+    },
+  })
 
-  const updateCita = async (id, citaData) => {
-    try {
-      const updatedCita = await appointmentService.updateAppointment(id, citaData)
-      setCitas((prev) => prev.map((cita) => (cita.id_cita === id ? updatedCita : cita)))
+  const updateCitaMutation = useMutation({
+    mutationFn: ({ id, data }) => appointmentService.updateAppointment(id, data),
+    onSuccess: (updatedCita) => {
+      queryClient.setQueryData(["citas"], (prev = []) =>
+        prev.map((cita) => (cita.id_cita === updatedCita.id_cita ? updatedCita : cita))
+      )
       toast.success("Cita actualizada con éxito.")
-      return updatedCita
-    } catch (err) {
-      console.error(`Error al actualizar cita ${id}:`, err)
+    },
+    onError: (err) => {
       toast.error(err.response?.data?.message || "Error al actualizar la cita.")
-      throw err
-    }
-  }
+    },
+  })
+
+  const cancelCitaMutation = useMutation({
+    mutationFn: ({ id, reason }) => appointmentService.cancelAppointment(id, reason),
+    onSuccess: (updatedCita) => {
+      queryClient.setQueryData(["citas"], (prev = []) =>
+        prev.map((cita) => (cita.id_cita === updatedCita.id_cita ? updatedCita : cita))
+      )
+      toast.success("Cita cancelada con éxito.")
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || "Error al cancelar la cita.")
+    },
+  })
+
+  const postponeCitaMutation = useMutation({
+    mutationFn: ({ id, newDateTime, reason }) =>
+      appointmentService.postponeAppointment(id, newDateTime, reason),
+    onSuccess: (updatedCita) => {
+      queryClient.setQueryData(["citas"], (prev = []) =>
+        prev.map((cita) => (cita.id_cita === updatedCita.id_cita ? updatedCita : cita))
+      )
+      toast.success("Cita postergada con éxito.")
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || "Error al postergar la cita.")
+    },
+  })
+
+  const marcarAsistidaMutation = useMutation({
+    mutationFn: (id) => appointmentService.markAsAttended(id),
+    onSuccess: (updatedCita) => {
+      queryClient.setQueryData(["citas"], (prev = []) =>
+        prev.map((cita) => (cita.id_cita === updatedCita.id_cita ? updatedCita : cita))
+      )
+      toast.success("Cita marcada como asistida.")
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || "Error al marcar como asistida.")
+    },
+  })
+
+  const marcarInasistenciaMutation = useMutation({
+    mutationFn: (id) => appointmentService.markAsNoShow(id),
+    onSuccess: (updatedCita) => {
+      queryClient.setQueryData(["citas"], (prev = []) =>
+        prev.map((cita) => (cita.id_cita === updatedCita.id_cita ? updatedCita : cita))
+      )
+      toast.success("Cita marcada como inasistencia.")
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.message || "Error al marcar como inasistencia.")
+    },
+  })
 
   const deleteCita = async (id) => {
     const result = await Swal.fire({
@@ -69,79 +111,28 @@ export const useCitas = () => {
     if (result.isConfirmed) {
       try {
         await appointmentService.deleteAppointment(id)
-        setCitas((prev) => prev.filter((cita) => cita.id_cita !== id))
+        queryClient.setQueryData(["citas"], (prev = []) =>
+          prev.filter((cita) => cita.id_cita !== id)
+        )
         toast.success("Cita eliminada con éxito.")
       } catch (err) {
-        console.error(`Error al eliminar cita ${id}:`, err)
         toast.error(err.response?.data?.message || "Error al eliminar la cita.")
         throw err
       }
     }
   }
 
-  const cancelCita = async (id, reason) => {
-    try {
-      const updatedCita = await appointmentService.cancelAppointment(id, reason)
-      setCitas((prev) => prev.map((cita) => (cita.id_cita === id ? updatedCita : cita)))
-      toast.success("Cita cancelada con éxito.")
-      return updatedCita
-    } catch (err) {
-      console.error(`Error al cancelar cita ${id}:`, err)
-      toast.error(err.response?.data?.message || "Error al cancelar la cita.")
-      throw err
-    }
-  }
-
-  const postponeCita = async (id, newDateTime, reason) => {
-    try {
-      const updatedCita = await appointmentService.postponeAppointment(id, newDateTime, reason)
-      setCitas((prev) => prev.map((cita) => (cita.id_cita === id ? updatedCita : cita)))
-      toast.success("Cita postergada con éxito.")
-      return updatedCita
-    } catch (err) {
-      console.error(`Error al postergar cita ${id}:`, err)
-      toast.error(err.response?.data?.message || "Error al postergar la cita.")
-      throw err
-    }
-  }
-
-  const marcarAsistida = async (id) => {
-    try {
-      const updatedCita = await appointmentService.markAsAttended(id)
-      setCitas((prev) => prev.map((cita) => (cita.id_cita === id ? updatedCita : cita)))
-      toast.success("Cita marcada como asistida.")
-      return updatedCita
-    } catch (err) {
-      console.error(`Error al marcar cita ${id} como asistida:`, err)
-      toast.error(err.response?.data?.message || "Error al marcar la cita como asistida.")
-      throw err
-    }
-  }
-
-  const marcarInasistencia = async (id) => {
-    try {
-      const updatedCita = await appointmentService.markAsNoShow(id)
-      setCitas((prev) => prev.map((cita) => (cita.id_cita === id ? updatedCita : cita)))
-      toast.success("Cita marcada como inasistencia.")
-      return updatedCita
-    } catch (err) {
-      console.error(`Error al marcar cita ${id} como inasistencia:`, err)
-      toast.error(err.response?.data?.message || "Error al marcar la cita como inasistencia.")
-      throw err
-    }
-  }
-
   return {
     citas,
     loading,
-    error,
+    error: isError ? error : null,
     fetchCitas,
-    addCita,
-    updateCita,
+    addCita: addCitaMutation.mutateAsync,
+    updateCita: updateCitaMutation.mutateAsync,
+    cancelCita: cancelCitaMutation.mutateAsync,
+    postponeCita: postponeCitaMutation.mutateAsync,
+    marcarAsistida: marcarAsistidaMutation.mutateAsync,
+    marcarInasistencia: marcarInasistenciaMutation.mutateAsync,
     deleteCita,
-    cancelCita,
-    postponeCita,
-    marcarAsistida,
-    marcarInasistencia,
   }
 }

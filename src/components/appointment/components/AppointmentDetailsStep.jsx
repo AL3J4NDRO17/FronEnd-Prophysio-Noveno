@@ -7,19 +7,21 @@ import { Input } from "../../public_ui/input"
 import { Label } from "../../public_ui/label"
 import { toast } from "react-toastify"
 import { Textarea } from "../../public_ui/textarea"
-import { Select } from "../../public_ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../public_ui/select"
 import Swal from "sweetalert2"
+import { format, parseISO, getDay, setHours, setMinutes, addMinutes, isBefore, isEqual, isAfter } from "date-fns"
 
-const ENGLISH_DAYS_OF_WEEK = ["Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 // Mantenemos los nombres en español si se necesitan para la visualización
 const SPANISH_DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+
 
 export default function AppointmentDetailsStep({
   onNext,
   onPrev,
   formData,
   onFormChange,
-  clinicWorkHours, // Ahora se espera que 'dia' esté en inglés
+  clinicWorkHours,
   existingAppointments,
   appointmentDuration,
 }) {
@@ -30,11 +32,10 @@ export default function AppointmentDetailsStep({
     if (!dateString || !clinicWorkHoursData || clinicWorkHoursData.length === 0) {
       return false
     }
-    const selectedDate = new Date(dateString)
-    const dayOfWeekIndex = selectedDate.getDay()
-    const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex] // Obtener el nombre del día en inglés
+    const selectedDate = parseISO(dateString) // Usar parseISO
+    const dayOfWeekIndex = getDay(selectedDate) // Usar getDay
+    const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex]
 
-    // Comprobar si existe algún horario para el día seleccionado (ahora 'dia' en clinicWorkHoursData es inglés)
     return clinicWorkHoursData.some((schedule) => schedule.dia === selectedDayNameEnglish)
   }
 
@@ -50,24 +51,25 @@ export default function AppointmentDetailsStep({
   // Función para generar franjas horarias
   const generateTimeSlots = (startTime, endTime, intervalMinutes) => {
     const slots = []
-    const parsedStartTime = startTime.substring(0, 5)
-    const parsedEndTime = endTime.substring(0, 5)
+    // Usar una fecha base para combinar con las horas
+    const baseDate = new Date()
+    const [startH, startM] = startTime.split(":").map(Number)
+    const [endH, endM] = endTime.split(":").map(Number)
 
-    const current = new Date(`2000-01-01T${parsedStartTime}:00`)
-    const end = new Date(`2000-01-01T${parsedEndTime}:00`)
+    let current = setMinutes(setHours(baseDate, startH), startM)
+    const end = setMinutes(setHours(baseDate, endH), endM)
 
-    if (current.getTime() >= end.getTime()) {
+    if (isEqual(current, end) || isAfter(current, end)) {
       console.warn(
-        `[generateTimeSlots] Hora de inicio (${parsedStartTime}) es igual o mayor que hora de fin (${parsedEndTime}). No se generarán slots.`,
+        `[generateTimeSlots] Hora de inicio (${startTime}) es igual o mayor que hora de fin (${endTime}). No se generarán slots.`,
       )
       return []
     }
 
-    while (current.getTime() < end.getTime()) {
-      const hours = String(current.getHours()).padStart(2, "0")
-      const minutes = String(current.getMinutes()).padStart(2, "0")
-      slots.push(`${hours}:${minutes}`)
-      current.setMinutes(current.getMinutes() + intervalMinutes)
+    while (isBefore(current, end)) {
+      // Usar isBefore
+      slots.push(format(current, "HH:mm")) // Usar format
+      current = addMinutes(current, intervalMinutes) // Usar addMinutes
     }
     return slots
   }
@@ -86,14 +88,16 @@ export default function AppointmentDetailsStep({
     )
 
     if (formData.fecha_cita && clinicWorkHours.length > 0 && appointmentDuration !== null) {
-      const selectedDate = new Date(formData.fecha_cita)
-      const dayOfWeekIndex = selectedDate.getDay()
+      const selectedDate = parseISO(formData.fecha_cita) // Usar parseISO
+      const dayOfWeekIndex = getDay(selectedDate) // Usar getDay
       const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex]
+
       console.log("[AppointmentDetailsStep useEffect] Día de la semana seleccionado (inglés):", selectedDayNameEnglish)
 
       const daySchedules = clinicWorkHours.filter((schedule) => {
-        return schedule.dia === selectedDayNameEnglish // Comparación directa con el nombre en inglés
+        return schedule.dia === selectedDayNameEnglish
       })
+
       console.log("[AppointmentDetailsStep useEffect] Horarios de la clínica filtrados para el día:", daySchedules)
 
       if (daySchedules.length === 0) {
@@ -119,21 +123,30 @@ export default function AppointmentDetailsStep({
       )
 
       const filteredSlots = uniqueSortedPotentialSlots.filter((slot) => {
-        const potentialAppStart = new Date(`${formData.fecha_cita}T${slot}:00`).getTime()
-        const potentialAppEnd = potentialAppStart + appointmentDuration * 60 * 1000
+        const potentialAppStart = parseISO(`${formData.fecha_cita}T${slot}:00`) // Usar parseISO
+        const potentialAppEnd = addMinutes(potentialAppStart, appointmentDuration) // Usar addMinutes
 
         const isOverlapping = existingAppointments.some((existingApp) => {
-          if (existingApp.estado === "cancelada" || existingApp.estado === "completada") {
+          if (
+            existingApp.estado === "cancelada" ||
+            existingApp.estado === "completada" ||
+            existingApp.estado === "inasistencia"
+          ) {
             return false
           }
 
-          const existingAppStart = new Date(existingApp.fecha_cita).getTime()
+          // Asegurarse de que existingApp.fecha_hora sea una cadena válida
+          if (!existingApp.fecha_hora || typeof existingApp.fecha_hora !== "string") {
+            return false
+          }
+
+          const existingAppStart = parseISO(existingApp.fecha_hora) // Usar parseISO
           const existingAppDuration = existingApp.duracion || appointmentDuration
-          const existingAppEndTime = existingAppStart + existingAppDuration * 60 * 1000
+          const existingAppEndTime = addMinutes(existingAppStart, existingAppDuration) // Usar addMinutes
 
-          return potentialAppStart < existingAppEndTime && potentialAppEnd > existingAppStart
+          // Usar isBefore y isAfter para la lógica de superposición
+          return isBefore(potentialAppStart, existingAppEndTime) && isAfter(potentialAppEnd, existingAppStart)
         })
-
         return !isOverlapping
       })
 
@@ -163,21 +176,15 @@ export default function AppointmentDetailsStep({
       toast.error("Por favor, complete la fecha, hora y motivo de la cita.")
       return
     }
-
     onNext()
   }
 
   const getMinDate = () => {
-    const today = new Date()
-    const year = today.getFullYear()
-    const month = String(today.getMonth() + 1).padStart(2, "0")
-    const day = String(today.getDate()).padStart(2, "0")
-    return `${year}-${month}-${day}`
+    return format(new Date(), "yyyy-MM-dd") // Usar format
   }
 
   const isNonWorkingDay =
     formData.fecha_cita && clinicWorkHours.length > 0 && !isDayAvailable(formData.fecha_cita, clinicWorkHours)
-
   const isSelectDisabled = !formData.fecha_cita || isNonWorkingDay || availableTimeSlots.length === 0
 
   return (
@@ -227,17 +234,24 @@ export default function AppointmentDetailsStep({
             id="hora_cita"
             name="hora_cita"
             value={formData.hora_cita}
-            onChange={handleChange}
-            className="input"
+            onValueChange={(value) => handleChange({ target: { name: "hora_cita", value } })}
             required
             disabled={isSelectDisabled}
           >
-            <option value="">Seleccione una hora</option>
-            {availableTimeSlots.map((slot) => (
-              <option key={slot} value={slot}>
-                {slot}
-              </option>
-            ))}
+            <SelectTrigger>
+              <SelectValue placeholder="Seleccione una hora" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableTimeSlots.length > 0 ? (
+                availableTimeSlots.map((slot) => (
+                  <SelectItem key={slot} value={slot}>
+                    {slot}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem disabled>No hay horas disponibles</SelectItem>
+              )}
+            </SelectContent>
           </Select>
           {!formData.fecha_cita && (
             <p className="publicAppointment-text-xs publicAppointment-text-tertiary mt-1">

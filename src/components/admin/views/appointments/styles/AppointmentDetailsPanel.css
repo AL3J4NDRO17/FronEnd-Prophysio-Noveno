@@ -1,31 +1,67 @@
-/* Variables de color para el tema claro (puedes añadir un bloque para modo oscuro si lo necesitas) */
+/* Variables CSS */
 :root {
-  --background-color: hsl(0 0% 100%); /* Blanco */
-  --foreground-color: hsl(222.2 47.4% 11.2%); /* Gris oscuro casi negro */
-  --muted-background-color: hsl(210 40% 96.1%); /* Gris muy claro */
-  --muted-foreground-color: hsl(215.4 16.3% 46.9%); /* Gris medio */
-  --border-color: hsl(214.3 31.8% 91.4%); /* Gris claro para bordes */
-  --primary-color: hsl(222.2 47.4% 11.2%); /* Color primario (ej. azul oscuro) */
-  --primary-foreground-color: hsl(210 40% 98%); /* Texto sobre primario (blanco) */
-  --destructive-color: hsl(0 84.2% 60.2%); /* Rojo para acciones destructivas */
-  --destructive-foreground-color: hsl(210 40% 98%); /* Texto sobre destructivo (blanco) */
-  --accent-color: hsl(210 40% 96.1%); /* Color de acento (gris claro) */
-  --accent-foreground-color: hsl(222.2 47.4% 11.2%); /* Texto sobre acento */
-  --radius: 0.5rem; /* Radio de borde por defecto */
-
-  /* Colores específicos para estados de citas */
-  --status-confirmed-bg: hsl(142.1 76.2% 36.3%); /* Verde */
-  --status-confirmed-text: hsl(0 0% 100%);
-  --status-pending-bg: hsl(48 96% 50%); /* Amarillo */
-  --status-pending-text: hsl(48 96% 20%);
-  --status-cancelled-bg: hsl(0 84.2% 60.2%); /* Rojo */
-  --status-cancelled-text: hsl(0 0% 100%);
-  --status-postponed-bg: hsl(217.2 91.2% 59.8%); /* Azul */
-  --status-postponed-text: hsl(0 0% 100%);
-  --status-completed-bg: hsl(215.4 16.3% 46.9%); /* Gris */
-  --status-completed-text: hsl(0 0% 100%);
-  --status-missed-bg: hsl(262.1 83.3% 57.8%); /* Morado */
-  --status-missed-text: hsl(0 0% 100%);
+  /* Colores Base */
+  --clr-white: #ffffff;
+  --clr-black: #000000;
+  --clr-gray-dark: #264653; /* Anteriormente --color-dark */
+  --clr-gray-medium: #94a3b8; /* Anteriormente --color-gray */
+  --clr-light-blue: #a2e1e8;
+  --clr-brown: #9b6b70;
+  /* Colores de Marca/Primarios */
+  --clr-brand-primary: #2a9d8f; /* Color principal de la marca */
+  --clr-brand-primary-hover: #0d9488;
+  --clr-brand-primary-light: #f0fdfa;
+  --clr-brand-secondary: #c4226b;
+  --clr-brand-secondary-hover: #9d1b55;
+  --clr-brand-teal: #14b8a6; /* Tono específico de teal */
+  /* Colores de Estado/Feedback */
+  --clr-status-success: #10b981;
+  --clr-status-danger: #ef4444;
+  --clr-status-warning: #f59e0b;
+  --clr-status-info: #3b82f6;
+  --clr-status-purple: #8b5cf6;
+  --clr-status-inactive: #6b7280;
+  /* Colores de Texto */
+  --txt-default: #374151;
+  --txt-secondary: #6b7280;
+  --txt-tertiary: #9ca3af;
+  --txt-heading: #111827;
+  /* Colores de Fondo */
+  --bg-page: #f0f2f5; /* Fondo de la página (body) */
+  --bg-default: #f9f9f9;
+  --bg-secondary: #f9fafb;
+  --bg-white: #ffffff;
+  --bg-off-white: #f8fafc;
+  /* Colores de Fondo de Estado */
+  --bg-status-success-light: #dcfce7;
+  --bg-status-inactive-light: #f3f4f6;
+  --bg-status-info-light: #dbeafe;
+  /* Bordes */
+  --brd-default: #e5e7eb;
+  /* Radios de Borde */
+  --radius-md: 0.375rem;
+  --radius-sm: 0.25rem;
+  /* Sombras */
+  --shd-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shd-default: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shd-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shd-sm-alt: 0 1px 3px rgba(0, 0, 0, 0.1); /* Alternativa para sombras pequeñas */
+  --shd-md-alt: 0 4px 6px rgba(0, 0, 0, 0.1); /* Alternativa para sombras medianas */
+  --shd-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Sombra grande */
+  /* Variables específicas para citas (badges) */
+  --appointmentsAdmin-color-confirmed: var(--clr-status-success);
+  --appointmentsAdmin-color-confirmed-bg: var(--bg-status-success-light);
+  --appointmentsAdmin-color-pending: var(--clr-status-warning);
+  --appointmentsAdmin-color-pending-bg: #fefce8; /* Un amarillo más claro para pendiente */
+  --appointmentsAdmin-color-cancelled: var(--clr-status-danger);
+  --appointmentsAdmin-color-cancelled-bg: #fee2e2; /* Un rojo más claro para cancelado */
+  /* Variables específicas para pestañas */
+  --tab-background: var(--clr-white); /* Fondo de la pestaña activa */
+  --tab-background-secondary: var(--bg-secondary); /* Fondo de la lista de pestañas */
+  --tab-foreground: var(--txt-default); /* Color de texto de la pestaña activa */
+  --tab-foreground-secondary: var(--txt-secondary); /* Color de texto de la pestaña inactiva */
+  --tab-border-radius: var(--radius-md); /* Radio de borde para pestañas */
+  --tab-shadow-sm: var(--shd-sm); /* Sombra para la pestaña activa */
 }
 
 /* Overlay del modal */
@@ -55,15 +91,14 @@
 
 /* Contenedor principal del modal */
 .appointment-details-panel {
-  background-color: var(--background-color);
+  background-color: var(--bg-white); /* Usando la nueva variable */
   width: 90%; /* Ancho relativo */
   max-width: 600px; /* Ancho máximo para pantallas grandes */
   max-height: 90vh; /* Altura máxima para evitar desbordamiento */
-  border-radius: var(--radius);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+  border-radius: var(--radius-md); /* Usando la nueva variable */
+  box-shadow: var(--shd-lg); /* Usando la nueva variable de sombra */
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Asegura que el contenido no se desborde del borde redondeado */
   animation: scaleIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; /* Animación de escala */
 }
 
@@ -85,13 +120,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--brd-default); /* Usando la nueva variable */
 }
 
 .appointment-details-title {
   font-size: 1.5rem; /* Título más grande */
   font-weight: 700;
-  color: var(--foreground-color);
+  color: var(--txt-heading); /* Usando la nueva variable */
 }
 
 .appointment-details-close-btn {
@@ -99,8 +134,8 @@
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  border-radius: var(--radius);
-  color: var(--muted-foreground-color);
+  border-radius: var(--radius-md); /* Usando la nueva variable */
+  color: var(--txt-secondary); /* Usando la nueva variable */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,7 +143,7 @@
 }
 
 .appointment-details-close-btn:hover {
-  background-color: var(--muted-background-color);
+  background-color: var(--bg-secondary); /* Usando la nueva variable */
 }
 
 /* Contenido del modal (scrollable) */
@@ -126,7 +161,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: var(--primary-color);
+  color: var(--clr-brand-primary); /* Usando la nueva variable */
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -135,7 +170,7 @@
 .appointment-details-section-icon {
   width: 20px;
   height: 20px;
-  color: var(--primary-color);
+  color: var(--clr-brand-primary); /* Usando la nueva variable */
 }
 
 .appointment-details-section-grid {
@@ -147,14 +182,14 @@
 .appointment-details-item {
   display: flex;
   align-items: center;
-  color: var(--foreground-color);
+  color: var(--txt-default); /* Usando la nueva variable */
   font-size: 0.95rem;
   line-height: 1.4;
 }
 
 .appointment-details-icon {
   margin-right: 0.75rem;
-  color: var(--muted-foreground-color);
+  color: var(--txt-secondary); /* Usando la nueva variable */
   width: 18px;
   height: 18px;
   flex-shrink: 0;
@@ -163,7 +198,7 @@
 .appointment-details-label {
   font-weight: 500;
   margin-right: 0.5rem;
-  color: var(--muted-foreground-color);
+  color: var(--txt-secondary); /* Usando la nueva variable */
 }
 
 .appointment-details-status-badge {
@@ -172,64 +207,67 @@
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: capitalize;
-  color: var(--primary-foreground-color);
+  color: var(--clr-white); /* Texto blanco para badges */
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 80px; /* Ancho mínimo para consistencia */
 }
 
-/* Colores de estado */
+/* Colores de estado usando las nuevas variables específicas para citas */
 .status-confirmada {
-  background-color: var(--status-confirmed-bg);
-  color: var(--status-confirmed-text);
+  background-color: var(--appointmentsAdmin-color-confirmed);
+  color: var(--clr-white); /* Asegura texto blanco */
 }
 .status-pendiente {
-  background-color: var(--status-pending-bg);
-  color: var(--status-pending-text);
+  background-color: var(--appointmentsAdmin-color-pending-bg);
+  color: var(--appointmentsAdmin-color-pending);
 }
 .status-cancelada {
-  background-color: var(--status-cancelled-bg);
-  color: var(--status-cancelled-text);
+  background-color: var(--appointmentsAdmin-color-cancelled-bg);
+  color: var(--appointmentsAdmin-color-cancelled);
 }
 .status-postergada {
-  background-color: var(--status-postponed-bg);
-  color: var(--status-postponed-text);
+  background-color: var(--clr-status-info); /* Usando clr-status-info para postergada */
+  color: var(--clr-white);
 }
 .status-completada {
-  background-color: var(--status-completed-bg);
-  color: var(--status-completed-text);
+  background-color: var(--clr-status-inactive); /* Usando clr-status-inactive para completada */
+  color: var(--clr-white);
 }
 .status-inasistencia {
-  background-color: var(--status-missed-bg);
-  color: var(--status-missed-text);
+  background-color: var(--clr-status-purple); /* Usando clr-status-purple para inasistencia */
+  color: var(--clr-white);
 }
 
 .notes-content {
-  display: block; /* Para que el párrafo de notas ocupe su propia línea */
-  padding-left: calc(18px + 0.75rem); /* Alinea el texto con los iconos de arriba */
+  display: block;
+  padding-left: calc(18px + 0.75rem);
 }
 
 .notes-content p {
   margin: 0;
-  color: var(--foreground-color);
+  color: var(--txt-default); /* Usando la nueva variable */
 }
 
 /* Pie de página del modal */
 .appointment-details-footer {
   padding: 1.5rem;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--brd-default); /* Usando la nueva variable */
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 0.75rem;
+  justify-content: flex-end;
+  position: relative;
 }
 
 .appointment-details-action-button {
-  width: 100%;
+  flex-grow: 1;
+  min-width: 150px;
   padding: 0.75rem 1rem;
   font-size: 1rem;
   font-weight: 500;
-  border-radius: var(--radius);
+  border-radius: var(--radius-md); /* Usando la nueva variable */
   cursor: pointer;
   transition: background-color 0.2s ease, opacity 0.2s ease;
   display: flex;
@@ -238,33 +276,59 @@
   gap: 0.5rem;
 }
 
+/* Estilos para el botón de "Más acciones" (DropdownMenuTrigger) */
+.appointment-details-more-actions-button {
+  margin-left: auto;
+  background-color: transparent; /* Asegura que sea transparente por defecto */
+  color: var(--txt-secondary); /* Color del icono */
+  border: none; /* Sin borde */
+  padding: 0.5rem; /* Ajusta el padding si es necesario */
+  border-radius: var(--radius-md);
+}
+
+.appointment-details-more-actions-button:hover:not(:disabled) {
+  background-color: var(--bg-secondary); /* Fondo al pasar el ratón */
+}
+
+/* Estilo para el ítem de menú destructivo (Eliminar Cita) */
+.dropdown-menu-item-destructive {
+  color: var(--clr-status-danger); /* Usando la nueva variable */
+}
+
+.dropdown-menu-item-destructive:hover,
+.dropdown-menu-item-destructive:focus {
+  background-color: #fee2e2; /* Un rojo más claro para el hover, similar a --appointmentsAdmin-color-cancelled-bg */
+  color: var(--clr-status-danger);
+  cursor: pointer;
+}
+
 /* Estilos para los botones de shadcn/ui (si no los tienes ya definidos globalmente) */
-/* Estos son ejemplos, asegúrate de que coincidan con tus definiciones de Button */
 .appointment-details-action-button[variant="default"] {
-  background-color: var(--primary-color);
-  color: var(--primary-foreground-color);
-  border: 1px solid var(--primary-color);
+  background-color: var(--clr-brand-primary); /* Usando la nueva variable */
+  color: var(--clr-white); /* Usando la nueva variable */
+  border: 1px solid var(--clr-brand-primary);
 }
 .appointment-details-action-button[variant="default"]:hover:not(:disabled) {
-  background-color: hsl(222.2 47.4% 20%); /* Un poco más oscuro */
+  background-color: var(--clr-brand-primary-hover); /* Usando la nueva variable */
+  border-color: var(--clr-brand-primary-hover);
 }
 
 .appointment-details-action-button[variant="destructive"] {
-  background-color: var(--destructive-color);
-  color: var(--destructive-foreground-color);
-  border: 1px solid var(--destructive-color);
+  background-color: var(--clr-status-danger); /* Usando la nueva variable */
+  color: var(--clr-white); /* Usando la nueva variable */
+  border: 1px solid var(--clr-status-danger);
 }
 .appointment-details-action-button[variant="destructive"]:hover:not(:disabled) {
-  background-color: hsl(0 84.2% 50%); /* Un poco más oscuro */
+  background-color: hsl(0 84.2% 50%); /* Un poco más oscuro, puedes definir una variable si quieres */
 }
 
 .appointment-details-action-button[variant="outline"] {
   background-color: transparent;
-  color: var(--foreground-color);
-  border: 1px solid var(--border-color);
+  color: var(--txt-default); /* Usando la nueva variable */
+  border: 1px solid var(--brd-default); /* Usando la nueva variable */
 }
 .appointment-details-action-button[variant="outline"]:hover:not(:disabled) {
-  background-color: var(--muted-background-color);
+  background-color: var(--bg-secondary); /* Usando la nueva variable */
 }
 
 .appointment-details-action-button:disabled {
@@ -275,11 +339,19 @@
 /* Media queries para responsividad */
 @media (max-width: 768px) {
   .appointment-details-panel {
-    width: 95%; /* Un poco más de ancho en móviles */
-    max-width: none; /* Sin ancho máximo en móviles */
+    width: 95%;
+    max-width: none;
   }
 
   .appointment-details-section-grid {
-    grid-template-columns: 1fr; /* Una columna en móviles */
+    grid-template-columns: 1fr;
+  }
+
+  .appointment-details-footer {
+    justify-content: center;
+  }
+
+  .appointment-details-more-actions-button {
+    margin-left: 0;
   }
 }

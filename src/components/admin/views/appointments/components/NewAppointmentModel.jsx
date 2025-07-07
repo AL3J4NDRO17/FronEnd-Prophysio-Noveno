@@ -39,9 +39,9 @@ const NewAppointmentModal = ({
 }) => {
   const [newAppointmentData, setNewAppointmentData] = useState({
     id_usuario: "",
-    fecha_hora: format(new Date(), "yyyy-MM-dd"), // Usar date-fns para formato inicial
+    fecha_hora: format(new Date(), "yyyy-MM-dd"),
     hora_cita: "09:00",
-    estado: "pendiente",
+    estado: "pendiente", // Se mantendrá aquí para la edición, pero se sobrescribirá para nuevas citas
     notes: "",
     numero_sesion: 1,
   })
@@ -50,15 +50,16 @@ const NewAppointmentModal = ({
   const [selectedUser, setSelectedUser] = useState(null)
   const [userSearchLoading, setUserSearchLoading] = useState(false)
 
+  // Efecto para inicializar el modal al abrirse o al cambiar la cita a editar/usuario inicial
   useEffect(() => {
     if (isOpen) {
       if (editingAppointment) {
-        const appDate = parseISO(editingAppointment.fecha_hora) // Usar parseISO
+        const appDate = parseISO(editingAppointment.fecha_hora)
         setNewAppointmentData({
           id_usuario: editingAppointment.id_usuario || "",
-          fecha_hora: format(appDate, "yyyy-MM-dd"), // Formatear a YYYY-MM-DD
-          hora_cita: format(appDate, "HH:mm"), // Formatear a HH:mm
-          estado: editingAppointment.estado || "pendiente",
+          fecha_hora: format(appDate, "yyyy-MM-dd"),
+          hora_cita: format(appDate, "HH:mm"),
+          estado: editingAppointment.estado || "pendiente", // Usa el estado existente para edición
           notes: editingAppointment.notes || "",
           numero_sesion: editingAppointment.numero_sesion || 1,
         })
@@ -68,37 +69,56 @@ const NewAppointmentModal = ({
           email: editingAppointment.usuario?.email,
         })
         setUserSearchTerm(editingAppointment.usuario?.nombre || "")
-      } else if (initialSelectedUser) {
-        setNewAppointmentData((prev) => ({
-          ...prev,
-          id_usuario: initialSelectedUser.id_usuario,
-        }))
-        setSelectedUser(initialSelectedUser)
-        setUserSearchTerm(initialSelectedUser.nombre)
       } else {
+        // Para una cita nueva (con o sin usuario inicial)
         const today = new Date()
         let defaultHour = "09:00"
         if (clinicWorkHours && clinicWorkHours.length > 0) {
-          const todayDayNameEnglish = ENGLISH_DAYS_OF_WEEK[getDay(today)] // Usar getDay de date-fns
-          const firstScheduleForToday = clinicWorkHours.find((s) => s.dia === todayDayNameEnglish)
+          const todayDayNameSpanish = SPANISH_DAYS_OF_WEEK[getDay(today)]
+          const firstScheduleForToday = clinicWorkHours.find((s) => s.dia === todayDayNameSpanish)
           if (firstScheduleForToday) {
             defaultHour = firstScheduleForToday.hora_inicio.substring(0, 5)
           }
         }
         setNewAppointmentData({
-          id_usuario: "",
-          fecha_hora: format(today, "yyyy-MM-dd"), // Usar date-fns para formato
+          id_usuario: initialSelectedUser?.id_usuario || "",
+          fecha_hora: format(today, "yyyy-MM-dd"),
           hora_cita: defaultHour,
-          estado: "pendiente",
+          estado: "confirmada", // Siempre "confirmada" para nuevas citas
           notes: "",
-          numero_sesion: 1,
+          numero_sesion: 1, // Por defecto 1, se recalculará si hay usuario seleccionado
         })
-        setSelectedUser(null)
+        setSelectedUser(initialSelectedUser || null)
         setFoundUsers([])
-        setUserSearchTerm("")
+        setUserSearchTerm(initialSelectedUser?.nombre || "")
       }
     }
   }, [isOpen, editingAppointment, initialSelectedUser, clinicWorkHours])
+
+  // Nuevo efecto para calcular el número de sesión cuando cambia el usuario seleccionado
+  useEffect(() => {
+    // Solo aplica esta lógica si NO estamos editando una cita existente
+    if (!editingAppointment) {
+      if (selectedUser) {
+        const patientCompletedAppointments = allAppointments.filter(
+          (cita) =>
+            cita.id_usuario === selectedUser.id_usuario &&
+            (cita.estado === "completada" || cita.estado === "pendiente" || cita.estado === "confirmada"), // Incluir confirmada
+        )
+        const nextSessionNumber = patientCompletedAppointments.length + 1
+        setNewAppointmentData((prev) => ({
+          ...prev,
+          numero_sesion: nextSessionNumber,
+        }))
+      } else {
+        // Si no hay usuario seleccionado, el número de sesión vuelve a 1
+        setNewAppointmentData((prev) => ({
+          ...prev,
+          numero_sesion: 1, // Vuelve a 1 si no hay usuario
+        }))
+      }
+    }
+  }, [selectedUser, allAppointments, editingAppointment]) // Dependencias: selectedUser, allAppointments, editingAppointment
 
   const handleModalInputChange = (e) => {
     const { name, value } = e.target
@@ -138,41 +158,30 @@ const NewAppointmentModal = ({
   }
 
   const isTimeSlotAvailable = (dateTime, existingAppointments, editingAppId = null) => {
-    const selectedDateTime = parseISO(dateTime) // Usar parseISO
-    const selectedDayIndex = getDay(selectedDateTime) // Usar getDay de date-fns
-    const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[selectedDayIndex]
+    const selectedDateTime = parseISO(dateTime)
+    const selectedDayIndex = getDay(selectedDateTime)
+    const selectedDayNameSpanish = ENGLISH_DAYS_OF_WEEK[selectedDayIndex]
 
-    console.log(
-      "NewAppointmentModal - isTimeSlotAvailable - Fecha y Hora seleccionada:",
-      selectedDateTime.toISOString(),
-    )
-    console.log("NewAppointmentModal - isTimeSlotAvailable - Índice del día:", selectedDayIndex)
-    console.log("NewAppointmentModal - isTimeSlotAvailable - Nombre del día (inglés):", selectedDayNameEnglish)
-
-    const daySchedules = clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameEnglish)
-    console.log("NewAppointmentModal - isTimeSlotAvailable - Horarios de clínica para el día:", daySchedules)
-
+    const daySchedules = clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameSpanish)
     if (daySchedules.length === 0) {
-      toast.error(`La clínica no trabaja los ${SPANISH_DAYS_OF_WEEK[selectedDayIndex]}s.`)
+      toast.error(`La clínica no trabaja los ${SPANISH_DAYS_OF_WEEK[selectedDayIndex]}.`)
       return false
     }
 
     let isWithinWorkHours = false
     let sessionDuration = 0
-
     for (const schedule of daySchedules) {
       const [startH, startM] = schedule.hora_inicio.split(":").map(Number)
       const [endH, endM] = schedule.hora_fin.split(":").map(Number)
-
-      const workStartDateTime = setMinutes(setHours(selectedDateTime, startH), startM) // Usar setHours, setMinutes
-      const workEndDateTime = setMinutes(setHours(selectedDateTime, endH), endM) // Usar setHours, setMinutes
+      const workStartDateTime = setMinutes(setHours(selectedDateTime, startH), startM)
+      const workEndDateTime = setMinutes(setHours(selectedDateTime, endH), endM)
 
       if (
-        (isEqual(selectedDateTime, workStartDateTime) || isAfter(selectedDateTime, workStartDateTime)) && // Usar isEqual, isAfter
-        isBefore(selectedDateTime, workEndDateTime) // Usar isBefore
+        (isEqual(selectedDateTime, workStartDateTime) || isAfter(selectedDateTime, workStartDateTime)) &&
+        isBefore(selectedDateTime, workEndDateTime)
       ) {
         sessionDuration = schedule.duracion_sesion
-        const newAppEndTime = addMinutes(selectedDateTime, sessionDuration) // Usar addMinutes
+        const newAppEndTime = addMinutes(selectedDateTime, sessionDuration)
         if (isBefore(newAppEndTime, workEndDateTime) || isEqual(newAppEndTime, workEndDateTime)) {
           isWithinWorkHours = true
           break
@@ -187,15 +196,14 @@ const NewAppointmentModal = ({
       return false
     }
 
-    const newAppEndTime = addMinutes(selectedDateTime, sessionDuration) // Usar addMinutes
-
+    const newAppEndTime = addMinutes(selectedDateTime, sessionDuration)
     for (const app of existingAppointments) {
       if (editingAppId && app.id_cita === editingAppId) continue
       if (app.estado === "cancelada" || app.estado === "completada" || app.estado === "inasistencia") continue
 
-      const existingAppStartTime = parseISO(app.fecha_hora) // Usar parseISO
+      const existingAppStartTime = parseISO(app.fecha_hora)
       const existingAppDuration = app.duracion || DEFAULT_SESSION_DURATION
-      const existingAppEndTime = addMinutes(existingAppStartTime, existingAppDuration) // Usar addMinutes
+      const existingAppEndTime = addMinutes(existingAppStartTime, existingAppDuration)
 
       if (isBefore(selectedDateTime, existingAppEndTime) && isAfter(newAppEndTime, existingAppStartTime)) {
         toast.error("El horario seleccionado se superpone con otra cita existente.")
@@ -209,19 +217,11 @@ const NewAppointmentModal = ({
     const slots = []
     if (!newAppointmentData.fecha_hora || !Array.isArray(clinicWorkHours) || clinicWorkHours.length === 0) return []
 
-    const selectedDate = parseISO(newAppointmentData.fecha_hora) // Usar parseISO
-    const dayOfWeekIndex = getDay(selectedDate) // Usar getDay de date-fns
-    // ¡CORRECCIÓN CRÍTICA AQUÍ! clinicWorkHours ya tiene los días en inglés.
-    const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex]
+    const selectedDate = parseISO(newAppointmentData.fecha_hora)
+    const dayOfWeekIndex = getDay(selectedDate)
+    const selectedDayNameSpanish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex]
 
-    console.log("NewAppointmentModal - getTimeSlots - Fecha seleccionada:", selectedDate.toISOString())
-    console.log("NewAppointmentModal - getTimeSlots - Índice del día:", dayOfWeekIndex)
-    console.log("NewAppointmentModal - getTimeSlots - Nombre del día (inglés):", selectedDayNameEnglish)
-    console.log("NewAppointmentModal - getTimeSlots - clinicWorkHours (para filtrar):", clinicWorkHours)
-
-    const daySchedules = clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameEnglish)
-    console.log("NewAppointmentModal - getTimeSlots - Horarios encontrados para el día:", daySchedules)
-
+    const daySchedules = clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameSpanish)
     if (daySchedules.length === 0) return []
 
     const allPotentialSlots = []
@@ -230,35 +230,32 @@ const NewAppointmentModal = ({
       const [endH, endM] = schedule.hora_fin.split(":").map(Number)
       const currentSessionDuration = schedule.duracion_sesion
 
-      let current = setMinutes(setHours(selectedDate, startH), startM) // Usar setHours, setMinutes
-      const end = setMinutes(setHours(selectedDate, endH), endM) // Usar setHours, setMinutes
+      let current = setMinutes(setHours(selectedDate, startH), startM)
+      const end = setMinutes(setHours(selectedDate, endH), endM)
 
       while (
         isBefore(addMinutes(current, currentSessionDuration), addMinutes(end, 1)) ||
         isEqual(addMinutes(current, currentSessionDuration), end)
       ) {
-        // Ajuste para incluir el último slot si coincide exactamente
-        allPotentialSlots.push(format(current, "HH:mm")) // Usar format
-        current = addMinutes(current, currentSessionDuration) // Usar addMinutes
+        allPotentialSlots.push(format(current, "HH:mm"))
+        current = addMinutes(current, currentSessionDuration)
       }
     })
 
     const uniqueSortedPotentialSlots = [...new Set(allPotentialSlots)].sort()
 
     const filteredSlots = uniqueSortedPotentialSlots.filter((slot) => {
-      const potentialAppStart = parseISO(`${newAppointmentData.fecha_hora}T${slot}:00`) // Usar parseISO
+      const potentialAppStart = parseISO(`${newAppointmentData.fecha_hora}T${slot}:00`)
       let currentSlotDuration = 0
 
-      const selectedDayNameEnglishForSlot = ENGLISH_DAYS_OF_WEEK[getDay(potentialAppStart)] // Usar getDay
-      console.log(clinicWorkHours,"|",)
+      const selectedDayNameSpanishForSlot = SPANISH_DAYS_OF_WEEK[getDay(potentialAppStart)] // Usar SPANISH_DAYS_OF_WEEK aquí
       const relevantSchedule = clinicWorkHours.find((s) => {
         const [sH, sM] = s.hora_inicio.split(":").map(Number)
         const [eH, eM] = s.hora_fin.split(":").map(Number)
-        const scheduleStart = setMinutes(setHours(potentialAppStart, sH), sM) // Usar setHours, setMinutes
-        const scheduleEnd = setMinutes(setHours(potentialAppStart, eH), eM) // Usar setHours, setMinutes
-
+        const scheduleStart = setMinutes(setHours(potentialAppStart, sH), sM)
+        const scheduleEnd = setMinutes(setHours(potentialAppStart, eH), eM)
         return (
-          s.dia === selectedDayNameEnglishForSlot &&
+          s.dia === selectedDayNameSpanishForSlot &&
           (isEqual(potentialAppStart, scheduleStart) || isAfter(potentialAppStart, scheduleStart)) &&
           isBefore(potentialAppStart, scheduleEnd)
         )
@@ -270,7 +267,7 @@ const NewAppointmentModal = ({
         currentSlotDuration = DEFAULT_SESSION_DURATION
       }
 
-      const potentialAppEnd = addMinutes(potentialAppStart, currentSlotDuration) // Usar addMinutes
+      const potentialAppEnd = addMinutes(potentialAppStart, currentSlotDuration)
 
       const isOverlapping = allAppointments.some((existingApp) => {
         if (editingAppointment && existingApp.id_cita === editingAppointment.id_cita) return false
@@ -281,21 +278,22 @@ const NewAppointmentModal = ({
         )
           return false
 
-        const existingAppStartTime = parseISO(existingApp.fecha_hora) // Usar parseISO
+        const existingAppStartTime = parseISO(existingApp.fecha_hora)
         const existingAppDuration = existingApp.duracion || DEFAULT_SESSION_DURATION
-        const existingAppEndTime = addMinutes(existingAppStartTime, existingAppDuration) // Usar addMinutes
+        const existingAppEndTime = addMinutes(existingAppStartTime, existingAppDuration)
 
         return isBefore(potentialAppStart, existingAppEndTime) && isAfter(potentialAppEnd, existingAppStartTime)
       })
       return !isOverlapping
     })
+
     return filteredSlots
   }, [newAppointmentData.fecha_hora, clinicWorkHours, allAppointments, editingAppointment])
 
   const timeSlots = getTimeSlots()
 
   const handleSave = async () => {
-    const { fecha_hora, hora_cita, id_usuario, ...restData } = newAppointmentData
+    const { fecha_hora, hora_cita, id_usuario, notes, numero_sesion } = newAppointmentData
     const combinedDateTime = `${fecha_hora}T${hora_cita}:00`
 
     if (!id_usuario) {
@@ -306,32 +304,30 @@ const NewAppointmentModal = ({
       toast.error("Por favor, complete la fecha y hora de la cita.")
       return
     }
-    if (!restData.notes) {
+    if (!notes) {
       toast.error("Por favor, ingrese el motivo de la consulta en las notas.")
       return
     }
 
-    const selectedDateTime = parseISO(combinedDateTime) // Usar parseISO
+    const selectedDateTime = parseISO(combinedDateTime)
     if (!editingAppointment && isBefore(selectedDateTime, new Date())) {
       toast.error("No se puede agendar una cita en el pasado.")
       return
     }
 
     let actualAppointmentDuration = DEFAULT_SESSION_DURATION
-    const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[getDay(selectedDateTime)] // Usar getDay
+    const selectedDayNameSpanish = SPANISH_DAYS_OF_WEEK[getDay(selectedDateTime)]
     const relevantSchedule = clinicWorkHours.find((s) => {
       const [sH, sM] = s.hora_inicio.split(":").map(Number)
       const [eH, eM] = s.hora_fin.split(":").map(Number)
-      const scheduleStart = setMinutes(setHours(selectedDateTime, sH), sM) // Usar setHours, setMinutes
-      const scheduleEnd = setMinutes(setHours(selectedDateTime, eH), eM) // Usar setHours, setMinutes
-
+      const scheduleStart = setMinutes(setHours(selectedDateTime, sH), sM)
+      const scheduleEnd = setMinutes(setHours(selectedDateTime, eH), eM)
       return (
-        s.dia === selectedDayNameEnglish &&
+        s.dia === selectedDayNameSpanish &&
         (isEqual(selectedDateTime, scheduleStart) || isAfter(selectedDateTime, scheduleStart)) &&
         isBefore(selectedDateTime, scheduleEnd)
       )
     })
-
     if (relevantSchedule) {
       actualAppointmentDuration = relevantSchedule.duracion_sesion
     } else {
@@ -344,20 +340,13 @@ const NewAppointmentModal = ({
       return
     }
 
-    let nextSessionNumber = restData.numero_sesion
-    if (!editingAppointment) {
-      const patientCompletedAppointments = allAppointments.filter(
-        (cita) => cita.id_usuario === id_usuario && cita.estado === "completada",
-      )
-      nextSessionNumber = patientCompletedAppointments.length + 1
-    }
-
     const appointmentPayload = {
-      ...restData,
       id_usuario: id_usuario,
-      fecha_hora: selectedDateTime.toISOString(), // Asegurarse de que sea ISO string
+      fecha_hora: selectedDateTime.toISOString(),
       duracion: actualAppointmentDuration,
-      numero_sesion: nextSessionNumber,
+      notes: notes,
+      numero_sesion: numero_sesion,
+      estado: editingAppointment ? newAppointmentData.estado : "confirmada", // Estado condicional
     }
 
     onSave(appointmentPayload, !!editingAppointment)
@@ -365,7 +354,8 @@ const NewAppointmentModal = ({
 
   if (!isOpen) return null
 
-  console.log("NewAppointmentModal - Slots de tiempo generados:", timeSlots)
+  // Determinar si el campo numero_sesion debe ser de solo lectura
+  const isSessionNumberReadOnly = !editingAppointment && !!selectedUser
 
   return (
     <div className="new-appointment-modal-overlay">
@@ -426,7 +416,6 @@ const NewAppointmentModal = ({
                     setNewAppointmentData((prev) => ({ ...prev, id_usuario: "" }))
                     setUserSearchTerm("")
                   }}
-                  className="new-appointment-change-user-button"
                   disabled={!!editingAppointment || !!initialSelectedUser}
                 >
                   Cambiar
@@ -479,31 +468,34 @@ const NewAppointmentModal = ({
               value={newAppointmentData.numero_sesion}
               onChange={handleModalInputChange}
               min="1"
-              readOnly={!editingAppointment}
-              className={!editingAppointment ? "new-appointment-readonly-input" : ""}
+              readOnly={isSessionNumberReadOnly}
+              className={isSessionNumberReadOnly ? "new-appointment-readonly-input" : ""}
             />
           </div>
-          <div className="new-appointment-form-group">
-            <Label htmlFor="estado_modal">Estado</Label>
-            <Select
-              id="estado_modal"
-              name="estado"
-              value={newAppointmentData.estado}
-              onValueChange={(value) => handleModalInputChange({ target: { name: "estado", value } })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Seleccione un estado" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pendiente">Pendiente</SelectItem>
-                <SelectItem value="confirmada">Confirmada</SelectItem>
-                <SelectItem value="cancelada">Cancelada</SelectItem>
-                <SelectItem value="completada">Completada</SelectItem>
-                <SelectItem value="postergada">Postergada</SelectItem>
-                <SelectItem value="inasistencia">Inasistencia</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          {/* El campo de estado se muestra solo si se está editando una cita */}
+          {editingAppointment && (
+            <div className="new-appointment-form-group">
+              <Label htmlFor="estado_modal">Estado</Label>
+              <Select
+                id="estado_modal"
+                name="estado"
+                value={newAppointmentData.estado}
+                onValueChange={(value) => handleModalInputChange({ target: { name: "estado", value } })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Seleccione un estado" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pendiente">Pendiente</SelectItem>
+                  <SelectItem value="confirmada">Confirmada</SelectItem>
+                  <SelectItem value="cancelada">Cancelada</SelectItem>
+                  <SelectItem value="completada">Completada</SelectItem>
+                  <SelectItem value="postergada">Postergada</SelectItem>
+                  <SelectItem value="inasistencia">Inasistencia</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="new-appointment-form-group">
             <Label htmlFor="notes_modal">Notas (Motivo de Consulta)</Label>
             <textarea
@@ -529,5 +521,4 @@ const NewAppointmentModal = ({
     </div>
   )
 }
-
 export default NewAppointmentModal
