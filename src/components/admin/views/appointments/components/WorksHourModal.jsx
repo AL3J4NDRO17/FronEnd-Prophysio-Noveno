@@ -1,42 +1,45 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@dialog" // Importación corregida
-import { Button } from "@button" // Importación corregida
-import { Input } from "@input" // Importación corregida
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@select" // Importación corregida
-import { Label } from "@label" // Importación corregida
-import "../styles/WorkHoursModal.css" // Importar el CSS
+// ¡IMPORTANTE! Asegúrate de que estos alias (@dialog, @button, etc.)
+// estén correctamente configurados en tu tsconfig.json o next.config.mjs
+// para que apunten a la ubicación real de tus componentes de UI.
+// Basado en tu archivo dialog-zyKweK6gjovxcpBc2eNryyj7NJHArs.jsx,
+// estos alias deben apuntar a tu implementación personalizada.
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@dialog"
+import { Button } from "@button"
+import { Input } from "@input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@select"
+import { Label } from "@label"
+import "../styles/WorkHoursModal.css"
 import { format } from "date-fns"
 import { es, enUS } from "date-fns/locale"
 
 const generateDaysOfWeekOptions = () => {
   const options = []
-  // Crear una fecha de referencia para cada día de la semana, empezando por el lunes
-  // 4 de enero de 2021 fue un lunes. Usamos una fecha fija para asegurar el orden.
-  const mondayRef = new Date("2021-01-04T12:00:00Z")
+  const mondayRef = new Date("2021-01-04T12:00:00Z") // Lunes de referencia
 
   for (let i = 0; i < 7; i++) {
     const date = new Date(mondayRef)
-    date.setDate(mondayRef.getDate() + i) // Añadir días para obtener Martes, Miércoles, etc.
+    date.setDate(mondayRef.getDate() + i)
 
     options.push({
-      value: format(date, "EEEE", { locale: enUS }), // Valor en inglés (ej. "Monday")
-      label: format(date, "EEEE", { locale: es }), // Etiqueta en español (ej. "Lunes")
+      value: format(date, "EEEE", { locale: enUS }),
+      label: format(date, "EEEE", { locale: es }),
     })
   }
-  console.log("opciones",options)
   return options
 }
 
 const daysOfWeek = generateDaysOfWeekOptions()
-console.log(daysOfWeek)
+
 export default function WorkHoursModal({ isOpen, onClose, currentWorkHours, onSave }) {
+  console.log("WorkHoursModal: Prop isOpen =", isOpen) // Mantener para depuración
+
   const [schedules, setSchedules] = useState([])
 
   useEffect(() => {
     if (isOpen && currentWorkHours) {
-      // Mapear los días a inglés para el estado interno del modal
       const mappedHours = currentWorkHours.map((h) => ({
         ...h,
         dia:
@@ -55,15 +58,12 @@ export default function WorkHoursModal({ isOpen, onClose, currentWorkHours, onSa
                       : h.dia === "Domingo"
                         ? "Sunday"
                         : h.dia,
+        hora_comida_inicio: h.hora_comida_inicio || null,
+        hora_comida_fin: h.hora_comida_fin || null,
       }))
       setSchedules(mappedHours)
     }
   }, [isOpen, currentWorkHours])
-
-  // Añadir un console.log para depurar el estado de los horarios
-  useEffect(() => {
-    console.log("Estado actual de schedules en WorkHoursModal:", schedules)
-  }, [schedules])
 
   const handleDayChange = (index, value) => {
     const newSchedules = [...schedules]
@@ -84,8 +84,18 @@ export default function WorkHoursModal({ isOpen, onClose, currentWorkHours, onSa
   }
 
   const addScheduleBlock = () => {
-    // CAMBIO: Inicializar 'dia' como undefined para que el placeholder funcione correctamente
-    setSchedules([...schedules, { id: null, dia: undefined, hora_inicio: "", hora_fin: "", duracion_sesion: "" }])
+    setSchedules([
+      ...schedules,
+      {
+        id: null,
+        dia: undefined,
+        hora_inicio: "",
+        hora_fin: "",
+        hora_comida_inicio: null,
+        hora_comida_fin: null,
+        duracion_sesion: "",
+      },
+    ])
   }
 
   const removeScheduleBlock = (index) => {
@@ -94,20 +104,36 @@ export default function WorkHoursModal({ isOpen, onClose, currentWorkHours, onSa
   }
 
   const handleSave = () => {
-    // Validar que no haya bloques vacíos o incompletos
-    const isValid = schedules.every(
-      (s) => s.dia && s.hora_inicio && s.hora_fin && s.duracion_sesion !== undefined && s.duracion_sesion !== "",
-    )
+    const isValid = schedules.every((s) => {
+      if (!s.dia || !s.hora_inicio || !s.hora_fin || s.duracion_sesion === undefined || s.duracion_sesion === "") {
+        return false
+      }
+      if ((s.hora_comida_inicio && !s.hora_comida_fin) || (!s.hora_comida_inicio && s.hora_comida_fin)) {
+        return false
+      }
+      return true
+    })
+
     if (!isValid) {
-      alert("Por favor, completa todos los campos de los horarios.")
+      alert(
+        "Por favor, completa todos los campos obligatorios de los horarios y asegúrate de que las horas de comida estén completas o vacías.",
+      )
       return
     }
-    onSave(schedules)
+
+    const schedulesToSave = schedules.map((s) => ({
+      ...s,
+      hora_comida_inicio: s.hora_comida_inicio === "" ? null : s.hora_comida_inicio,
+      hora_comida_fin: s.hora_comida_fin === "" ? null : s.hora_comida_fin,
+    }))
+
+    onSave(schedulesToSave)
   }
 
   if (!isOpen) return null
 
   return (
+    // ¡CAMBIO CLAVE AQUÍ! Volvemos a usar isOpen y onClose para tu Dialog personalizado
     <Dialog isOpen={isOpen} onClose={onClose}>
       <DialogContent className="work-hours-modal-content">
         <DialogHeader>
@@ -122,7 +148,6 @@ export default function WorkHoursModal({ isOpen, onClose, currentWorkHours, onSa
               <div className="schedule-inputs">
                 <div className="form-group">
                   <Label htmlFor={`day-${index}`}>Día</Label>
-                  {/* CAMBIO: Eliminar || "" ya que 'undefined' es el valor esperado para no seleccionado */}
                   <Select onValueChange={(value) => handleDayChange(index, value)} value={schedule.dia}>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Selecciona un día" />
@@ -153,6 +178,26 @@ export default function WorkHoursModal({ isOpen, onClose, currentWorkHours, onSa
                     type="time"
                     value={schedule.hora_fin || ""}
                     onChange={(e) => handleTimeChange(index, "hora_fin", e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+                <div className="form-group">
+                  <Label htmlFor={`lunch-start-time-${index}`}>Comida Inicio (Opcional)</Label>
+                  <Input
+                    id={`lunch-start-time-${index}`}
+                    type="time"
+                    value={schedule.hora_comida_inicio || ""}
+                    onChange={(e) => handleTimeChange(index, "hora_comida_inicio", e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+                <div className="form-group">
+                  <Label htmlFor={`lunch-end-time-${index}`}>Comida Fin (Opcional)</Label>
+                  <Input
+                    id={`lunch-end-time-${index}`}
+                    type="time"
+                    value={schedule.hora_comida_fin || ""}
+                    onChange={(e) => handleTimeChange(index, "hora_comida_fin", e.target.value)}
                     className="w-full"
                   />
                 </div>

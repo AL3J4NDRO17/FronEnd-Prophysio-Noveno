@@ -1,3 +1,4 @@
+import {IMGBanner} from "../assets/topBanner.webp"
 
 
 export default function TopBannerServices() {
@@ -12,16 +13,7 @@ export default function TopBannerServices() {
         </p>
         <div className="services-hero__stats">
           <div className="services-hero__stat">
-            <span className="services-hero__stat-number">15+</span>
-            <span className="services-hero__stat-label">Años de experiencia</span>
-          </div>
-          <div className="services-hero__stat">
-            <span className="services-hero__stat-number">5000+</span>
-            <span className="services-hero__stat-label">Pacientes satisfechos</span>
-          </div>
-          <div className="services-hero__stat">
-            <span className="services-hero__stat-number">98%</span>
-            <span className="services-hero__stat-label">Tasa de éxito</span>
+            
           </div>
         </div>
       </div>

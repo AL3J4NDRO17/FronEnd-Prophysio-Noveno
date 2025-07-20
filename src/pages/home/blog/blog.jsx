@@ -31,44 +31,46 @@ const BlogSection = () => {
     <div className="blog-home-section-container">
       <section className="blog-section">
         <div className="blog-left-container" style={{ flex: 1 }}>
-        <SlideInLeft  >
-          <div className="blog-data-container">
-            <div className="blog-container">
-              {isLoading ? (
-                <p>Cargando artículos...</p>
-              ) : error ? (
-                <p>No pudimos cargar los artículos: {error}</p>
-              ) : recentBlogs.length === 0 ? (
-                <NoArticlesPlaceholder />
-              ) : (
-                <div className="blog-grid">
-                  {recentBlogs.map((post) => (
-                    <article key={post.id} className="blog-card">
-                      <Link to={`/blog/${post.id}`}>
-                        <img
-                          src={post.bannerImage || "/placeholder.svg?height=180&width=320"}
-                          alt={post.title}
-                          className="blog-image"
-                        />
-                        <div className="blog-content">
-                          <div className="blog-category">{post.category || "Fisioterapia"}</div>
-                          <h3 className="blog-card-title">{post.title}</h3>
-                          <p className="blog-excerpt">
-                            {stripHtmlTags(post.mainContent || post.effectsContent).substring(0, 300)}...
-                          </p>
-                          <div className="blog-metadata">
-                            <span>{formatDate(post.publishDate || post.date)}</span>
-                            <span>• Por {post.author || "ProPhysio"}</span>
+          <SlideInLeft  >
+            <div className="blog-data-container">
+              <div className="blog-container">
+                {isLoading ? (
+                  <p>Cargando artículos...</p>
+                ) : error ? (
+                  <p>No pudimos cargar los artículos: {error}</p>
+                ) : recentBlogs.length === 0 ? (
+                  <NoArticlesPlaceholder />
+                ) : (
+                  <div className="blog-grid">
+                    {recentBlogs.map((post) => (
+                      <article key={post.id} className="blog-card">
+                        <Link to={`/blog/${post.id}`}>
+                          <img
+                            src={post.bannerImage || "/placeholder.svg?height=180&width=320"}
+                            alt={post.title}
+                            className="blog-image"
+                          />
+                          <div className="blog-content">
+                            <div className="blog-category">{post.category || "Fisioterapia"}</div>
+                            <h3 className="blog-card-title">
+                              {stripHtmlTags(post.title).substring(0, 300)}...
+                            </h3>
+                            <p className="blog-excerpt">
+                              {stripHtmlTags(post.mainContent || post.effectsContent).substring(0, 300)}...
+                            </p>
+                            <div className="blog-metadata">
+                              <span>{formatDate(post.publishDate || post.date)}</span>
+                              <span>• Por {post.author || "ProPhysio"}</span>
+                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    </article>
-                  ))}
-                </div>
-              )}
+                        </Link>
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </SlideInLeft>
+          </SlideInLeft>
         </div >
         <div className="blog-right-container" style={{ flex: 1 }}>
           <SlideInRight >

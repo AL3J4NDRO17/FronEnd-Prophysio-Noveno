@@ -73,15 +73,9 @@ const AppointmentCalendarView = ({ events, onSelectEvent, onSelectSlot, clinicWo
         const spanishDays = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
         const selectedDayNameEnglish = englishDays[dayOfWeekIndex]
 
-        console.log("CalendarView - Fecha seleccionada (Date object):", selectedDate.toISOString())
-        console.log("CalendarView - Índice del día (getDay()):", dayOfWeekIndex)
-        console.log("CalendarView - Nombre del día (inglés):", selectedDayNameEnglish)
-        console.log("CalendarView - clinicWorkHours recibidos:", clinicWorkHours) // LOG CRUCIAL
-
         const daySchedules = Array.isArray(clinicWorkHours)
           ? clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameEnglish)
           : []
-        console.log("CalendarView - Horarios encontrados para el día seleccionado:", daySchedules)
 
         if (daySchedules.length === 0) {
           toast.error(`La clínica no trabaja los ${spanishDays[dayOfWeekIndex]}.`)
@@ -90,6 +84,8 @@ const AppointmentCalendarView = ({ events, onSelectEvent, onSelectSlot, clinicWo
 
         let isWithinWorkHours = false
         let sessionDuration = 0
+        let isDuringLunchBreak = false // Nuevo flag para la hora de comida
+
         for (const schedule of daySchedules) {
           if (!schedule.hora_inicio || !schedule.hora_fin) {
             console.error("Horario incompleto detectado:", schedule)
@@ -103,17 +99,41 @@ const AppointmentCalendarView = ({ events, onSelectEvent, onSelectSlot, clinicWo
           const workStartDateTime = setMinutes(setHours(selectedDate, workStartTimeParts[0]), workStartTimeParts[1])
           const workEndDateTime = setMinutes(setHours(selectedDate, workEndTimeParts[0]), workEndTimeParts[1])
 
+          // Verificar si la cita cae dentro del horario laboral principal
           if (
             (isEqual(selectedDate, workStartDateTime) || isAfter(selectedDate, workStartDateTime)) &&
             isBefore(selectedDate, workEndDateTime)
           ) {
             sessionDuration = schedule.duracion_sesion
             const slotEnd = addMinutes(selectedDate, sessionDuration)
+
+            // Verificar si la cita se superpone con la hora de comida
+            if (schedule.hora_comida_inicio && schedule.hora_comida_fin) {
+              const [lunchStartH, lunchStartM] = schedule.hora_comida_inicio.split(":").map(Number)
+              const [lunchEndH, lunchEndM] = schedule.hora_comida_fin.split(":").map(Number)
+              const lunchStartDateTime = setMinutes(setHours(selectedDate, lunchStartH), lunchStartM)
+              const lunchEndDateTime = setMinutes(setHours(selectedDate, lunchEndH), lunchEndM)
+
+              if (
+                (isBefore(selectedDate, lunchEndDateTime) && isAfter(slotEnd, lunchStartDateTime)) ||
+                isEqual(selectedDate, lunchStartDateTime) ||
+                isEqual(slotEnd, lunchEndDateTime)
+              ) {
+                isDuringLunchBreak = true
+                break // Si se superpone con la comida, no es válido
+              }
+            }
+
             if (isBefore(slotEnd, workEndDateTime) || isEqual(slotEnd, workEndDateTime)) {
               isWithinWorkHours = true
               break
             }
           }
+        }
+
+        if (isDuringLunchBreak) {
+          toast.error("El horario seleccionado cae dentro de la hora de comida de la clínica.")
+          return
         }
 
         if (!isWithinWorkHours) {
@@ -146,7 +166,7 @@ const AppointmentCalendarView = ({ events, onSelectEvent, onSelectSlot, clinicWo
           return
         }
 
-        onSelectSlot(null)
+        onSelectSlot(null) // Esto debería abrir el modal de nueva cita
       }
     },
     [events, onSelectSlot, clinicWorkHours],

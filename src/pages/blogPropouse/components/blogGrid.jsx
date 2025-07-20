@@ -47,7 +47,7 @@ export default function BlogGrid({ blogs = [] }) {
               </div>
               <h3 dangerouslySetInnerHTML={{ __html: post.title || "" }}></h3>
               <p className="tech_blog_post_excerpt">
-                {`${stripHtmlTags(post.mainContent).substring(0, 150)} ${stripHtmlTags(post.effectsContent).substring(0, 150)}`}
+                {stripHtmlTags(post.mainContent).substring(0, 150)}
               </p>
               <div className="tech_blog_post_footer">
                 <p className="tech_blog_post_author">Por: {post.author}</p>

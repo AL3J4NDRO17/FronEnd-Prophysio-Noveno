@@ -22,6 +22,7 @@ const isSlotWithinWorkHours = (dateTime, clinicWorkHours, appointmentDuration) =
 
   const newAppStartTime = selectedDate.getTime()
   let isWithinWorkHours = false
+  let isDuringLunchBreak = false // Nuevo flag para la hora de comida
 
   for (const schedule of daySchedules) {
     const workStartTimeParts = schedule.hora_inicio.split(":").map(Number)
@@ -36,11 +37,36 @@ const isSlotWithinWorkHours = (dateTime, clinicWorkHours, appointmentDuration) =
     // Check if the new appointment's start time falls within this schedule block
     if (newAppStartTime >= workStartDateTime.getTime() && newAppStartTime < workEndDateTime.getTime()) {
       const newAppEndTime = newAppStartTime + appointmentDuration * 60 * 1000
+
+      // Verificar si la cita se superpone con la hora de comida
+      if (schedule.hora_comida_inicio && schedule.hora_comida_fin) {
+        const [lunchStartH, lunchStartM] = schedule.hora_comida_inicio.split(":").map(Number)
+        const [lunchEndH, lunchEndM] = schedule.hora_comida_fin.split(":").map(Number)
+        const lunchStartDateTime = new Date(selectedDate)
+        lunchStartDateTime.setHours(lunchStartH, lunchStartM, 0, 0)
+        const lunchEndDateTime = new Date(selectedDate)
+        lunchEndDateTime.setHours(lunchEndH, lunchEndM, 0, 0)
+
+        if (
+          (newAppStartTime < lunchEndDateTime.getTime() && newAppEndTime > lunchStartDateTime.getTime()) ||
+          newAppStartTime === lunchStartDateTime.getTime() ||
+          newAppEndTime === lunchEndDateTime.getTime()
+        ) {
+          isDuringLunchBreak = true
+          break
+        }
+      }
+
       if (newAppEndTime <= workEndDateTime.getTime()) {
         isWithinWorkHours = true
         break
       }
     }
+  }
+
+  if (isDuringLunchBreak) {
+    Swal.fire("Error", "La nueva fecha y hora caen dentro de la hora de comida de la clínica.", "error")
+    return false
   }
 
   if (!isWithinWorkHours) {

@@ -36,10 +36,7 @@ const LocationPage = () => {
           <InfoItem icon={<Clock />} title="Horario" content={["L: 09:30-20:00", "M-V: 10:00-20:00"]} />
           <InfoItem icon={<Phone />} title="Teléfono" content={["222 508 1501", "WhatsApp: +52 222 508 1501"]} />
 
-          <div className="location-action-buttons">
-            <button className="location-btn primary">¡VISÍTANOS!</button>
-            <button className="location-btn secondary">WHATSAPP</button>
-          </div>
+         
         </div>
       </section>
 

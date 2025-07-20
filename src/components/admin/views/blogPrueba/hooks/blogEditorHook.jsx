@@ -96,52 +96,16 @@ export function useBlogEditor(existingBlog, onClose, contentImageSize) {
       return
     }
 
-
-
     if (!blogData.title.trim()) {
       toast.error("El título es obligatorio")
       return
     }
 
-    let bannerImageUrl = blogData.bannerImage
-    let contentImageUrl = blogData.contentImage
-
-    // Subir imagen del banner
-    if (bannerImageUrl && bannerImageUrl instanceof File) {
-      try {
-        bannerImageUrl = await uploadImageToCloudinary(bannerImageUrl)
-      } catch (error) {
-        toast.error("Error al subir la imagen del banner")
-        return
-      }
-    }
-
-    // Subir imagen de contenido con el tamaño ajustado
-    if (contentImageUrl && contentImageUrl instanceof File) {
-      try {
-        const response = await uploadImageToCloudinary(
-          contentImageUrl,
-          contentImageSize?.width || 300,  // Si no existe, asignamos 300x200 por defecto
-          contentImageSize?.height || 200
-        );
-        contentImageUrl = response.url;
-        setBlogData((prev) => ({
-          ...prev,
-          contentImage: contentImageUrl,
-          contentimagedimensions: { width: response.width, height: response.height },
-        }));
-      } catch (error) {
-        toast.error("Error al subir la imagen de contenido");
-        return;
-      }
-    }
-
+   
     // Preparar datos para enviar al backend
     const blogToSend = {
       ...blogData,
-      bannerImage: bannerImageUrl.url || bannerImageUrl,
-      contentImage: contentImageUrl,
-      contentImageSize,
+
     }
 
     mutation.mutate(blogToSend)

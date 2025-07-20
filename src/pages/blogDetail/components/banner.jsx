@@ -6,7 +6,7 @@ export default function BlogBanner({ blog }) {
       {blog.bannerImage ? (
         <img
           src={blog.bannerImage || "/placeholder.svg"}
-          alt={blog.bannerTitle}
+          alt={blog.title}
           className="publicBlogDetail-banner-image"
         />
       ) : (
@@ -15,7 +15,7 @@ export default function BlogBanner({ blog }) {
         </div>
       )}
       <h1 className="publicBlogDetail-banner-title ql-editor">
-        {blog.bannerTitle && <div dangerouslySetInnerHTML={{ __html: blog.bannerTitle }} />}
+        {blog.title && <div dangerouslySetInnerHTML={{ __html: blog.title }} />}
       </h1>
     </div>
   )

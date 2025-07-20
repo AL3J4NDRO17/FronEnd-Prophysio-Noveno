@@ -160,9 +160,9 @@ const NewAppointmentModal = ({
   const isTimeSlotAvailable = (dateTime, existingAppointments, editingAppId = null) => {
     const selectedDateTime = parseISO(dateTime)
     const selectedDayIndex = getDay(selectedDateTime)
-    const selectedDayNameSpanish = ENGLISH_DAYS_OF_WEEK[selectedDayIndex]
+    const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[selectedDayIndex] // Usar inglés para coincidir con el modelo
 
-    const daySchedules = clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameSpanish)
+    const daySchedules = clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameEnglish)
     if (daySchedules.length === 0) {
       toast.error(`La clínica no trabaja los ${SPANISH_DAYS_OF_WEEK[selectedDayIndex]}.`)
       return false
@@ -170,23 +170,49 @@ const NewAppointmentModal = ({
 
     let isWithinWorkHours = false
     let sessionDuration = 0
+    let isDuringLunchBreak = false // Nuevo flag para la hora de comida
+
     for (const schedule of daySchedules) {
       const [startH, startM] = schedule.hora_inicio.split(":").map(Number)
       const [endH, endM] = schedule.hora_fin.split(":").map(Number)
       const workStartDateTime = setMinutes(setHours(selectedDateTime, startH), startM)
       const workEndDateTime = setMinutes(setHours(selectedDateTime, endH), endM)
 
+      // Verificar si la cita cae dentro del horario laboral principal
       if (
         (isEqual(selectedDateTime, workStartDateTime) || isAfter(selectedDateTime, workStartDateTime)) &&
         isBefore(selectedDateTime, workEndDateTime)
       ) {
         sessionDuration = schedule.duracion_sesion
         const newAppEndTime = addMinutes(selectedDateTime, sessionDuration)
+
+        // Verificar si la cita se superpone con la hora de comida
+        if (schedule.hora_comida_inicio && schedule.hora_comida_fin) {
+          const [lunchStartH, lunchStartM] = schedule.hora_comida_inicio.split(":").map(Number)
+          const [lunchEndH, lunchEndM] = schedule.hora_comida_fin.split(":").map(Number)
+          const lunchStartDateTime = setMinutes(setHours(selectedDateTime, lunchStartH), lunchStartM)
+          const lunchEndDateTime = setMinutes(setHours(selectedDateTime, lunchEndH), lunchEndM)
+
+          if (
+            (isBefore(selectedDateTime, lunchEndDateTime) && isAfter(newAppEndTime, lunchStartDateTime)) ||
+            isEqual(selectedDateTime, lunchStartDateTime) ||
+            isEqual(newAppEndTime, lunchEndDateTime)
+          ) {
+            isDuringLunchBreak = true
+            break // Si se superpone con la comida, no es válido
+          }
+        }
+
         if (isBefore(newAppEndTime, workEndDateTime) || isEqual(newAppEndTime, workEndDateTime)) {
           isWithinWorkHours = true
           break
         }
       }
+    }
+
+    if (isDuringLunchBreak) {
+      toast.error("El horario seleccionado cae dentro de la hora de comida de la clínica.")
+      return false
     }
 
     if (!isWithinWorkHours) {
@@ -219,9 +245,9 @@ const NewAppointmentModal = ({
 
     const selectedDate = parseISO(newAppointmentData.fecha_hora)
     const dayOfWeekIndex = getDay(selectedDate)
-    const selectedDayNameSpanish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex]
+    const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex] // Usar inglés para coincidir con el modelo
 
-    const daySchedules = clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameSpanish)
+    const daySchedules = clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameEnglish)
     if (daySchedules.length === 0) return []
 
     const allPotentialSlots = []
@@ -233,11 +259,37 @@ const NewAppointmentModal = ({
       let current = setMinutes(setHours(selectedDate, startH), startM)
       const end = setMinutes(setHours(selectedDate, endH), endM)
 
+      // Definir la hora de comida si existe
+      let lunchStartDateTime = null
+      let lunchEndDateTime = null
+      if (schedule.hora_comida_inicio && schedule.hora_comida_fin) {
+        const [lunchStartH, lunchStartM] = schedule.hora_comida_inicio.split(":").map(Number)
+        const [lunchEndH, lunchEndM] = schedule.hora_comida_fin.split(":").map(Number)
+        lunchStartDateTime = setMinutes(setHours(selectedDate, lunchStartH), lunchStartM)
+        lunchEndDateTime = setMinutes(setHours(selectedDate, lunchEndH), lunchEndM)
+      }
+
       while (
         isBefore(addMinutes(current, currentSessionDuration), addMinutes(end, 1)) ||
         isEqual(addMinutes(current, currentSessionDuration), end)
       ) {
-        allPotentialSlots.push(format(current, "HH:mm"))
+        const potentialAppEnd = addMinutes(current, currentSessionDuration)
+
+        // Verificar si la franja horaria se superpone con la hora de comida
+        let isOverlappingLunch = false
+        if (lunchStartDateTime && lunchEndDateTime) {
+          if (
+            (isBefore(current, lunchEndDateTime) && isAfter(potentialAppEnd, lunchStartDateTime)) ||
+            isEqual(current, lunchStartDateTime) ||
+            isEqual(potentialAppEnd, lunchEndDateTime)
+          ) {
+            isOverlappingLunch = true
+          }
+        }
+
+        if (!isOverlappingLunch) {
+          allPotentialSlots.push(format(current, "HH:mm"))
+        }
         current = addMinutes(current, currentSessionDuration)
       }
     })
@@ -248,14 +300,14 @@ const NewAppointmentModal = ({
       const potentialAppStart = parseISO(`${newAppointmentData.fecha_hora}T${slot}:00`)
       let currentSlotDuration = 0
 
-      const selectedDayNameSpanishForSlot = SPANISH_DAYS_OF_WEEK[getDay(potentialAppStart)] // Usar SPANISH_DAYS_OF_WEEK aquí
+      const selectedDayNameEnglishForSlot = ENGLISH_DAYS_OF_WEEK[getDay(potentialAppStart)] // Usar ENGLISH_DAYS_OF_WEEK aquí
       const relevantSchedule = clinicWorkHours.find((s) => {
         const [sH, sM] = s.hora_inicio.split(":").map(Number)
         const [eH, eM] = s.hora_fin.split(":").map(Number)
         const scheduleStart = setMinutes(setHours(potentialAppStart, sH), sM)
         const scheduleEnd = setMinutes(setHours(potentialAppStart, eH), eM)
         return (
-          s.dia === selectedDayNameSpanishForSlot &&
+          s.dia === selectedDayNameEnglishForSlot &&
           (isEqual(potentialAppStart, scheduleStart) || isAfter(potentialAppStart, scheduleStart)) &&
           isBefore(potentialAppStart, scheduleEnd)
         )

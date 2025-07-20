@@ -1,4 +1,6 @@
+
 export default function BlogContent({ blog }) {
+  console.log(blog)
   return (
     <div className="publicBlogDetail-content">
       <div className="publicBlogDetail-body">

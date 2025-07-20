@@ -2,9 +2,7 @@
 
 import { useState } from "react"
 import { useBlogs } from "./hooks/useBlogs"
-import { useBlogEditor } from "./hooks/blogEditorHook"
 import { useCategories } from "./hooks/useConfig"
-import { Edit, Trash2, ImageIcon } from "lucide-react"
 
 import BlogGrid from "./components/grid"
 import BlogModal from "./components/modal"
@@ -30,14 +28,14 @@ export default function BlogPage() {
   // Usamos los hooks proporcionados para obtener datos
   const { blogs = [], isLoading, deleteBlog, updateStatusBlog } = useBlogs()
   const { categories, loadingCategories } = useCategories()
-  const { handlePublish } = useBlogEditor()
+  // No necesitas handlePublish aquí, ya que se pasa al modal y el modal lo llama.
+  // const { handlePublish } = useBlogEditor()
 
   // Lógica para abrir el editor de blogs
   const handleEdit = (blog) => {
     setSelectedBlog(blog)
     setIsModalOpen(true)
   }
-
 
   // Lógica para eliminar el blog
   const handleDelete = (blogId) => {
@@ -128,7 +126,7 @@ export default function BlogPage() {
             setIsModalOpen(false)
             setSelectedBlog(null)
           }}
-          onSubmit={handlePublish}
+          // onSubmit={handlePublish} // handlePublish is now managed internally by useBlogEditor
           existingBlog={selectedBlog}
           categories={categories}
         />
@@ -139,4 +137,3 @@ export default function BlogPage() {
     </div>
   )
 }
-

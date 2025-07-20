@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 
-import { X, Eye, Save, Edit, Upload } from 'lucide-react'
+import { X, Eye, Save, Edit, Upload } from "lucide-react"
 
 import { FilePond, registerPlugin } from "react-filepond"
 
@@ -23,49 +23,92 @@ registerPlugin(FilePondPluginImagePreview, FilePondPluginFileValidateType)
 
 export default function BlogModal({ isOpen, onClose, existingBlog, categories }) {
   const [activeTab, setActiveTab] = useState("editor")
-  const [attachedFiles, setAttachedFiles] = useState([]) // Estado para FilePond de imágenes adjuntas
+  const [filePondAttachedFiles, setFilePondAttachedFiles] = useState([]) // State for FilePond of attached images
+  const [filePondBannerFile, setFilePondBannerFile] = useState([]) // State for FilePond of banner image
 
   const { blogData, setBlogData, handleInputChange, handlePublish, isLoading, isError, error } = useBlogEditor(
     existingBlog,
     onClose,
   )
 
-  // Inicializar attachedFiles si hay un blog existente
+  // Initialize FilePond files and blogData.attachedImages from existingBlog
   useEffect(() => {
-    if (existingBlog?.attachedImages) {
-      setAttachedFiles(existingBlog.attachedImages.map(url => ({ source: url })))
-    }
-  }, [existingBlog])
+    if (existingBlog) {
+      // Initialize banner image for FilePond and blogData
+      if (existingBlog.bannerImage) {
+        setFilePondBannerFile([{ source: existingBlog.bannerImage }])
+        setBlogData((prev) => ({ ...prev, bannerImage: existingBlog.bannerImage }))
+      } else {
+        setFilePondBannerFile([])
+        setBlogData((prev) => ({ ...prev, bannerImage: null }))
+      }
 
-  const handleBannerUpload = async (fileItems) => {
+      // Initialize attached images for FilePond and blogData
+      if (existingBlog.attachedImages) {
+        setFilePondAttachedFiles(existingBlog.attachedImages.map((url) => ({ source: url })))
+        setBlogData((prev) => ({ ...prev, attachedImages: existingBlog.attachedImages }))
+      } else {
+        setFilePondAttachedFiles([])
+        setBlogData((prev) => ({ ...prev, attachedImages: [] }))
+      }
+    } else {
+      // Reset states for new blog creation
+      setFilePondBannerFile([])
+      setFilePondAttachedFiles([])
+      setBlogData({
+        bannerTitle: "",
+        bannerImage: null,
+        title: "",
+        mainContent: "",
+        author: "",
+        categoryId: "",
+        status: "draft",
+        attachedImages: [], // Ensure attachedImages is initialized
+      })
+    }
+  }, [existingBlog, setBlogData])
+
+  const handleBannerUpload = (fileItems) => {
+    setFilePondBannerFile(fileItems) // Update FilePond's internal state for banner
+
     if (fileItems.length > 0 && fileItems[0].file instanceof File) {
-      const file = fileItems[0].file
-      localStorage.setItem("tempBannerImg", URL.createObjectURL(file))
       setBlogData((prev) => ({
         ...prev,
-        bannerImage: file,
+        bannerImage: fileItems[0].file, // Store the actual File object
+      }))
+    } else if (fileItems.length === 0) {
+      setBlogData((prev) => ({
+        ...prev,
+        bannerImage: null, // Clear banner image if removed
+      }))
+    } else if (fileItems.length > 0 && typeof fileItems[0].source === "string") {
+      setBlogData((prev) => ({
+        ...prev,
+        bannerImage: fileItems[0].source, // Store the URL if it's an existing image
       }))
     }
   }
 
   const handleAttachedImagesUpload = (fileItems) => {
-    const newImages = fileItems.map(item => {
-      if (item.file instanceof File) {
-        return URL.createObjectURL(item.file);
-      }
-      return item.source; // Para imágenes existentes
-    });
-    setAttachedFiles(fileItems); // Mantener el estado interno de FilePond
-    setBlogData((prev) => ({
-      ...prev,
-      attachedImages: newImages,
-    }));
-  };
+    setFilePondAttachedFiles(fileItems) // Update FilePond's internal state
 
-  const handleBannerTitleChange = (value) => {
+    const newAttachedImagesForBlogData = fileItems.map((item) => {
+      if (item.file instanceof File) {
+        return item.file // Store the actual File object for new uploads
+      }
+      return item.source // Store the URL for existing images
+    })
+
     setBlogData((prev) => ({
       ...prev,
-      bannerTitle: value,
+      attachedImages: newAttachedImagesForBlogData, // This will now contain a mix of File objects and URLs
+    }))
+  }
+
+  const handleTitleChange = (value) => {
+    setBlogData((prev) => ({
+      ...prev,
+      title: value,
     }))
   }
 
@@ -192,7 +235,7 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
               <div className="blogAdmin-editor-content">
                 <div className="blogAdmin-editor-banner">
                   <FilePond
-                    files={blogData.bannerImage ? [{ source: blogData.bannerImage }] : []}
+                    files={filePondBannerFile} // Use filePondBannerFile for FilePond's display
                     onupdatefiles={(fileItems) => handleBannerUpload(fileItems)}
                     allowMultiple={false}
                     maxFiles={1}
@@ -204,7 +247,7 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                   />
                   <RichTextEditor
                     value={blogData.bannerTitle || ""}
-                    onChange={handleBannerTitleChange}
+                    onChange={handleTitleChange}
                     placeholder="Título del Banner"
                   />
                 </div>
@@ -218,7 +261,7 @@ export default function BlogModal({ isOpen, onClose, existingBlog, categories })
                 <div className="blogAdmin-editor-attached-images">
                   <h3>Imágenes Adjuntas</h3>
                   <FilePond
-                    files={attachedFiles}
+                    files={filePondAttachedFiles} // Use filePondAttachedFiles for FilePond's display
                     onupdatefiles={handleAttachedImagesUpload}
                     allowMultiple={true}
                     maxFiles={5} // Puedes ajustar el límite de imágenes adjuntas

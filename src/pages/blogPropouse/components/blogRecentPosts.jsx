@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom"
 import { FileText } from "lucide-react" // Importa un icono de Lucide React
 import { use } from "react"
 
+ function stripHtmlTags(str) {
+    return str.replace(/<[^>]*>/g, '',); // Esto elimina todas las etiquetas HTML
+  }
+
 export default function BlogRecentPosts() {
   const { blogs, isLoading, error } = useBlogContext() // Asegúrate de que este hook esté correctamente implementado
   const navigate = useNavigate()
@@ -71,7 +75,7 @@ export default function BlogRecentPosts() {
           >
             <span className="post-number">{index + 1}</span>
             <div className="post-content">
-              <h3 className="post-title">{post.title}</h3>
+              <h3 className="post-title">{stripHtmlTags (post.title)}</h3>
               <p className="post-meta">
                 {stripHtmlTags(post.mainContent)
                   ? `${stripHtmlTags(post.mainContent).substring(0, 100)}...`

@@ -1,5 +1,4 @@
 
-
 export default function ContactBanner() {
   return (
     <section className="contact-banner">

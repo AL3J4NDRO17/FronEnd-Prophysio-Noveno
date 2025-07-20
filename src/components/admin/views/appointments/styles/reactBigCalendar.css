@@ -1,98 +1,153 @@
-/* General calendar background */
+/* Importa tus variables CSS si no están ya disponibles globalmente */
+/* @import './your-variables-file.css'; */
+
+/* Estilos base de react-big-calendar (mantén los que ya tengas) */
+/* ... */
+
+/* Colores de eventos personalizados basados en el estado */
+/* Fondo general del calendario */
+
 .rbc-calendar {
+
+
+
+  background-color: white;
+}
+
+/* Asegúrate de que los días en vista mensual también tengan fondo blanco */
+
+.rbc-day-bg.rbc-today {
+  background-color: #eaf6ff !important;
+  /* Azul claro, puedes cambiarlo */
+}
+
+/* Opcional: resalta también el encabezado del día actual */
+.rbc-header.rbc-today {
+  background-color: #d0ecff !important;
+  font-weight: bold;
+}
+
+/* Asegúrate de que los días en vista mensual también tengan fondo blanco */
+
+/* Citas Canceladas (Rojo) */
+.rbc-event-cancelled {
+  background-color: var(--appointmentsAdmin-color-cancelled);
+  /* Rojo */
+  color: var(--clr-white);
+  /* Texto blanco para contraste */
+}
+
+/* Citas Completadas / Asistidas (Verde) */
+.rbc-event-completed {
+  background-color: var(--appointmentsAdmin-color-confirmed);
+  /* Verde */
+  color: var(--clr-white);
+}
+
+/* Citas Agendadas Normal (Pendiente, Postergada) (Azul) */
+.rbc-event-agendada-normal {
+  background-color: var(--clr-status-info);
+  /* Azul */
+  color: var(--clr-white);
+}
+
+/* Citas Confirmadas (Naranja) - NUEVO */
+.rbc-event-confirmed-orange {
+  background-color: var(--clr-status-warning);
+  /* Naranja */
+  color: var(--clr-white);
+}
+
+/* Citas con Inasistencia (Morado) */
+.rbc-event-missed {
+  background-color: var(--clr-status-purple);
+  /* Morado */
+  color: var(--clr-white);
+}
+
+/* Estilo por defecto para cualquier otro estado no especificado */
+.rbc-event-default {
+  background-color: var(--clr-gray-medium);
+  /* Gris medio */
+  color: var(--clr-white);
+}
+
+/* Puedes añadir estilos adicionales para el texto del evento si lo deseas */
+.rbc-event {
+  font-size: 0.85rem;
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: none;
+  /* Elimina el borde por defecto si lo hay */
+}
+
+/* Estilos para el fondo de los días en la vista de mes/semana si quieres resaltarlos */
+.rbc-day-bg.rbc-today {
+  background-color: var(--bg-default);
+  /* Un fondo ligeramente diferente para el día actual */
+}
+
+/* Estilos para el encabezado del calendario */
+.rbc-header {
+  background-color: var(--bg-secondary);
+  color: var(--txt-heading);
+  padding: 8px 0;
+  font-weight: 600;
+  border-bottom: 1px solid var(--brd-default);
+}
+
+/* Estilos para los botones de navegación del calendario */
+.rbc-btn-group button {
   background-color: var(--bg-white);
   color: var(--txt-default);
-  font-family: inherit;
   border: 1px solid var(--brd-default);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shd-sm-alt);
-}
-
-/* Toolbar (mes, semana, día, hoy, flechas) */
-.rbc-toolbar {
-  background-color: var(--bg-secondary);
-  border-bottom: 1px solid var(--brd-default);
-  padding: 0.5rem;
-  color: var(--txt-heading);
-}
-.rbc-toolbar-label {
-  font-weight: bold;
-  font-size: 1.2rem;
-}
-.rbc-btn-group button {
-  background-color: var(--clr-brand-primary-light);
-  border: 1px solid var(--clr-brand-primary);
-  color: var(--clr-brand-primary);
   border-radius: var(--radius-sm);
-  margin-right: 4px;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.9rem;
-  transition: background 0.2s;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
 }
+
 .rbc-btn-group button:hover {
-  background-color: var(--clr-brand-primary-hover);
-  color: white;
+  background-color: var(--bg-secondary);
+  color: var(--clr-brand-primary);
 }
 
-/* Cabeceras de días */
-.rbc-header {
-  background-color: var(--bg-off-white);
-  border-bottom: 1px solid var(--brd-default);
-  padding: 8px 4px;
-  color: var(--txt-secondary);
-  font-weight: 500;
+.rbc-btn-group button:active,
+.rbc-btn-group button.rbc-active {
+  background-color: var(--clr-brand-primary);
+  color: var(--clr-white);
+  border-color: var(--clr-brand-primary);
 }
 
-/* Fila horaria lateral */
-.rbc-time-content > .rbc-timeslot-group {
+/* Estilos para las franjas horarias */
+.rbc-time-slot {
+  border-top: 1px dashed var(--brd-default);
+}
+
+.rbc-time-header-content {
   border-left: 1px solid var(--brd-default);
 }
-.rbc-time-gutter {
+
+.rbc-time-header {
+  border-bottom: 1px solid var(--brd-default);
+}
+
+.rbc-time-view-resources .rbc-header {
+  border-bottom: 1px solid var(--brd-default);
+}
+
+.rbc-time-view {
+  border: 1px solid var(--brd-default);
+}
+
+.rbc-agenda-view table {
+  border: 1px solid var(--brd-default);
+}
+
+.rbc-agenda-view th {
   background-color: var(--bg-secondary);
-  color: var(--txt-tertiary);
-  font-size: 0.8rem;
+  border-bottom: 1px solid var(--brd-default);
 }
 
-/* Celdas */
-.rbc-day-bg {
-  background-color: var(--bg-default);
-  border-right: 1px solid var(--brd-default);
-}
-.rbc-time-slot {
-  border-top: 1px solid var(--brd-default);
-}
-
-/* Eventos (citas) */
-.rbc-event {
-  background-color: var(--appointmentsAdmin-color-confirmed);
-  color: white;
-  padding: 2px 6px;
-  border-radius: var(--radius-sm);
-  font-size: 0.8rem;
-  box-shadow: var(--shd-sm);
-  overflow: hidden;
-}
-
-/* Evento pendiente personalizado */
-.rbc-event.status-pending {
-  background-color: var(--appointmentsAdmin-color-pending);
-}
-.rbc-event.status-cancelled {
-  background-color: var(--appointmentsAdmin-color-cancelled);
-}
-
-/* Evento al hacer hover */
-.rbc-event:hover {
-  filter: brightness(1.05);
-  cursor: pointer;
-}
-
-/* Día actual */
-.rbc-today {
-  background-color: var(--clr-light-blue) !important;
-}
-
-/* Evento seleccionado (opcional) */
-.rbc-selected {
-  outline: 2px solid var(--clr-brand-secondary);
+.rbc-agenda-view td {
+  border-bottom: 1px solid var(--brd-default);
 }

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Mail, MapPin, Phone } from "lucide-react"
 import "../styles/contact.css"
-
+import Swal from 'sweetalert2'
 function ContactItem({ icon, title, content }) {
   return (
     <div className="location-contact-item">
@@ -34,10 +34,22 @@ export default function ContactForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Aquí iría la lógica de envío del formulario
- 
-  }
 
+    Swal.fire({
+      title: '¡Mensaje enviado!',
+      text: 'Espera nuestra respuesta 😊',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    }).then(() => {
+      // Limpiar formulario después de cerrar el alert
+      setFormData({
+        nombre: "",
+        email: "",
+        mensaje: "",
+        aceptaPolitica: false,
+      })
+    })
+  }
   return (
     <div className="location-contact-section">
       <div className="location-contact-content">
@@ -61,7 +73,7 @@ export default function ContactForm() {
             </div>
           </div>
 
-          <form className="location-contact-form" onSubmit={handleSubmit}>
+          <form className="location-contact-form" onSubmit={handleSubmit} >
             <input
               type="text"
               name="nombre"

@@ -2,7 +2,6 @@ import "./about.css"
 import IMG1 from "./assets/collageImg1.webp"
 import IMG2 from "./assets/collageImg2.webp"
 import IMG3 from "./assets/collageImg3.webp"
-import MyV from "./assets/MyVSectionImg.webp"
 
 export default function AboutCompany() {
   return (
@@ -12,7 +11,7 @@ export default function AboutCompany() {
         <div className="company-hero__overlay"></div>
         <div className="company-hero__content">
           <h1 className="company-hero__title">Nuestra Historia</h1>
-          <p className="company-hero__subtitle">Comprometidos con tu bienestar desde 2005</p>
+          <p className="company-hero__subtitle">Comprometidos con tu bienestar desde 2022</p>
           <button className="company-hero__button">Conoce más</button>
         </div>
       </section>
@@ -25,22 +24,18 @@ export default function AboutCompany() {
             <h2 className="company-about__heading">Expertos en fisioterapia y rehabilitación</h2>
             <p className="company-about__description">
               Somos un equipo de profesionales dedicados a mejorar la calidad de vida de nuestros pacientes a través de
-              técnicas avanzadas de fisioterapia y rehabilitación. Con más de 15 años de experiencia, nos hemos
-              convertido en referentes en el cuidado personalizado y efectivo.
+              técnicas avanzadas de fisioterapia y rehabilitación.
             </p>
             <div className="company-about__stats">
               <div className="company-about__stat">
-                <span className="company-about__stat-number">15+</span>
+                <span className="company-about__stat-number">2+</span>
                 <span className="company-about__stat-label">Años de experiencia</span>
               </div>
               <div className="company-about__stat">
-                <span className="company-about__stat-number">5000+</span>
+                <span className="company-about__stat-number">500+</span>
                 <span className="company-about__stat-label">Pacientes atendidos</span>
               </div>
-              <div className="company-about__stat">
-                <span className="company-about__stat-number">20</span>
-                <span className="company-about__stat-label">Especialistas</span>
-              </div>
+            
             </div>
           </div>
           <div className="company-about__image-column">
@@ -150,38 +145,7 @@ export default function AboutCompany() {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="company-team">
-        <div className="company-team__container">
-          <div className="company-team__header">
-            <h2 className="company-team__heading">Nuestro Equipo</h2>
-            <p className="company-team__subheading">Profesionales comprometidos con tu bienestar</p>
-          </div>
-          <div className="company-team__grid">
-            <div className="company-team__member">
-              <div className="company-team__photo">
-                <img src={IMG1} alt="Director médico" />
-              </div>
-              <h3 className="company-team__name">Dr. Carlos Méndez</h3>
-              <p className="company-team__position">Director Médico</p>
-            </div>
-            <div className="company-team__member">
-              <div className="company-team__photo">
-                <img src={IMG2} alt="Fisioterapeuta senior" />
-              </div>
-              <h3 className="company-team__name">Dra. Laura Sánchez</h3>
-              <p className="company-team__position">Fisioterapeuta Senior</p>
-            </div>
-            <div className="company-team__member">
-              <div className="company-team__photo">
-                <img src={IMG3} alt="Especialista en rehabilitación" />
-              </div>
-              <h3 className="company-team__name">Lic. Miguel Torres</h3>
-              <p className="company-team__position">Especialista en Rehabilitación</p>
-            </div>
-          </div>
-        </div>
-      </section>
+    
     </div>
   )
 }
