@@ -4,7 +4,13 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "../../publ
 import { Button } from "../../public_ui/button"
 import { Input } from "../../public_ui/input"
 import { Label } from "../../public_ui/label"
-import {Select} from "@select"
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@select"
 
 export default function ClientDetailsStep({ onNext, onPrev, formData, onFormChange }) {
   const handleChange = (e) => {
@@ -29,11 +35,15 @@ export default function ClientDetailsStep({ onNext, onPrev, formData, onFormChan
         </div>
         <div className="publicAppointment-form-group">
           <Label htmlFor="sexo">Sexo</Label>
-          <Select id="sexo" name="sexo" value={formData.sexo} onChange={handleChange} className="input" required>
-            <option value="">Seleccione</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Femenino">Femenino</option>
-            <option value="Otro">Otro</option>
+          <Select value={formData.sexo} onValueChange={(value) => onFormChange("sexo", value)}>
+            <SelectTrigger className="input">
+              <SelectValue placeholder="Seleccione" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Masculino">Masculino</SelectItem>
+              <SelectItem value="Femenino">Femenino</SelectItem>
+              <SelectItem value="Otro">Otro</SelectItem>
+            </SelectContent>
           </Select>
         </div>
         <div className="publicAppointment-form-group">

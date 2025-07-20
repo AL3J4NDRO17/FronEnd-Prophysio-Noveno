@@ -8,13 +8,10 @@ import { Label } from "../../public_ui/label"
 import { toast } from "react-toastify"
 import { Textarea } from "../../public_ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../public_ui/select"
-import Swal from "sweetalert2"
 import { format, parseISO, getDay, setHours, setMinutes, addMinutes, isBefore, isEqual, isAfter } from "date-fns"
 
 const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-// Mantenemos los nombres en español si se necesitan para la visualización
 const SPANISH_DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
-
 
 export default function AppointmentDetailsStep({
   onNext,
@@ -32,8 +29,8 @@ export default function AppointmentDetailsStep({
     if (!dateString || !clinicWorkHoursData || clinicWorkHoursData.length === 0) {
       return false
     }
-    const selectedDate = parseISO(dateString) // Usar parseISO
-    const dayOfWeekIndex = getDay(selectedDate) // Usar getDay
+    const selectedDate = parseISO(dateString)
+    const dayOfWeekIndex = getDay(selectedDate)
     const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex]
 
     return clinicWorkHoursData.some((schedule) => schedule.dia === selectedDayNameEnglish)
@@ -48,16 +45,23 @@ export default function AppointmentDetailsStep({
     onFormChange("radiografias", e.target.files)
   }
 
-  // Función para generar franjas horarias
-  const generateTimeSlots = (startTime, endTime, intervalMinutes) => {
+  // Función para generar franjas horarias, ahora considerando la hora de comida
+  const generateTimeSlots = (startTime, endTime, lunchStartTime, lunchEndTime, intervalMinutes, selectedDate) => {
     const slots = []
-    // Usar una fecha base para combinar con las horas
-    const baseDate = new Date()
     const [startH, startM] = startTime.split(":").map(Number)
     const [endH, endM] = endTime.split(":").map(Number)
 
-    let current = setMinutes(setHours(baseDate, startH), startM)
-    const end = setMinutes(setHours(baseDate, endH), endM)
+    let current = setMinutes(setHours(selectedDate, startH), startM)
+    const end = setMinutes(setHours(selectedDate, endH), endM)
+
+    let lunchStartDateTime = null
+    let lunchEndDateTime = null
+    if (lunchStartTime && lunchEndTime) {
+      const [lunchStartH, lunchStartM] = lunchStartTime.split(":").map(Number)
+      const [lunchEndH, lunchEndM] = lunchEndTime.split(":").map(Number)
+      lunchStartDateTime = setMinutes(setHours(selectedDate, lunchStartH), lunchStartM)
+      lunchEndDateTime = setMinutes(setHours(selectedDate, lunchEndH), lunchEndM)
+    }
 
     if (isEqual(current, end) || isAfter(current, end)) {
       console.warn(
@@ -67,9 +71,24 @@ export default function AppointmentDetailsStep({
     }
 
     while (isBefore(current, end)) {
-      // Usar isBefore
-      slots.push(format(current, "HH:mm")) // Usar format
-      current = addMinutes(current, intervalMinutes) // Usar addMinutes
+      const potentialAppEnd = addMinutes(current, intervalMinutes)
+
+      // Verificar si la franja horaria se superpone con la hora de comida
+      let isOverlappingLunch = false
+      if (lunchStartDateTime && lunchEndDateTime) {
+        if (
+          (isBefore(current, lunchEndDateTime) && isAfter(potentialAppEnd, lunchStartDateTime)) ||
+          isEqual(current, lunchStartDateTime) ||
+          isEqual(potentialAppEnd, lunchEndDateTime)
+        ) {
+          isOverlappingLunch = true
+        }
+      }
+
+      if (!isOverlappingLunch) {
+        slots.push(format(current, "HH:mm"))
+      }
+      current = addMinutes(current, intervalMinutes)
     }
     return slots
   }
@@ -79,8 +98,8 @@ export default function AppointmentDetailsStep({
     console.log(
       "[AppointmentDetailsStep useEffect] Fecha seleccionada:",
       formData.fecha_cita,
-      "Horarios de clínica recibidos (esperado inglés):",
-      clinicWorkHours,
+      "Horarios de clínica recibidos:",
+      clinicWorkHours, // Ahora es un array
       "Citas existentes:",
       existingAppointments,
       "Duración de cita (dinámica):",
@@ -88,13 +107,14 @@ export default function AppointmentDetailsStep({
     )
 
     if (formData.fecha_cita && clinicWorkHours.length > 0 && appointmentDuration !== null) {
-      const selectedDate = parseISO(formData.fecha_cita) // Usar parseISO
-      const dayOfWeekIndex = getDay(selectedDate) // Usar getDay
+      const selectedDate = parseISO(formData.fecha_cita)
+      const dayOfWeekIndex = getDay(selectedDate)
       const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex]
 
       console.log("[AppointmentDetailsStep useEffect] Día de la semana seleccionado (inglés):", selectedDayNameEnglish)
 
       const daySchedules = clinicWorkHours.filter((schedule) => {
+        // Asegurarse de que el día del horario coincida con el día seleccionado
         return schedule.dia === selectedDayNameEnglish
       })
 
@@ -112,7 +132,14 @@ export default function AppointmentDetailsStep({
       let allPotentialSlots = []
       daySchedules.forEach((schedule) => {
         allPotentialSlots = allPotentialSlots.concat(
-          generateTimeSlots(schedule.hora_inicio, schedule.hora_fin, appointmentDuration),
+          generateTimeSlots(
+            schedule.hora_inicio,
+            schedule.hora_fin,
+            schedule.hora_comida_inicio, // Pasar hora de comida
+            schedule.hora_comida_fin, // Pasar hora de comida
+            appointmentDuration,
+            selectedDate, // Pasar la fecha seleccionada para date-fns
+          ),
         )
       })
 
@@ -123,8 +150,8 @@ export default function AppointmentDetailsStep({
       )
 
       const filteredSlots = uniqueSortedPotentialSlots.filter((slot) => {
-        const potentialAppStart = parseISO(`${formData.fecha_cita}T${slot}:00`) // Usar parseISO
-        const potentialAppEnd = addMinutes(potentialAppStart, appointmentDuration) // Usar addMinutes
+        const potentialAppStart = parseISO(`${formData.fecha_cita}T${slot}:00`)
+        const potentialAppEnd = addMinutes(potentialAppStart, appointmentDuration)
 
         const isOverlapping = existingAppointments.some((existingApp) => {
           if (
@@ -135,16 +162,14 @@ export default function AppointmentDetailsStep({
             return false
           }
 
-          // Asegurarse de que existingApp.fecha_hora sea una cadena válida
           if (!existingApp.fecha_hora || typeof existingApp.fecha_hora !== "string") {
             return false
           }
 
-          const existingAppStart = parseISO(existingApp.fecha_hora) // Usar parseISO
+          const existingAppStart = parseISO(existingApp.fecha_hora)
           const existingAppDuration = existingApp.duracion || appointmentDuration
-          const existingAppEndTime = addMinutes(existingAppStart, existingAppDuration) // Usar addMinutes
+          const existingAppEndTime = addMinutes(existingAppStart, existingAppDuration)
 
-          // Usar isBefore y isAfter para la lógica de superposición
           return isBefore(potentialAppStart, existingAppEndTime) && isAfter(potentialAppEnd, existingAppStart)
         })
         return !isOverlapping
@@ -176,11 +201,45 @@ export default function AppointmentDetailsStep({
       toast.error("Por favor, complete la fecha, hora y motivo de la cita.")
       return
     }
+
+    // Validación adicional para la hora de comida antes de avanzar
+    const selectedDateTime = parseISO(`${fecha_cita}T${hora_cita}:00`)
+    const dayOfWeekIndex = getDay(selectedDateTime)
+    const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex]
+
+    const daySchedules = clinicWorkHours.filter((schedule) => schedule.dia === selectedDayNameEnglish)
+
+    let isDuringLunchBreak = false
+    for (const schedule of daySchedules) {
+      if (schedule.hora_comida_inicio && schedule.hora_comida_fin) {
+        const [lunchStartH, lunchStartM] = schedule.hora_comida_inicio.split(":").map(Number)
+        const [lunchEndH, lunchEndM] = schedule.hora_comida_fin.split(":").map(Number)
+        const lunchStartDateTime = setMinutes(setHours(selectedDateTime, lunchStartH), lunchStartM)
+        const lunchEndDateTime = setMinutes(setHours(selectedDateTime, lunchEndH), lunchEndM)
+
+        const potentialAppEnd = addMinutes(selectedDateTime, appointmentDuration)
+
+        if (
+          (isBefore(selectedDateTime, lunchEndDateTime) && isAfter(potentialAppEnd, lunchStartDateTime)) ||
+          isEqual(selectedDateTime, lunchStartDateTime) ||
+          isEqual(potentialAppEnd, lunchEndDateTime)
+        ) {
+          isDuringLunchBreak = true
+          break
+        }
+      }
+    }
+
+    if (isDuringLunchBreak) {
+      toast.error("La hora seleccionada cae dentro de la hora de comida de la clínica. Por favor, elija otro horario.")
+      return
+    }
+
     onNext()
   }
 
   const getMinDate = () => {
-    return format(new Date(), "yyyy-MM-dd") // Usar format
+    return format(new Date(), "yyyy-MM-dd")
   }
 
   const isNonWorkingDay =

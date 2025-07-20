@@ -2,7 +2,7 @@
 
 import "./styles/CancelPostponeModal.css"
 import "./styles/NewAppointmentStepper.css" // Importa el CSS del stepper
-import "./styles/appointments.css" // Importa el CSS de citas  
+import "./styles/appointments.css" // Importa el CSS de citas
 import "./styles/userAppointmentsDetails.css" // Importa el CSS de detalles de citas
 import "./styles/SummaryStep.css"
 import "./styles/VeriftAppointment.css"
@@ -15,40 +15,42 @@ import UserAppointmentDetails from "./utils/UserAppointmentDetails"
 import CancelPostponeModal from "./components/CancelPostponeModal"
 import { toast } from "react-toastify"
 import { Info } from "lucide-react" // Importar icono de información
+import { parseISO, getDay, setHours, setMinutes, addMinutes, isBefore, isEqual, isAfter } from "date-fns"
 
 import { useCitas } from "./hooks/useCitas"
-
-// import { useOutletContext } from "react-router-dom" // Eliminado para compatibilidad con Next.js App Router
+import { useClinicHours } from "./hooks/useClinicHours" // Importar el hook de horarios de clínica
 
 // Default work hours (example) - Should ideally come from a global config or API
-const DEFAULT_WORK_HOURS = {
-  days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], // Días en inglés
-  startTime: "09:00",
-  endTime: "18:00",
-}
+// ESTO YA NO ES NECESARIO, SE OBTIENE DE useClinicHours
+// const DEFAULT_WORK_HOURS = {
+//   days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], // Días en inglés
+//   startTime: "09:00",
+//   endTime: "18:00",
+// }
 
 export default function AgendarCitaPage() {
   // Simulación de useOutletContext para obtener el usuario
   const { user } = useOutletContext()
   const userId = user?.id_Perfil
- 
 
   const { citas, loading: citasLoading, cargarCitas, cancelarCita, postergarCita } = useCitas()
+  const { clinicHours, loading: clinicHoursLoading } = useClinicHours() // Obtener horarios de clínica
   const [activeAppointment, setActiveAppointment] = useState(null)
   const [showCancelPostponeModal, setShowCancelPostponeModal] = useState(false)
   const [appointmentToCancelOrPostpone, setAppointmentToCancelOrPostpone] = useState(null)
   const [cancelPostponeMode, setCancelPostponeMode] = useState("cancel")
 
   // Simulate fetching work hours (in a real app, this would be from localStorage or an API)
-  const [workHours, setWorkHours] = useState(DEFAULT_WORK_HOURS)
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("prophysioWorkHours")
-      if (saved) {
-        setWorkHours(JSON.parse(saved))
-      }
-    }
-  }, [])
+  // ESTO YA NO ES NECESARIO, SE OBTIENE DE useClinicHours
+  // const [workHours, setWorkHours] = useState(DEFAULT_WORK_HOURS)
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const saved = localStorage.getItem("prophysioWorkHours")
+  //     if (saved) {
+  //       setWorkHours(JSON.parse(saved))
+  //     }
+  //   }
+  // }, [])
 
   useEffect(() => {
     if (!citasLoading && citas.length > 0 && userId) {
@@ -70,6 +72,7 @@ export default function AgendarCitaPage() {
   }
 
   const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  const SPANISH_DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
 
   const handleConfirmCancelPostpone = async (details) => {
     if (!appointmentToCancelOrPostpone) return
@@ -79,50 +82,86 @@ export default function AgendarCitaPage() {
         await cancelarCita(appointmentToCancelOrPostpone.id_cita, details.motivo)
       } else if (cancelPostponeMode === "postpone") {
         const newCombinedDateTime = details.nuevaFecha
-        const appointmentDuration = appointmentToCancelOrPostpone.duracion || 30
+        const appointmentDuration = appointmentToCancelOrPostpone.duracion || 60 // Usar 60 como default
 
-        const isTimeSlotAvailable = (dateTime, duration, existingAppointments, workHoursConfig) => {
-          const newAppStartTime = new Date(dateTime).getTime()
-          const newAppEndTime = newAppStartTime + Number.parseInt(duration) * 60 * 1000
+        const isTimeSlotAvailable = (
+          dateTime,
+          duration,
+          existingAppointments,
+          clinicWorkHoursData,
+          currentAppointmentId,
+        ) => {
+          const newAppStartTime = parseISO(dateTime)
+          const newAppEndTime = addMinutes(newAppStartTime, duration)
 
-          const selectedDay = new Date(dateTime).getDay()
-          const dayName = ENGLISH_DAYS_OF_WEEK[selectedDay] // Obtiene el nombre del día en inglés
+          const selectedDayIndex = getDay(newAppStartTime)
+          const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[selectedDayIndex]
 
-          if (!workHoursConfig.days.includes(dayName)) {
-            toast.error(`La clínica no trabaja los ${dayName}s.`)
+          const daySchedules = clinicWorkHoursData.filter((schedule) => schedule.dia === selectedDayNameEnglish)
+
+          if (daySchedules.length === 0) {
+            toast.error(`La clínica no trabaja los ${SPANISH_DAYS_OF_WEEK[selectedDayIndex]}.`)
             return false
           }
 
-          const workStartTimeParts = workHoursConfig.startTime.split(":")
-          const workEndTimeParts = workHoursConfig.endTime.split(":")
+          let isWithinWorkHours = false
+          let isDuringLunchBreak = false
 
-          const workStartDateTime = new Date(dateTime)
-          workStartDateTime.setHours(
-            Number.parseInt(workStartTimeParts[0]),
-            Number.parseInt(workStartTimeParts[1]),
-            0,
-            0,
-          )
+          for (const schedule of daySchedules) {
+            const [startH, startM] = schedule.hora_inicio.split(":").map(Number)
+            const [endH, endM] = schedule.hora_fin.split(":").map(Number)
+            const workStartDateTime = setMinutes(setHours(newAppStartTime, startH), startM)
+            const workEndDateTime = setMinutes(setHours(newAppStartTime, endH), endM)
 
-          const workEndDateTime = new Date(dateTime)
-          workEndDateTime.setHours(Number.parseInt(workEndTimeParts[0]), Number.parseInt(workEndTimeParts[1]), 0, 0)
+            if (
+              (isEqual(newAppStartTime, workStartDateTime) || isAfter(newAppStartTime, workStartDateTime)) &&
+              isBefore(newAppStartTime, workEndDateTime)
+            ) {
+              if (isBefore(newAppEndTime, workEndDateTime) || isEqual(newAppEndTime, workEndDateTime)) {
+                isWithinWorkHours = true
 
-          if (newAppStartTime < workStartDateTime.getTime() || newAppEndTime > workEndDateTime.getTime()) {
+                // Verificar hora de comida
+                if (schedule.hora_comida_inicio && schedule.hora_comida_fin) {
+                  const [lunchStartH, lunchStartM] = schedule.hora_comida_inicio.split(":").map(Number)
+                  const [lunchEndH, lunchEndM] = schedule.hora_comida_fin.split(":").map(Number)
+                  const lunchStartDateTime = setMinutes(setHours(newAppStartTime, lunchStartH), lunchStartM)
+                  const lunchEndDateTime = setMinutes(setHours(newAppStartTime, lunchEndH), lunchEndM)
+
+                  if (
+                    (isBefore(newAppStartTime, lunchEndDateTime) && isAfter(newAppEndTime, lunchStartDateTime)) ||
+                    isEqual(newAppStartTime, lunchStartDateTime) ||
+                    isEqual(newAppEndTime, lunchEndDateTime)
+                  ) {
+                    isDuringLunchBreak = true
+                    break // Si se superpone con la comida, no es válido
+                  }
+                }
+                break
+              }
+            }
+          }
+
+          if (isDuringLunchBreak) {
+            toast.error("El horario seleccionado cae dentro de la hora de comida de la clínica.")
+            return false
+          }
+
+          if (!isWithinWorkHours) {
             toast.error(
-              `El horario seleccionado está fuera del horario laboral (${workHoursConfig.startTime} - ${workHoursConfig.endTime}).`,
+              "El horario seleccionado está fuera del horario laboral de la clínica para este día o la duración excede el bloque.",
             )
             return false
           }
 
           for (const app of existingAppointments) {
-            if (appointmentToCancelOrPostpone && app.id_cita === appointmentToCancelOrPostpone.id_cita) continue
+            if (app.id_cita === currentAppointmentId) continue // Ignorar la cita que se está modificando
+            if (app.estado === "cancelada" || app.estado === "completada" || app.estado === "inasistencia") continue
 
-            if (app.estado === "cancelada" || app.estado === "completada") continue
+            const existingAppStartTime = parseISO(app.fecha_hora)
+            const existingAppDuration = app.duracion || 60
+            const existingAppEndTime = addMinutes(existingAppStartTime, existingAppDuration)
 
-            const existingAppStartTime = new Date(app.fecha_cita).getTime()
-            const existingAppEndTime = existingAppStartTime + (app.duracion || 30) * 60 * 1000
-
-            if (newAppStartTime < existingAppEndTime && newAppEndTime > existingAppStartTime) {
+            if (isBefore(newAppStartTime, existingAppEndTime) && isAfter(newAppEndTime, existingAppStartTime)) {
               toast.error("El horario seleccionado se superpone con otra cita existente.")
               return false
             }
@@ -130,7 +169,15 @@ export default function AgendarCitaPage() {
           return true
         }
 
-        if (!isTimeSlotAvailable(newCombinedDateTime, appointmentDuration, citas, workHours)) {
+        if (
+          !isTimeSlotAvailable(
+            newCombinedDateTime,
+            appointmentDuration,
+            citas,
+            clinicHours,
+            appointmentToCancelOrPostpone.id_cita,
+          )
+        ) {
           return
         }
 
@@ -186,8 +233,8 @@ export default function AgendarCitaPage() {
           </p>
         </div>
 
-        {citasLoading ? (
-          <p>Cargando sus citas...</p>
+        {citasLoading || clinicHoursLoading ? ( // Añadir clinicHoursLoading
+          <p>Cargando sus citas y horarios...</p>
         ) : activeAppointment ? (
           <>
             <UserAppointmentDetails
@@ -200,14 +247,15 @@ export default function AgendarCitaPage() {
                 isOpen={showCancelPostponeModal}
                 onClose={() => setShowCancelPostponeModal(false)}
                 onConfirm={handleConfirmCancelPostpone}
-                appointmentDate={appointmentToCancelOrPostpone.fecha_cita}
+                appointmentFechaHora={appointmentToCancelOrPostpone.fecha_hora} // Usar fecha_hora
                 mode={cancelPostponeMode}
-                workHours={workHours}
+                clinicWorkHours={clinicHours} // Pasar clinicHours
+                appointmentDuration={appointmentToCancelOrPostpone.duracion || 60} // Pasar duración
               />
             )}
           </>
         ) : (
-          <NewAppointmentStepper userId={userId} />
+          <NewAppointmentStepper userId={userId} clinicWorkHours={clinicHours} existingAppointments={citas} />
         )}
       </div>
 

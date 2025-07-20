@@ -30,6 +30,7 @@
 
 /* Contenedor del contenido del select (el dropdown que aparece) */
 .select-content {
+  width: 100%;
   background-color: var(--bg-white);
   border: 1px solid var(--brd-default);
   border-radius: var(--radius-md);
@@ -38,10 +39,16 @@
   max-height: 200px; /* Para scroll si hay muchas opciones */
   overflow-y: auto;
   padding: 0.25rem; /* Espacio interno */
+  .select-content {
+  min-width: var(--radix-select-trigger-width);
+  width: var(--radix-select-trigger-width);
+  box-sizing: border-box;
+}
 }
 
 /* Elementos individuales del select */
 .select-item {
+  width: 100%;
   padding: 0.5rem 0.75rem;
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -81,4 +88,8 @@
   height: 1px;
   background-color: var(--brd-default);
   margin: 0.25rem 0;
+}
+
+.select-viewport {
+  width: 100%;
 }

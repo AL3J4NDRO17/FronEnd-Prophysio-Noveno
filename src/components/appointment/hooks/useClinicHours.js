@@ -1,22 +1,11 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { clinicHoursService } from "../services/clinicHoursService"
+import { horarioService} from "../services/clinicHoursService"
 import { toast } from "react-toastify"
 
-// Mapeo de días de la semana de español a inglés
-const DAY_MAP = {
-  Lunes: "Monday",
-  Martes: "Tuesday",
-  Miércoles: "Wednesday",
-  Jueves: "Thursday",
-  Viernes: "Friday",
-  Sábado: "Saturday",
-  Domingo: "Sunday",
-}
-
 export const useClinicHours = () => {
-  const [clinicHours, setClinicHours] = useState(null) // Almacenará los horarios en un formato mapeado
+  const [clinicHours, setClinicHours] = useState([]) // Ahora almacenará un array de objetos de horario
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -24,23 +13,17 @@ export const useClinicHours = () => {
     try {
       setLoading(true)
       setError(null)
-      const data = await clinicHoursService.getClinicHours()
-
-      // Transformar los datos para un uso más fácil en el frontend
-      const transformedHours = data.reduce((acc, curr) => {
-        const englishDay = DAY_MAP[curr.dia]
-        if (englishDay) {
-          if (!acc[englishDay]) {
-            acc[englishDay] = []
-          }
-          acc[englishDay].push({
-            hora_inicio: curr.hora_inicio,
-            hora_fin: curr.hora_fin,
-          })
-        }
-        return acc
-      }, {})
-      setClinicHours(transformedHours)
+      const data = await horarioService.getClinicHours()
+      // No necesitamos transformar los días a inglés aquí, ya que el backend los envía en español
+      // y el frontend los mapea a inglés cuando es necesario para date-fns.
+      // Simplemente almacenamos los datos tal cual vienen del backend,
+      // asegurando que hora_comida_inicio y hora_comida_fin estén presentes (o null).
+      const processedData = data.map((h) => ({
+        ...h,
+        hora_comida_inicio: h.hora_comida_inicio || null,
+        hora_comida_fin: h.hora_comida_fin || null,
+      }))
+      setClinicHours(processedData)
     } catch (err) {
       console.error("Error al cargar horarios de clínica:", err)
       toast.error("No se pudieron cargar los horarios de la clínica.")
