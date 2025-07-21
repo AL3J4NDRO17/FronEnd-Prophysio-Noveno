@@ -1,0 +1,248 @@
+/* Contenedor principal que simula el panel derecho */
+.user-dashboard-history-container {
+  background-color: #ffffff; /* Fondo blanco */
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra de caja añadida */
+  min-height: 100vh; /* Asegura que ocupe toda la altura disponible */
+  box-sizing: border-box;
+}
+
+/* Estilos del encabezado */
+.user-dashboard-header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.user-dashboard-title {
+  font-size: 1.8em;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.user-dashboard-description {
+  font-size: 0.95em;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Mensajes de estado (cargando, error, sin citas) */
+.appointment-history-message {
+  text-align: center;
+  color: #777;
+  font-size: 1.1em;
+  padding: 40px 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Grid para las tarjetas de citas */
+.appointment-history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+/* Estilos de la tarjeta de cita */
+.appointment-card {
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.appointment-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.appointment-card-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fdfdfd;
+}
+
+.appointment-card-title {
+  font-size: 1.15em;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.appointment-card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Estilos para los detalles de la cita (fecha, hora, notas) */
+.appointment-detail-item {
+  display: flex;
+  align-items: flex-start; /* Alinea el icono con la primera línea de texto */
+  gap: 10px;
+  color: #555;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.appointment-detail-icon {
+  width: 18px;
+  height: 18px;
+  color: #888; /* Color por defecto para los iconos */
+  flex-shrink: 0; /* Evita que el icono se encoja */
+  margin-top: 2px; /* Ajuste fino para alinear con el texto */
+}
+
+.appointment-notes-text {
+  font-style: italic;
+  color: #666;
+}
+
+/* Estilos para las insignias de estado */
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8em;
+  font-weight: 500;
+  text-transform: capitalize;
+  white-space: nowrap; /* Evita que el texto se rompa */
+}
+
+.status-badge-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.status-badge-default {
+  background-color: #e0e0e0;
+  color: #555;
+}
+
+.status-badge-success {
+  background-color: #d4edda; /* Verde claro */
+  color: #155724; /* Verde oscuro */
+}
+
+.status-badge-destructive {
+  background-color: #f8d7da; /* Rojo claro */
+  color: #721c24; /* Rojo oscuro */
+}
+
+.status-badge-warning {
+  background-color: #fff3cd; /* Amarillo claro */
+  color: #856404; /* Amarillo oscuro */
+}
+
+.status-badge-secondary {
+  background-color: #e2e3e5; /* Gris claro */
+  color: #383d41; /* Gris oscuro */
+}
+
+/* Estilos para la sección de radiografías/documentos */
+.radiography-section {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 15px;
+  margin-top: 10px;
+  flex-direction: row; /* Asegura que el icono y el contenido estén en la misma fila */
+}
+
+.radiography-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.radiography-title {
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+.radiography-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.radiography-item {
+  margin-bottom: 5px;
+}
+
+.appointment-link {
+  color: #007bff; /* Azul para enlaces */
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.appointment-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Estilos para motivos de cancelación/postergación */
+.appointment-reason-text {
+  font-weight: 500;
+}
+
+.red {
+  color: #dc3545; /* Rojo para iconos y texto de cancelación */
+}
+
+.blue {
+  color: #007bff; /* Azul para iconos y texto de postergación */
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+  .user-dashboard-history-container {
+    padding: 20px;
+  }
+
+  .user-dashboard-title {
+    font-size: 1.5em;
+  }
+
+  .appointment-history-grid {
+    grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+  }
+
+  .appointment-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-dashboard-history-container {
+    padding: 15px;
+  }
+
+  .user-dashboard-title {
+    font-size: 1.3em;
+  }
+
+  .appointment-card-title {
+    font-size: 1em;
+  }
+
+  .appointment-card-content {
+    padding: 15px;
+  }
+
+  .appointment-detail-item {
+    font-size: 0.85em;
+  }
+}

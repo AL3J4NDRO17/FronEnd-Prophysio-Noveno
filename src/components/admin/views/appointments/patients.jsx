@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { Search, Plus, Eye, CalendarDays, Users, Clock, XCircle } from "lucide-react" // Añadido XCircle para limpiar búsqueda
 import "./patients.css" // Importar el CSS dedicado para pacientes
@@ -11,7 +10,7 @@ import { toast } from "react-toastify"
 import { userService } from "./services/userService"
 import { useCitas } from "./hooks/useCitas"
 import { horarioService } from "./services/horarioService"
-
+import { radiografiaService } from "./services/radiografiesService" // Importar radiografiaService
 import NewAppointmentModal from "./components/NewAppointmentModel"
 import PatientDetailsPanel from "./components/PatientDetailsPanel"
 
@@ -43,12 +42,14 @@ function PatientsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [filterStatus, setFilterStatus] = useState("all") // Nuevo estado para el filtro
-
   const [showNewAppointmentModal, setShowNewAppointmentModal] = useState(false)
   const [selectedPatientForAppointment, setSelectedPatientForAppointment] = useState(null)
-
   const [showPatientDetailsPanel, setShowPatientDetailsPanel] = useState(false)
   const [selectedPatientIdForDetails, setSelectedPatientIdForDetails] = useState(null)
+  const [selectedPatientProfileForDetails, setSelectedPatientProfileForDetails] = useState(null)
+  const [selectedPatientRadiographies, setSelectedPatientRadiographies] = useState([])
+  const [detailsLoading, setDetailsLoading] = useState(false)
+  const [detailsError, setDetailsError] = useState(null)
 
   // Data needed for NewAppointmentModal
   const { citas, crearCita, actualizarCita, loading: loadingCitas } = useCitas()
@@ -128,9 +129,23 @@ function PatientsPage() {
     }
   }
 
-  const openPatientDetailsPanel = (patientId) => {
+  const openPatientDetailsPanel = async (patientId) => {
     setSelectedPatientIdForDetails(patientId)
-    setShowPatientDetailsPanel(true)
+    setDetailsLoading(true)
+    setDetailsError(null)
+    setShowPatientDetailsPanel(true) // Abre el panel inmediatamente para mostrar el estado de carga
+    try {
+      const profile = await userService.getPatientProfile(patientId)
+      const radiografias = await radiografiaService.getRadiografiasByPerfil(profile.perfil.id_perfil) // Asume que profile.perfil.id_perfil existe
+      setSelectedPatientProfileForDetails(profile)
+      setSelectedPatientRadiographies(radiografias)
+    } catch (err) {
+      console.error("Error al cargar detalles o radiografías del paciente:", err)
+      setDetailsError("No se pudieron cargar los detalles o radiografías del paciente.")
+      toast.error("Error al cargar detalles del paciente.")
+    } finally {
+      setDetailsLoading(false)
+    }
   }
 
   const filteredPatients = useMemo(() => {
@@ -170,10 +185,8 @@ function PatientsPage() {
 
   // --- Cálculo de Estadísticas ---
   const totalPatients = patients.length
-
   const today = new Date()
   today.setHours(0, 0, 0, 0)
-
   const patientsWithUpcomingAppointments = new Set(
     citas
       .filter((cita) => {
@@ -332,7 +345,6 @@ function PatientsPage() {
                   Sin Citas Próximas
                 </Button>
               </div>
-
               {loading && <p>Cargando pacientes...</p>}
               {error && <p>Error al cargar pacientes: {error.message || error}</p>}
               {!loading && !error && filteredPatients.length === 0 && (
@@ -413,14 +425,25 @@ function PatientsPage() {
       {/* Patient Details Panel (new component) */}
       <PatientDetailsPanel
         isOpen={showPatientDetailsPanel}
-        onClose={() => setShowPatientDetailsPanel(false)}
-        patientId={selectedPatientIdForDetails}
+        onClose={() => {
+          setShowPatientDetailsPanel(false)
+          setSelectedPatientProfileForDetails(null) // Limpiar al cerrar
+          setSelectedPatientRadiographies([]) // Limpiar al cerrar
+          setSelectedPatientIdForDetails(null) // Limpiar el ID también
+        }}
+        patientId={selectedPatientIdForDetails} // Mantener el ID para referencia si es necesario
+        patientProfile={selectedPatientProfileForDetails} // Pasar el perfil cargado
+        radiografias={selectedPatientRadiographies} // Pasar las radiografías cargadas
+        loading={detailsLoading} // Pasar el estado de carga
+        error={detailsError} // Pasar el estado de error
         onScheduleAppointment={(patient) => {
           setShowPatientDetailsPanel(false) // Close details panel
           openScheduleAppointmentModal(patient) // Open appointment modal
         }}
-      />
+        radiografiaService={radiografiaService}
+      />\
     </div>
   )
 }
+
 export default PatientsPage

@@ -8,7 +8,7 @@ import { Label } from "../../public_ui/label"
 import { toast } from "react-toastify"
 import { Textarea } from "../../public_ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../public_ui/select"
-import { format, parseISO, getDay, setHours, setMinutes, addMinutes, isBefore, isEqual, isAfter } from "date-fns"
+import { format, parseISO, getDay, setHours, setMinutes, addMinutes, isEqual, isBefore, isAfter } from "date-fns"
 
 const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 const SPANISH_DAYS_OF_WEEK = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
@@ -23,6 +23,45 @@ export default function AppointmentDetailsStep({
   appointmentDuration,
 }) {
   const [availableTimeSlots, setAvailableTimeSlots] = useState([])
+  // CAMBIO: selectedFileNames ahora es un array
+  const [selectedFileNames, setSelectedFileNames] = useState([])
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    onFormChange(name, value)
+  }
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files) // Convertir FileList a Array
+    const allowedTypes = ["image/jpeg", "image/png"]
+    const maxFiles = 5
+
+    const validFiles = []
+    let invalidFilesCount = 0
+
+    if (files.length > maxFiles) {
+      toast.error(`Solo puedes subir un máximo de ${maxFiles} imágenes.`)
+      e.target.value = null // Limpiar el input
+      onFormChange("radiografias", []) // Limpiar el estado
+      setSelectedFileNames([])
+      return
+    }
+
+    files.forEach((file) => {
+      if (allowedTypes.includes(file.type)) {
+        validFiles.push(file)
+      } else {
+        invalidFilesCount++
+      }
+    })
+
+    if (invalidFilesCount > 0) {
+      toast.error(`Se ignoraron ${invalidFilesCount} archivo(s) no válido(s). Solo se permiten JPG y PNG.`)
+    }
+
+    onFormChange("radiografias", validFiles)
+    setSelectedFileNames(validFiles.map((file) => file.name))
+  }
 
   // Función para verificar si un día es laborable para la clínica
   const isDayAvailable = (dateString, clinicWorkHoursData) => {
@@ -34,15 +73,6 @@ export default function AppointmentDetailsStep({
     const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[dayOfWeekIndex]
 
     return clinicWorkHoursData.some((schedule) => schedule.dia === selectedDayNameEnglish)
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    onFormChange(name, value)
-  }
-
-  const handleFileChange = (e) => {
-    onFormChange("radiografias", e.target.files)
   }
 
   // Función para generar franjas horarias, ahora considerando la hora de comida
@@ -99,7 +129,7 @@ export default function AppointmentDetailsStep({
       "[AppointmentDetailsStep useEffect] Fecha seleccionada:",
       formData.fecha_cita,
       "Horarios de clínica recibidos:",
-      clinicWorkHours, // Ahora es un array
+      clinicWorkHours,
       "Citas existentes:",
       existingAppointments,
       "Duración de cita (dinámica):",
@@ -114,7 +144,6 @@ export default function AppointmentDetailsStep({
       console.log("[AppointmentDetailsStep useEffect] Día de la semana seleccionado (inglés):", selectedDayNameEnglish)
 
       const daySchedules = clinicWorkHours.filter((schedule) => {
-        // Asegurarse de que el día del horario coincida con el día seleccionado
         return schedule.dia === selectedDayNameEnglish
       })
 
@@ -135,10 +164,10 @@ export default function AppointmentDetailsStep({
           generateTimeSlots(
             schedule.hora_inicio,
             schedule.hora_fin,
-            schedule.hora_comida_inicio, // Pasar hora de comida
-            schedule.hora_comida_fin, // Pasar hora de comida
+            schedule.hora_comida_inicio,
+            schedule.hora_comida_fin,
             appointmentDuration,
-            selectedDate, // Pasar la fecha seleccionada para date-fns
+            selectedDate,
           ),
         )
       })
@@ -329,8 +358,39 @@ export default function AppointmentDetailsStep({
           )}
         </div>
         <div className="publicAppointment-form-group">
-          <Label htmlFor="radiografias">Subir Radiografías (opcional)</Label>
-          <Input id="radiografias" name="radiografias" type="file" onChange={handleFileChange} />
+          <Label htmlFor="radiografias">Subir Documentos/Radiografías (opcional, máx. 5)</Label>{" "}
+          <Input
+            id="radiografias"
+            name="radiografias"
+            type="file"
+            onChange={handleFileChange}
+            accept="image/jpeg,image/png"
+            multiple // CAMBIO: Permitir múltiples archivos
+          />
+          {selectedFileNames.length > 0 && (
+            <div className="publicAppointment-text-xs publicAppointment-text-tertiary mt-1">
+              Archivos seleccionados:
+              <ul className="list-disc list-inside">
+                {selectedFileNames.map((name, index) => (
+                  <li key={index}>
+                    <strong>{name}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        <div className="publicAppointment-form-group">
+          <Label htmlFor="radiografia_descripcion">Descripción de Documentos/Radiografías (opcional)</Label>
+          <Textarea
+            id="radiografia_descripcion"
+            name="radiografia_descripcion"
+            value={formData.radiografia_descripcion}
+            onChange={handleChange}
+            className="input"
+            rows="2"
+            placeholder="Ej: Radiografía de rodilla izquierda, 15/07/2024"
+          ></Textarea>
         </div>
       </CardContent>
       <CardFooter className="publicAppointment-card-footer-between">

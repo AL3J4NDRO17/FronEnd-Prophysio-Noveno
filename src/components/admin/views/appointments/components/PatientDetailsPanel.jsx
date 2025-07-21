@@ -11,16 +11,23 @@ import {
   DropdownMenuTrigger,
 } from "../../../../public_ui/dropdown-menu"
 import { useEffect, useRef, useState } from "react"
+
 import "../styles/PatientDetailsPanel.css"
 import { useCitas } from "../hooks/useCitas"
-import { userService } from "../services/userService"
 
-const PatientDetailsPanel = ({ isOpen, onClose, patientId, onScheduleAppointment }) => {
+const PatientDetailsPanel = ({
+  isOpen,
+  onClose,
+  patientId,
+  patientProfile,
+  radiografias,
+  loading,
+  error,
+  onScheduleAppointment,
+  radiografiaService,
+}) => {
   const panelRef = useRef(null)
   const [isPanelVisible, setIsPanelVisible] = useState(false)
-  const [patientProfile, setPatientProfile] = useState(null)
-  const [profileLoading, setProfileLoading] = useState(true)
-  const [profileError, setProfileError] = useState(null)
 
   const { citas } = useCitas()
 
@@ -31,45 +38,29 @@ const PatientDetailsPanel = ({ isOpen, onClose, patientId, onScheduleAppointment
       }
     }
 
-    if (isOpen && patientId) {
+    if (isOpen) {
       const timer = setTimeout(() => {
         setIsPanelVisible(true)
       }, 10)
       document.addEventListener("keydown", handleEscape)
-
-      const fetchPatientProfile = async () => {
-        setProfileLoading(true)
-        setProfileError(null)
-        try {
-          const data = await userService.getPatientProfile(patientId)
-          setPatientProfile(data)
-        } catch (err) {
-          console.error("Error al cargar el perfil del paciente:", err)
-          setProfileError("No se pudo cargar el perfil del paciente.")
-        } finally {
-          setProfileLoading(false)
-        }
-      }
-      fetchPatientProfile()
-
+      document.body.style.overflow = "hidden" // Prevenir scroll en el body
       return () => {
         clearTimeout(timer)
         document.removeEventListener("keydown", handleEscape)
-        setPatientProfile(null)
-        setProfileLoading(true)
-        setProfileError(null)
+        document.body.style.overflow = "" // Limpiar overflow del body
       }
     } else {
       setIsPanelVisible(false)
       document.removeEventListener("keydown", handleEscape)
+      document.body.style.overflow = "" // Asegurar que el overflow del body se restablezca al cerrar
     }
-
     return () => {
       document.removeEventListener("keydown", handleEscape)
+      document.body.style.overflow = "" // Limpieza final
     }
-  }, [isOpen, onClose, patientId])
+  }, [isOpen, onClose])
 
-  if (!isOpen || !patientId) return null
+  if (!isOpen) return null // patientId ya no es la única condición para renderizar el panel, ya que puede estar cargando.
 
   const formatDate = (dateString) => {
     if (!dateString) return "No especificada"
@@ -137,10 +128,12 @@ const PatientDetailsPanel = ({ isOpen, onClose, patientId, onScheduleAppointment
             </Button>
           </CardHeader>
           <CardContent className="patient-details-card-content">
-            {profileLoading ? (
+            {loading ? (
               <p>Cargando detalles del paciente...</p>
-            ) : profileError ? (
-              <p className="text-red-500">{profileError}</p>
+            ) : error ? (
+              <p className="text-red-500">{error}</p>
+            ) : !patientProfile ? (
+              <p className="text-gray-500">No se encontró el perfil del paciente.</p>
             ) : (
               <div className="patient-details-grid">
                 <div className="patient-details-section-spacing">
@@ -215,6 +208,42 @@ const PatientDetailsPanel = ({ isOpen, onClose, patientId, onScheduleAppointment
                         </p>
                       </div>
                     </div>
+                  </div>
+
+                  <h4 className="patient-subsection-title">Radiografías y Documentos</h4>
+                  <div className="patient-radiographies-section patient-details-section-spacing">
+                    {radiografias && radiografias.length > 0 ? (
+                      <ul className="patient-radiography-list">
+                        {radiografias.map((radiografia) => (
+                          <li key={radiografia.id_radiografia} className="patient-radiography-item">
+                            <FileText className="patient-radiography-icon" />
+                            <a
+                              href={radiografia.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="patient-radiography-link"
+                            >
+                              {radiografia.descripcion || `Documento del ${formatDate(radiografia.fecha_subida)}`}
+                            </a>
+                            {/* Display the image directly */}
+                            {radiografia.url && (
+                              <img
+                                src={radiografia.url || "/placeholder.svg"}
+                                alt={radiografia.descripcion || `Radiografía ${formatDate(radiografia.fecha_subida)}`}
+                                width={100} // Adjust width as needed
+                                height={100} // Adjust height as needed
+                                className="patient-radiography-image"
+                                objectFit="contain" // Ensure image fits within bounds
+                              />
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm text-gray-500">
+                        No hay radiografías o documentos registrados para este paciente.
+                      </p>
+                    )}
                   </div>
                 </div>
 

@@ -31,7 +31,7 @@ const LocationPage = () => {
           <InfoItem
             icon={<MapPin />}
             title="Dirección"
-            content={["Col. Tehuizan", "C.P. 43000, Huejutla de Reyes, Hgo"]}
+            content={["Col. Tahuizan", "C.P. 43000, Huejutla de Reyes, Hgo"]}
           />
           <InfoItem icon={<Clock />} title="Horario" content={["L: 09:30-20:00", "M-V: 10:00-20:00"]} />
           <InfoItem icon={<Phone />} title="Teléfono" content={["222 508 1501", "WhatsApp: +52 222 508 1501"]} />

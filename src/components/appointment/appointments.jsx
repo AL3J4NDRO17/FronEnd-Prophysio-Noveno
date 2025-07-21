@@ -20,13 +20,6 @@ import { parseISO, getDay, setHours, setMinutes, addMinutes, isBefore, isEqual, 
 import { useCitas } from "./hooks/useCitas"
 import { useClinicHours } from "./hooks/useClinicHours" // Importar el hook de horarios de clínica
 
-// Default work hours (example) - Should ideally come from a global config or API
-// ESTO YA NO ES NECESARIO, SE OBTIENE DE useClinicHours
-// const DEFAULT_WORK_HOURS = {
-//   days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], // Días en inglés
-//   startTime: "09:00",
-//   endTime: "18:00",
-// }
 
 export default function AgendarCitaPage() {
   // Simulación de useOutletContext para obtener el usuario

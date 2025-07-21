@@ -15,12 +15,7 @@ const ProfileTabs = ({ activeTab, setActiveTab }) => {
       >
         Información Médica
       </button>
-      <button
-        className={`profile-tab ${activeTab === "account" ? "active" : ""}`}
-        onClick={() => setActiveTab("account")}
-      >
-        Cuenta
-      </button>
+     
     </div>
   )
 }

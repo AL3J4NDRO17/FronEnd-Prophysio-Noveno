@@ -13,7 +13,7 @@ export const useClinicHours = () => {
     try {
       setLoading(true)
       setError(null)
-      const data = await horarioService.getClinicHours()
+      const data = await horarioService.getHorariosClinica()
       // No necesitamos transformar los días a inglés aquí, ya que el backend los envía en español
       // y el frontend los mapea a inglés cuando es necesario para date-fns.
       // Simplemente almacenamos los datos tal cual vienen del backend,

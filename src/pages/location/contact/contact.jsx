@@ -63,12 +63,12 @@ export default function ContactForm() {
             </p>
 
             <div className="location-contact-details">
-              <ContactItem icon={<Phone />} title="Por teléfono o WhatsApp:" content="+34 611 007 411" />
-              <ContactItem icon={<Mail />} title="Por mail en:" content="carlos@fisioalandia.com" />
+              <ContactItem icon={<Phone />} title="Por teléfono o WhatsApp:" content="+52 222 508 1501" />
+
               <ContactItem
                 icon={<MapPin />}
                 title="¿Dónde me desplazo?"
-                content="Huejutla y alrededores, El Alto, Atlapexco, Jaltocan"
+                content="Huejutla y alrededores"
               />
             </div>
           </div>

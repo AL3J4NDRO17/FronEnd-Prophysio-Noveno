@@ -15,7 +15,7 @@
 .patient-details-panel {
   background-color: white;
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   height: 100%;
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
   transform: translateX(100%);
@@ -50,6 +50,20 @@
   font-size: 1.4em;
   font-weight: bold;
   color: #333;
+}
+
+/* Close button for the panel */
+.patient-details-close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.patient-details-close-button:hover {
+  background-color: #f0f0f0;
 }
 
 /* Contenido de la tarjeta */
@@ -230,23 +244,113 @@
 }
 
 .patient-history-date {
-  font-size: 0.75rem; /* text-xs */
-  color: #6b7280; /* text-gray-500 */
+  font-size: 0.75rem;
+  /* text-xs */
+  color: #6b7280;
+  /* text-gray-500 */
 }
 
 .patient-history-notes {
-  font-size: 0.875rem; /* text-sm */
-  color: #4b5563; /* text-gray-600 */
-  margin-top: 0.5rem; /* mt-2 */
+  font-size: 0.875rem;
+  /* text-sm */
+  color: #4b5563;
+  /* text-gray-600 */
+  margin-top: 0.5rem;
+  /* mt-2 */
 }
 
 /* Common icon styles */
 .icon-medium {
-  height: 1.25rem; /* h-5 */
-  width: 1.25rem; /* w-5 */
+  height: 1.25rem;
+  /* h-5 */
+  width: 1.25rem;
+  /* w-5 */
 }
 
 .icon-small {
-  height: 1rem; /* h-4 */
-  width: 1rem; /* w-4 */
+  height: 1rem;
+  /* h-4 */
+  width: 1rem;
+  /* w-4 */
+}
+
+/* Estilos para la sección de radiografías */
+.patient-radiographies-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Espacio entre elementos de la lista */
+}
+
+.patient-radiography-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Columnas responsivas para imágenes */
+  gap: 1rem; /* Espacio entre las imágenes */
+}
+
+.patient-radiography-item {
+  display: flex;
+  flex-direction: column; /* Apilar elementos verticalmente */
+  align-items: center;
+  text-align: center;
+  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fdfdfd;
+  transition: all 0.2s ease-in-out;
+}
+
+.patient-radiography-item:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.patient-radiography-icon {
+  width: 24px;
+  height: 24px;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.patient-radiography-link {
+  font-size: 0.9em;
+  color: #007bff;
+  text-decoration: none;
+  margin-bottom: 0.5rem;
+  word-break: break-word; /* Permite que el texto largo se rompa */
+}
+
+.patient-radiography-link:hover {
+  text-decoration: underline;
+}
+
+/* Estilos para las imágenes de radiografía */
+.patient-radiography-image {
+  display: block; /* Asegura que la imagen se comporte como un bloque */
+  width: 100%; /* Ocupa el 100% del ancho de su contenedor */
+  height: 100px; /* Altura fija para uniformidad */
+  object-fit: contain; /* Asegura que la imagen completa sea visible sin recortar */
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  margin-top: 0.5rem; /* Espacio superior para separar del texto/enlace */
+  cursor: pointer; /* Indica que es clickeable (para un futuro visor de imágenes) */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.patient-radiography-image:hover {
+  transform: scale(1.02); /* Ligeramente más grande al pasar el ratón */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+  .patient-radiography-list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Columnas más pequeñas en móviles */
+  }
+
+  .patient-radiography-image {
+    height: 80px; /* Altura más pequeña en móviles */
+  }
 }

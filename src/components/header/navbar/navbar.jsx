@@ -124,10 +124,8 @@ const Navbar = () => {
                         <User size={20} />
                       </button>
                       <div className={`dropdown-content ${isUserDropdownOpen ? "active" : ""}`}>
-                        <Link to="/HistorialMedico" className="dropdown-item" onClick={closeMenu}>
-                          Historial Médico
-                        </Link>
-                        <Link to="/user" className="dropdown-item" onClick={closeMenu}>
+                       
+                        <Link to="/user/profile" className="dropdown-item" onClick={closeMenu}>
                           Perfil
                         </Link>
                         <button

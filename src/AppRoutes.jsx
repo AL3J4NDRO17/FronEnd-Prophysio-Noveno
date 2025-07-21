@@ -59,8 +59,11 @@ const AdminStadics = lazy(() => import("./components/admin/views/stadistics/Mode
 const UserDashboardLayout = lazy(() => import("./components/user/userLayout.jsx"));
 const UserProfileEdit = lazy(() => import("./components/user/components/profile/profile.jsx"));
 const UserDashboard = lazy(() => import("./components/user/components/welcome/welcome.jsx"));
-const UserHistorySheduler = lazy(() => import("./components/user/components/shedulerHistory/shedulerHistory.jsx"));
+const UserHistorySheduler = lazy(() => import("./components/appointment/utils/UserAppointmentHistory.jsx"));
 const UserConfirmationAppointment = lazy(() => import("./components/appointment/utils/VerifyAppointment.jsx"));
+
+
+
 // 🔥 VARIANTES DE ANIMACIÓN PARA TRANSICIONES MÁS FLUIDAS
 const pageVariants = {
   initial: { opacity: 0, y: 10 },
@@ -145,7 +148,7 @@ const AppContent = ({ showSplash, location }) => {
             <Route element={<ProtectedRoute allowedRoles={["usuario"]} />}>
               <Route path="/user" element={<UserDashboardLayout />}>
                 <Route index element={<UserDashboard />} />
-                <Route path="shedulerHistory" element={<UserHistorySheduler />} />
+                <Route path="history" element={<UserHistorySheduler />} />
                 <Route path="dashboard" element={<UserDashboard />} />
                 <Route path="sheduler" element={<AppointmentScheduler />} />
                 <Route path="profile" element={<UserProfileEdit />} />

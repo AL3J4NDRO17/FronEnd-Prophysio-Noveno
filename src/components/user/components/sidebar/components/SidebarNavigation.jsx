@@ -5,11 +5,11 @@ import { Home, User, Calendar, Clock, FileText } from "lucide-react"
 
 const SidebarNavigation = ({ isActive, handleNavigation }) => {
   const menuItems = [
-    { path: "/user", icon: Home, label: "Inicio" },
+   
     { path: "/user/profile", icon: User, label: "Mi Perfil" },
     { path: "/user/sheduler", icon: Calendar, label: "Agendar Cita" },
     { path: "/user/history", icon: Clock, label: "Historial de Citas" },
-    { path: "/user/medical-history", icon: FileText, label: "Historial Clínico" },
+  
   ]
 
   return (

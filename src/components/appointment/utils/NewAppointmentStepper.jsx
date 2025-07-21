@@ -13,9 +13,7 @@ import PaymentOptionStep from "../components/PaymentOptionStep" // Nuevo compone
 import "../styles/NewAppointmentStepper.css"
 import { horarioService } from "../services/clinicHoursService" // Ruta actualizada
 
-
 const ENGLISH_DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-
 const SPANISH_TO_ENGLISH_DAY_MAP = {
   Domingo: "Sunday",
   Lunes: "Monday",
@@ -26,7 +24,11 @@ const SPANISH_TO_ENGLISH_DAY_MAP = {
   Sábado: "Saturday",
 }
 
-const NewAppointmentStepper = ({ userId }) => {
+const NewAppointmentStepper = ({
+  userId,
+  clinicWorkHours: propClinicWorkHours,
+  existingAppointments: propExistingAppointments,
+}) => {
   const {
     perfil,
     loading: hookLoading,
@@ -47,7 +49,8 @@ const NewAppointmentStepper = ({ userId }) => {
     motivo_consulta: "",
     fecha_cita: "",
     hora_cita: "",
-    radiografias: null,
+    radiografias: [], // Inicializar como un array vacío para múltiples archivos
+    radiografia_descripcion: "", // Nuevo campo para la descripción de la radiografía
     metodo_pago: "",
     estado: "pendiente",
   })
@@ -65,16 +68,13 @@ const NewAppointmentStepper = ({ userId }) => {
         console.log("NewAppointmentStepper: Intentando cargar horarios de la clínica...")
         const hours = await horarioService.getHorariosClinica()
         console.log("NewAppointmentStepper: Horarios de la clínica cargados (raw):", hours)
-
         // Normalizar los nombres de los días a inglés para consistencia
         const normalizedHours = hours.map((schedule) => ({
           ...schedule,
           dia: SPANISH_TO_ENGLISH_DAY_MAP[schedule.dia] || schedule.dia, // Convierte si es español, mantiene si ya es inglés o desconocido
         }))
         console.log("NewAppointmentStepper: Horarios de la clínica normalizados (English):", normalizedHours)
-
         setClinicWorkHours(normalizedHours)
-
         if (normalizedHours.length > 0 && normalizedHours[0].duracion_sesion) {
           setAppointmentDuration(normalizedHours[0].duracion_sesion)
         } else {
@@ -107,6 +107,7 @@ const NewAppointmentStepper = ({ userId }) => {
   }, [perfil])
 
   const [currentStep, setCurrentStep] = useState(1)
+
   useEffect(() => {
     console.log("NewAppointmentStepper: Paso actual del hook useAgendarCita:", paso)
     if (citaCreada && paso === 4) {
@@ -123,11 +124,7 @@ const NewAppointmentStepper = ({ userId }) => {
   }, [hookError])
 
   const handleFormChange = (name, value) => {
-    if (name === "radiografias") {
-      setFormData((prev) => ({ ...prev, [name]: value.length > 0 ? value[0] : null }))
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }))
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleNextStep = async () => {
@@ -156,17 +153,14 @@ const NewAppointmentStepper = ({ userId }) => {
       )
     } else if (currentStep === 3) {
       const { fecha_cita, hora_cita, motivo_consulta } = formData
-
       if (!fecha_cita || !hora_cita || !motivo_consulta) {
         toast.error("Por favor, complete la fecha, hora y motivo de la cita.")
         return
       }
-
       if (appointmentDuration === null) {
         toast.error("La duración de la cita no está configurada. Por favor, intente de nuevo más tarde.")
         return
       }
-
       const combinedDateTime = `${fecha_cita}T${hora_cita}:00`
       console.log("NewAppointmentStepper: Validando disponibilidad para:", combinedDateTime)
       if (!isTimeSlotAvailable(combinedDateTime, appointmentDuration, citas, clinicWorkHours)) {
@@ -190,7 +184,6 @@ const NewAppointmentStepper = ({ userId }) => {
 
   const handleSubmitAppointment = async () => {
     const combinedDateTime = `${formData.fecha_cita}T${formData.hora_cita}:00`
-
     const citaFormData = new FormData()
     citaFormData.append("id_usuario", userId)
     citaFormData.append("fecha_hora", new Date(combinedDateTime).toISOString())
@@ -201,9 +194,15 @@ const NewAppointmentStepper = ({ userId }) => {
     citaFormData.append("estado", formData.estado)
     citaFormData.append("duracion", appointmentDuration.toString())
     citaFormData.append("metodo_pago", formData.metodo_pago)
-
-    if (formData.radiografias) {
-      citaFormData.append("radiografias", formData.radiografias)
+    // Asegúrate de que la descripción de la radiografía también se envíe si es necesaria en el backend
+    if (formData.radiografia_descripcion) {
+      citaFormData.append("foto_documento_descripcion", formData.radiografia_descripcion)
+    }
+    // CAMBIO CLAVE AQUÍ: Iterar sobre el array de archivos y adjuntar cada uno individualmente
+    if (formData.radiografias && formData.radiografias.length > 0) {
+      formData.radiografias.forEach((file) => {
+        citaFormData.append("radiografias", file)
+      })
     }
 
     await agendarCita(citaFormData)
@@ -212,12 +211,11 @@ const NewAppointmentStepper = ({ userId }) => {
   const isTimeSlotAvailable = (dateTime, duration, existingAppointments, clinicWorkHoursData) => {
     const newAppStartTime = new Date(dateTime).getTime()
     const newAppEndTime = newAppStartTime + Number.parseInt(duration) * 60 * 1000
-
     const selectedDayIndex = new Date(dateTime).getDay()
     const selectedDayNameEnglish = ENGLISH_DAYS_OF_WEEK[selectedDayIndex]
+
     console.log("NewAppointmentStepper: Día seleccionado (inglés):", selectedDayNameEnglish)
 
-    // clinicWorkHoursData ahora contiene nombres de días en inglés
     const daySchedules = clinicWorkHoursData.filter((schedule) => schedule.dia === selectedDayNameEnglish)
     console.log("NewAppointmentStepper: Horarios filtrados para el día:", daySchedules)
 
@@ -230,10 +228,8 @@ const NewAppointmentStepper = ({ userId }) => {
     for (const schedule of daySchedules) {
       const workStartTimeParts = schedule.hora_inicio.split(":")
       const workEndTimeParts = schedule.hora_fin.split(":")
-
       const workStartDateTime = new Date(dateTime)
       workStartDateTime.setHours(Number.parseInt(workStartTimeParts[0]), Number.parseInt(workStartTimeParts[1]), 0, 0)
-
       const workEndDateTime = new Date(dateTime)
       workEndDateTime.setHours(Number.parseInt(workEndTimeParts[0]), Number.parseInt(workEndTimeParts[1]), 0, 0)
 
@@ -250,7 +246,6 @@ const NewAppointmentStepper = ({ userId }) => {
 
     for (const app of existingAppointments) {
       if (app.estado === "cancelada" || app.estado === "completada") continue
-
       const existingAppStartTime = new Date(app.fecha_cita).getTime()
       const existingAppDuration = app.duracion || duration
       const existingAppEndTime = existingAppStartTime + existingAppDuration * 60 * 1000
@@ -361,4 +356,5 @@ const NewAppointmentStepper = ({ userId }) => {
     </div>
   )
 }
+
 export default NewAppointmentStepper
